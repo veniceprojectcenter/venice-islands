@@ -25,6 +25,12 @@ html, body
     margin: 0 0 5px;
     color: #777;
 }
+.info h2 {
+    font: 15px Arial, Helvetica, sans-serif;
+    margin: 0 0 1px;
+    color: #1313f5;
+}
+
 
 .VPCinfo {
     padding: 6px 8px;
@@ -71,8 +77,8 @@ html, body
 /*white box for text overlay*/
 #overlay div {
      width:300px;
-     height: 30%;
-     margin: 150px auto;
+     height: 50%;
+     margin: 50px auto;
      float: center;
      left:  0px;
      text-align:left;

@@ -16,16 +16,28 @@
 <!--    <script src="islands_population.geojson" type="text/javascript"></script> -->
     <script src="IslesLagoon_single.geojson" type="text/javascript"></script>
     <script src="IslesLagoon_multi.geojson" type="text/javascript"></script>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
     <link REL=StyleSheet HREF="style.css" TYPE="text/css" MEDIA=screen> 
     
 </head>
 <body>    
-	<div id="map" style="style.css"></div>
-   
-    <script type ='text/javascript' src='js/map.js'></script>
-    <script type ='text/javascript' src='js/moreInfo.js'></script>
+	<div id="map" style="style.css">
+        
+    </div>
+    <script type ='text/javascript' src='js/styles.js'></script>
+    <script type ='text/javascript' src='js/icons.js'></script>
+    <script type ='text/javascript' src='js/baseLayer.js'></script>
+    
+    <script type ='text/javascript' src='js/core/geom.js'></script>
+    <script type ='text/javascript' src='js/core/CKtoGeoJSON.js'></script>
+    
+    <script type ='text/javascript' src='js/core/map.js'></script>
+    <script type ='text/javascript' src='js/core/moreInfo.js'></script>
+    <script type ='text/javascript' src='js/core/filter.js'></script>
+    <script type ='text/javascript' src='js/core/color.js'></script>
+    <script type ='text/javascript' src='js/getData.js'></script>
     <div id="overlay" style = "style.css">
         <div id="inner"></div>
     </div>
