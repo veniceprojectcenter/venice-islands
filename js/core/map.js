@@ -48,23 +48,41 @@ function partial(func /*, 0..n args */) {
 
 //**********************************************************************************************
 
-//		L.marker([45.4375, 12.33]).addTo(map)
-//			.bindPopup("<b>Welcome to Venice!</b><br />I am a popup.").openPopup();
-//
-var popup = L.popup();
+// create a legend for the colors
+// Create grades using http://colorbrewer2.org/
+var legend = L.control({position: 'bottomright'});
 
-function onMapClick(e) {
-    popup
-    .setLatLng(e.latlng)
-    .setContent("You clicked the map at " + e.latlng.toString())
-    .openOn(map);
+legend.onAdd = function (map) {
+ 
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
+        labels = [];
+
+    $(div).append('<center> <button type="button" id="legendButton" >Show/Hide</button></center><br>');
+    
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    }
+
+    return div;
+};
+
+if(!opaqueFlag){
+    legend.addTo(map);
+    // attach an event to the legend's show/hide button
+    document.getElementById("legendButton").addEventListener("click", hideColors);
+}
+
+// function called on show/hide legend button press
+function hideColors(e){
     if(e.stopPropagation){
         e.stopPropagation();
     }
+    opaqueFlag != opaqueFlag;
 }
-
-map.on('click', onMapClick);
-
 
 //**********************************************************************************************
 
@@ -278,44 +296,6 @@ var mapOverlays = {
 
 // add in layer control so that you can toggle the layers
 var layerController = L.control.layers(baseMaps,mapOverlays).addTo(map);
-
-//*********************************************************************************************
-
-// create a legend for the colors
-var legend = L.control({position: 'bottomright'});
-
-legend.onAdd = function (map) {
- 
-    var div = L.DomUtil.create('div', 'info legend'),
-        grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
-        labels = [];
-
-    $(div).append('<center> <button type="button" id="legendButton" >Show/Hide</button></center><br>');
-    
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-    }
-
-    return div;
-};
-
-// MUST REMOVE LATER
-legend.addTo(map);
-
-// attach an event to the legend's show/hide button
-document.getElementById("legendButton").addEventListener("click", hideColors);
-
-// function called on show/hide legend button press
-function hideColors(e){
-    if(e.stopPropagation){
-        e.stopPropagation();
-    }
-    opaqueFlag != opaqueFlag;
-}
-
 
 //*******************************************************************************************
 

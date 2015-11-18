@@ -5,6 +5,8 @@ var FilterControl = L.Control.extend({
     //fieldSelect
     //functionSelect
     //textInput
+    //savedFields
+    //autoComplete
     
     initialize: function (object, position, modifyDiv) {
         // ...
@@ -13,6 +15,7 @@ var FilterControl = L.Control.extend({
         }
         
         this.object = object;
+        this.save = {};
         
         this.modifyDiv = modifyDiv;
     },
@@ -34,48 +37,64 @@ var FilterControl = L.Control.extend({
         return this.div;
     },
     
-    setObject : function(object){
+    setupImage : function(){
         var that = this;
-        this.div.innerHTML = '';
-        this.object = object;
-        applyStyle(this.div,Filter_style(this.div));
-        
-        //on click, un-minimize and stop propogation
-        this.div.onclick = function(e){
-            if(that.minimized){
-                that.minimize(false);
-            }
-            if(e.stopPropagation){
-                e.stopPropagation();
-            }
-            return false;
-        }
-        //on double click, (un)minimize and stop propogation
-        this.div.ondblclick = function(e){
+
+        var labelDiv = document.createElement("DIV");
+        var label = document.createElement("IMG");
+        label.setAttribute('src','image/filter.png');
+        applyStyle(labelDiv,FilterElement_style(labelDiv));
+        labelDiv.style.float = 'left';
+        labelDiv.onclick = function(e){
             that.minimize(!that.minimized);
             if(e.stopPropagation){
                 e.stopPropagation();
             }
             return false;
         }
-        
-        var labelDiv = document.createElement("DIV");
-        var label = document.createElement("img");
-        label.setAttribute('src','/image/filter.png');
-        applyStyle(labelDiv,FilterElement_style(labelDiv));
-        labelDiv.style.float = 'left';
         labelDiv.appendChild(label);
         this.div.appendChild(labelDiv);
+    },
+    
+    setObject : function(object){
+        var that = this;
+        this.div.innerHTML = '';
+        this.object = object;
+        applyStyle(this.div,Filter_style(this.div));
+        
+        //on click, stop propogation
+        this.div.onclick = function(e){
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
+        }
+        //on double click, stop propogation
+        this.div.ondblclick = function(e){
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
+        }
+        
+        this.setupImage();
         
         this.fieldSelect = createDropdown(object);
         //this.fieldSelect.multiple = true;
+        this.fieldSelect.onchange = function(e){
+            console.log(that.getAutoCompleteValues());
+            that.autoComplete.list = that.getAutoCompleteValues();
+            that.autoComplete.evaluate();
+        }
         this.div.appendChild(this.fieldSelect);
+        
         this.functionSelect = createDropdown(["=","<",">","contains"]);
         this.div.appendChild(this.functionSelect);
         
         this.textInput = document.createElement("INPUT");
         applyStyle(this.textInput,FilterElement_style(this.textInput));
-        this.textInput.setAttribute("type", "text");
+        //this.textInput.setAttribute("type", "text");
+        
         this.textInput.onkeypress = function(e){
             var key = e.which || e.keyCode;
             if (key == 27) {  // 27 is the ESC key
@@ -91,6 +110,18 @@ var FilterControl = L.Control.extend({
             }
         };
         this.div.appendChild(this.textInput);
+        
+        this.autoComplete = new Awesomplete(this.textInput,{list: this.getAutoCompleteValues(),minChars:1});
+        
+        L.DomEvent.on(this.textInput, 'mousedown', function(event) {
+            L.DomEvent.stopPropagation(event);
+        });
+        L.DomEvent.on(this.textInput, 'mouseup', function(event) {
+            L.DomEvent.stopPropagation(event);
+        });
+        L.DomEvent.on(this.textInput, 'mousemove', function(event) {
+            L.DomEvent.stopPropagation(event);
+        });
         
         var applyButton = document.createElement("INPUT");
         applyStyle(applyButton,FilterElement_style(applyButton));
@@ -111,19 +142,22 @@ var FilterControl = L.Control.extend({
     minimize : function(bool){
         this.minimized = bool;
         if(bool){
+            this.save["field"] = this.fieldSelect.selectedIndex;
+            this.save["function"] = this.functionSelect.selectedIndex;
+            this.save["text"] = this.textInput.value;
+                
             this.div.innerHTML = '';
             applyStyle(this.div,Filter_style(this.div));
 
-            var labelDiv = document.createElement("DIV");
-            var label = document.createElement("img");
-            label.setAttribute('src','/image/filter.png')
-            applyStyle(labelDiv,FilterElement_style(labelDiv));
-            labelDiv.style.float = 'left';
-            labelDiv.appendChild(label);
-            this.div.appendChild(labelDiv);
+            this.setupImage();
+            
         }
         else{
             this.setObject(this.object);
+            
+            this.fieldSelect.selectedIndex = this.save["field"];
+            this.functionSelect.selectedIndex = this.save["function"];
+            this.textInput.value = this.save["text"];
         }
     },
     
@@ -214,6 +248,10 @@ var FilterControl = L.Control.extend({
     inputText : function(){
         return this.textInput.value;
     },
+        
+    getAutoCompleteValues : function (e){
+        
+    },
     
     //callback for applying filter (should be overridden using filter.onApply = ___)
     onApply : function(e){
@@ -271,6 +309,8 @@ function createDropdown(object,options){
     return dropdown;
 }
 
+
+
 function applyStyle(feature,style){
     for(property in style){
         feature.style[property] = style[property];
@@ -305,14 +345,11 @@ filter.onApply = function(e){
             for(var n=0,nLen=feature.properties.islands.length;(n<nLen)&&(show==false);n++){
                 if(feature_layers[islandIndeces[feature.properties.islands[n]]].feature.visible){
                     show = true;
-                    console.log("show");
                 }
             }
             if(feature.visible != show){
-                console.log(feature);
                 feature.visible_changed = true;
                 feature.visible = show;
-                console.log(feature);
             }
         }
     }
@@ -329,6 +366,23 @@ filter.onClear = function(e){
         }
     }
     refreshFilter();
+}
+filter.getAutoCompleteValues = function(e){
+    var vals = [];
+    var fields = filter.selectedFields();
+    for(var i=0,iLen=feature_layers.length;i<iLen;i++){
+        var feature = feature_layers[i].feature;
+        for(var f=0,fLen=fields.length;f<fLen;f++){
+            if(feature.properties.hasOwnProperty(fields[f])){
+                var value = feature.properties[fields[f]];
+                value = value ? value.toString() : 'null';
+                if(vals.indexOf(value)==-1){
+                    vals.push(value);
+                }
+            }
+        }
+    }
+    return vals;
 }
 
 //add the filter control to 

@@ -36,6 +36,25 @@ var ColorControl = L.Control.extend({
         return this.div;
     },
     
+    setupImage : function(){
+        var that = this;
+        
+        var labelDiv = document.createElement("DIV");
+        var label = document.createElement("IMG");
+        label.setAttribute('src','image/color.png');
+        applyStyle(labelDiv,FilterElement_style(labelDiv));
+        labelDiv.style.float = 'left';
+        labelDiv.onclick = function(e){
+            that.minimize(!that.minimized);
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
+        }
+        labelDiv.appendChild(label);
+        this.div.appendChild(labelDiv);
+    },
+    
     setObject : function(object){
         var that = this;
         this.div.innerHTML = '';
@@ -59,13 +78,7 @@ var ColorControl = L.Control.extend({
             return false;
         }
         
-        var labelDiv = document.createElement("DIV");
-        var label = document.createElement("img");
-        label.setAttribute('src','/image/color.png')
-        applyStyle(labelDiv,ColorElement_style(labelDiv));
-        labelDiv.style.float = 'left';
-        labelDiv.appendChild(label);
-        this.div.appendChild(labelDiv);
+        this.setupImage();
         
         this.fieldSelect = createDropdown(object);
         //this.fieldSelect.multiple = true;
@@ -95,13 +108,7 @@ var ColorControl = L.Control.extend({
             this.div.innerHTML = '';
             applyStyle(this.div,Color_style(this.div));
 
-            var labelDiv = document.createElement("DIV");
-            var label = document.createElement("img");
-            label.setAttribute('src','/image/color.png')
-            applyStyle(labelDiv,ColorElement_style(labelDiv));
-            labelDiv.style.float = 'left';
-            labelDiv.appendChild(label);
-            this.div.appendChild(labelDiv);
+            this.setupImage();
         }
         else{
             this.setObject(this.object);

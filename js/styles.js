@@ -12,6 +12,78 @@ function Island_style(feature) {
     };
 }
 
+// function for generating the colors for Island_style
+function getColor(d) {
+    if(opaqueFlag){
+        return 'rgba(0,0,0,0)';
+    } else{
+    
+    if(d){
+        return d > 3000 ? '#4d004b' :
+           d > 2000 ? '#810f7c' :
+           d > 1000 ? '#88419d' :
+           d > 500  ? '#8c6bb1' :
+           d > 200  ? '#8c96c6' :
+           d > 100  ? '#9ebcda' :
+           d > 50   ? '#bfd3e6' :
+           d > 20   ? '#e0ecf4' :
+           d > 10   ? '#f7fcfd' :
+                      '#f7fcfd';
+    }
+    return 'rgba(255, 0, 0, 0.64)';
+    }
+}
+
+// function for changing the feature instances within a layer
+// pass in a property name as a string
+// islands_single.setStyle(a_style) also works for changing style 
+function recolorIsles(name) {
+
+    islands_single.eachLayer(function(layer) {
+        // Your function that determines a fill color for a particular
+        // property name and value.
+        //var myFillColor = generateRandomColors();
+        var myFillColor = getColor(layer.feature.properties[name]);
+
+        var x =  layer.setStyle({
+                fillColor: myFillColor,
+                weight: 0,
+                opacity: 1,
+                color: 'black',
+                dashArray: '1',
+                fillOpacity: 0.7
+        });
+    });
+    
+    islands_multi.eachLayer(function(layer) {
+        // Your function that determines a fill color for a particular
+        // property name and value.
+        //var myFillColor = generateRandomColors();
+        var myFillColor = getColor(layer.feature.properties[name]);
+
+        layer.setStyle({
+                fillColor: myFillColor,
+                weight: 0,
+                opacity: 1,
+                color: 'black',
+                dashArray: '1',
+                fillOpacity: 0.7
+        });
+    });
+}
+
+//*********************************************************************************
+function Random_style(feature) {
+    return {
+        fillColor: generateRandomColors(),
+        weight: 0,
+        opacity: 1,
+        color: 'black',
+        dashArray: '1',
+        fillOpacity: 0.7
+    };
+}
+
 function Highlight_style(feature) {
     return {
         fillColor: '#7fcdbb',
@@ -48,32 +120,6 @@ function ColorElement_style(feature){
     }
 }
 
-//******** OPTIONAL - Used for custom styles **********//
-
-// Styling for making choropleth-like colorations of polygons
-// Create grades using http://colorbrewer2.org/
-function getColor(d) {
-    if(opaqueFlag){
-        return 'rgba(0,0,0,0)';
-    } else{
-    
-    if(d){
-        return d > 3000 ? '#4d004b' :
-           d > 2000 ? '#810f7c' :
-           d > 1000 ? '#88419d' :
-           d > 500  ? '#8c6bb1' :
-           d > 200  ? '#8c96c6' :
-           d > 100  ? '#9ebcda' :
-           d > 50   ? '#bfd3e6' :
-           d > 20   ? '#e0ecf4' :
-           d > 10   ? '#f7fcfd' :
-                      '#f7fcfd';
-    }
-    return 'rgba(255, 0, 0, 0.64)';
-    }
-}
-
-//**********************************************************************************************
 
 // this section contains an alternate styling for polygons
 function style2(feature) {
