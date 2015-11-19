@@ -305,7 +305,7 @@ function getGroup(URL,tag,customArgs){
     }
     
     $.getJSON(URL,partial(getGroupCallback,tag,customArgs));
-    
+    // $.getJSON(URL, function(result){ getGroupCallback(tag,customArgs,result); });
 }
 
 function getGroupCallback(tag,customArgs,msg) {
