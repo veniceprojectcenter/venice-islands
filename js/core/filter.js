@@ -18,6 +18,22 @@ var FilterControl = L.Control.extend({
         this.save = {};
         
         this.modifyDiv = modifyDiv;
+        this.div = this.div || L.DomUtil.create('div', 'info legend');
+        
+        //on click, stop propogation
+        this.div.onclick = function(e){
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
+        }
+        //on double click, stop propogation
+        this.div.ondblclick = function(e){
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
+        }
     },
     
     minimized: false,
@@ -27,7 +43,7 @@ var FilterControl = L.Control.extend({
     },
 
     onAdd: function (map) {
-        this.div = L.DomUtil.create('div', 'info legend');
+        this.div = this.div || L.DomUtil.create('div', 'info legend');
         
         this.setObject(this.object);
         
@@ -62,39 +78,21 @@ var FilterControl = L.Control.extend({
         this.object = object;
         applyStyle(this.div,Filter_style(this.div));
         
-        //on click, stop propogation
-        this.div.onclick = function(e){
-            if(e.stopPropagation){
-                e.stopPropagation();
-            }
-            return false;
-        }
-        //on double click, stop propogation
-        this.div.ondblclick = function(e){
-            if(e.stopPropagation){
-                e.stopPropagation();
-            }
-            return false;
-        }
-        
-        this.setupImage();
-        
         this.fieldSelect = createDropdown(object);
         //this.fieldSelect.multiple = true;
         this.fieldSelect.onchange = function(e){
-            console.log(that.getAutoCompleteValues());
-            that.autoComplete.list = that.getAutoCompleteValues();
+            that.autoComplete.list = that.getAllValues();
             that.autoComplete.evaluate();
         }
         this.div.appendChild(this.fieldSelect);
+            
         
         this.functionSelect = createDropdown(["=","<",">","contains"]);
         this.div.appendChild(this.functionSelect);
-        
+            
         this.textInput = document.createElement("INPUT");
         applyStyle(this.textInput,FilterElement_style(this.textInput));
         //this.textInput.setAttribute("type", "text");
-        
         this.textInput.onkeypress = function(e){
             var key = e.which || e.keyCode;
             if (key == 27) {  // 27 is the ESC key
@@ -111,7 +109,7 @@ var FilterControl = L.Control.extend({
         };
         this.div.appendChild(this.textInput);
         
-        this.autoComplete = new Awesomplete(this.textInput,{list: this.getAutoCompleteValues(),minChars:1});
+        this.autoComplete = new Awesomplete(this.textInput,{list: this.getAllValues(),minChars:1});
         
         L.DomEvent.on(this.textInput, 'mousedown', function(event) {
             L.DomEvent.stopPropagation(event);
@@ -123,41 +121,40 @@ var FilterControl = L.Control.extend({
             L.DomEvent.stopPropagation(event);
         });
         
-        var applyButton = document.createElement("INPUT");
-        applyStyle(applyButton,FilterElement_style(applyButton));
-        applyButton.setAttribute("type", "button");
-        applyButton.setAttribute("value","Apply");
-        applyButton.onclick = this.onApply;
-
-        this.div.appendChild(applyButton);
-        
-        var clearButton = document.createElement("INPUT");
-        applyStyle(clearButton,FilterElement_style(clearButton));
-        clearButton.setAttribute("type", "button");
-        clearButton.setAttribute("value","Clear");
-        clearButton.onclick = this.onClear;
-        this.div.appendChild(clearButton);
+        this.minimize(this.minimized);
     },
     
     minimize : function(bool){
         this.minimized = bool;
-        if(bool){
-            this.save["field"] = this.fieldSelect.selectedIndex;
-            this.save["function"] = this.functionSelect.selectedIndex;
-            this.save["text"] = this.textInput.value;
-                
-            this.div.innerHTML = '';
-            applyStyle(this.div,Filter_style(this.div));
 
-            this.setupImage();
+        this.div.innerHTML = '';
+        applyStyle(this.div,Filter_style(this.div));
+
+        this.setupImage();
+        
+        if(bool==false){
             
-        }
-        else{
-            this.setObject(this.object);
+            this.div.appendChild(this.fieldSelect);
             
-            this.fieldSelect.selectedIndex = this.save["field"];
-            this.functionSelect.selectedIndex = this.save["function"];
-            this.textInput.value = this.save["text"];
+            this.div.appendChild(this.functionSelect);
+            
+            this.div.appendChild(this.textInput);
+            
+            this.autoComplete = new Awesomplete(this.textInput,{list: this.getAllValues(),minChars:1});
+            
+            var applyButton = document.createElement("INPUT");
+            applyStyle(applyButton,FilterElement_style(applyButton));
+            applyButton.setAttribute("type", "button");
+            applyButton.setAttribute("value","Apply");
+            applyButton.onclick = this.onApply;
+            this.div.appendChild(applyButton);
+
+            var clearButton = document.createElement("INPUT");
+            applyStyle(clearButton,FilterElement_style(clearButton));
+            clearButton.setAttribute("type", "button");
+            clearButton.setAttribute("value","Clear");
+            clearButton.onclick = this.onClear;
+            this.div.appendChild(clearButton);
         }
     },
     
@@ -249,7 +246,7 @@ var FilterControl = L.Control.extend({
         return this.textInput.value;
     },
         
-    getAutoCompleteValues : function (e){
+    getAllValues : function (e){
         
     },
     
@@ -319,8 +316,21 @@ function applyStyle(feature,style){
 
 //********************************************************************************************************
 
+console.log(islands_layer);
+
 //Create a filter object (put it in the top left and flow left to right)
-var filter = new FilterControl(singleLayer.features[0].properties,'topleft',function(div){
+var fieldsObj = undefined;
+
+var keys = [];
+for(var key in islands_layer.layers){
+    keys.push(key);
+}
+
+if(keys.length>0){
+    fieldsObj = islands_layer.layers[keys[0]].feature.properties;
+}
+
+var filter = new FilterControl(fieldsObj,'topleft',function(div){
     div.style.clear = 'both';
 });
 //define onApply behavior
@@ -367,7 +377,7 @@ filter.onClear = function(e){
     }
     refreshFilter();
 }
-filter.getAutoCompleteValues = function(e){
+filter.getAllValues = function(e){
     var vals = [];
     var fields = filter.selectedFields();
     for(var i=0,iLen=feature_layers.length;i<iLen;i++){
@@ -375,7 +385,7 @@ filter.getAutoCompleteValues = function(e){
         for(var f=0,fLen=fields.length;f<fLen;f++){
             if(feature.properties.hasOwnProperty(fields[f])){
                 var value = feature.properties[fields[f]];
-                value = value ? value.toString() : 'null';
+                value = (value!=null && value!=undefined) ? value.toString() : 'null';
                 if(vals.indexOf(value)==-1){
                     vals.push(value);
                 }
@@ -385,6 +395,6 @@ filter.getAutoCompleteValues = function(e){
     return vals;
 }
 
-//add the filter control to 
+
 map.addControl(filter);
 filter.minimize(true);

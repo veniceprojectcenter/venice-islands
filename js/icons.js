@@ -1,4 +1,4 @@
-// icons from https://mapicons.mapsmarker.com/category/markers/restaurants-bars/
+// icons from https://mapicons.mapsmarker.com
 // define shared options that will be inherited by all custom icons
 var customIcon = L.Icon.extend({
     options: {
@@ -7,7 +7,7 @@ var customIcon = L.Icon.extend({
     }
 });
 // then define the individual icons by feeding in the image URLs
-var hotelIcon = new customIcon({iconUrl: 'image/lodging-2.png'});
-var churchIcon = new customIcon({iconUrl: 'image/cathedral.png'});
-var conventIcon = new customIcon({iconUrl: 'image/convent-2.png'});
-var storeIcon = new customIcon({iconUrl: 'image/mall.png'});
+var hotelIcon = new customIcon({iconUrl: 'image/icons/lodging-2.png'});
+var churchIcon = new customIcon({iconUrl: 'image/icons/cathedral.png'});
+var conventIcon = new customIcon({iconUrl: 'image/icons/convent-2.png'});
+var storeIcon = new customIcon({iconUrl: 'image/icons/mall.png'});

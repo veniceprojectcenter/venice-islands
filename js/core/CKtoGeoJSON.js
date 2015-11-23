@@ -57,12 +57,13 @@ function CKtoGeoJSON(CKjson){
     Array.prototype.push.apply(geoJson.properties.islands,findIslands(geoJson.properties));
     
     if(geoJson.properties.islands.length === 0){
-        if(singleLayer){
-            Array.prototype.push.apply(geoJson.properties.islands,queryIslands(singleLayer,geoJson));
-        }
-        if(multiLayer){
-            Array.prototype.push.apply(geoJson.properties.islands,queryIslands(multiLayer,geoJson));
-        }
+        Array.prototype.push.apply(geoJson.properties.islands,queryIslands_LAYER(islands_layer,geoJson));
+//        if(singleLayer){
+//            Array.prototype.push.apply(geoJson.properties.islands,queryIslands_JSON(singleLayer,geoJson));
+//        }
+//        if(multiLayer){
+//            Array.prototype.push.apply(geoJson.properties.islands,queryIslands_JSON(multiLayer,geoJson));
+//        }
     }
     
     //TODO: ??? IF STILLL no islands, find nearest Island/Islands??? (nearest to each point if a polygon)
@@ -98,7 +99,7 @@ function nearestIsland(islands_geoJson,point){
     return island;
 }
 
-function queryIslands(islands_geoJson,obj_geoJson){
+function queryIslands_JSON(islands_geoJson,obj_geoJson){
     var output = new Array(0);
     
     for(var i=0;i<islands_geoJson.features.length;i++){
@@ -108,6 +109,27 @@ function queryIslands(islands_geoJson,obj_geoJson){
             }
         }
     }
+    return output;
+}
+
+function queryIslands_LAYER(islands_geoLayer,obj_geoJson){
+    var output = new Array(0);
+    
+    islands_geoLayer.eachLayer(function(layer){
+        if(queryIsland(layer.feature,obj_geoJson)){
+            if(output.indexOf(layer.feature.properties.Numero)<0){
+                output.push(layer.feature.properties.Numero);
+            }
+        }
+    });
+    
+//    for(var i=0;i<islands_geoJson.features.length;i++){
+//        if(queryIsland(islands_geoJson.features[i],obj_geoJson)){
+//            if(output.indexOf(islands_geoJson.features[i].properties.Numero)<0){
+//                output.push(islands_geoJson.features[i].properties.Numero);
+//            }
+//        }
+//    }
     return output;
 }
 

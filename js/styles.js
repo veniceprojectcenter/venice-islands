@@ -2,8 +2,9 @@
 var opaqueFlag = false;
 
 function Island_style(feature) {
+   // console.log(feature.properties);
     return {
-        fillColor: getColor(feature.properties.sum_pop_11),
+        fillColor: colorControl.getColor(feature.properties),
         weight: 0,
         opacity: 1,
         color: 'black',
@@ -18,7 +19,7 @@ function getColor(d) {
         return 'rgba(0,0,0,0)';
     } else{
     
-    if(d){
+    if(d!=undefined){
         return d > 3000 ? '#4d004b' :
            d > 2000 ? '#810f7c' :
            d > 1000 ? '#88419d' :
@@ -37,30 +38,14 @@ function getColor(d) {
 // function for changing the feature instances within a layer
 // pass in a property name as a string
 // islands_single.setStyle(a_style) also works for changing style 
-function recolorIsles(name) {
-
-    islands_single.eachLayer(function(layer) {
-        // Your function that determines a fill color for a particular
-        // property name and value.
-        //var myFillColor = generateRandomColors();
-        var myFillColor = getColor(layer.feature.properties[name]);
-
-        var x =  layer.setStyle({
-                fillColor: myFillColor,
-                weight: 0,
-                opacity: 1,
-                color: 'black',
-                dashArray: '1',
-                fillOpacity: 0.7
-        });
-    });
+function recolorIsles() {
     
-    islands_multi.eachLayer(function(layer) {
+    islands_layer.eachLayer(function(layer) {
         // Your function that determines a fill color for a particular
         // property name and value.
         //var myFillColor = generateRandomColors();
-        var myFillColor = getColor(layer.feature.properties[name]);
-
+        var myFillColor = colorControl.getColor(layer.feature.properties);
+        //console.log(layer.feature.properties);
         layer.setStyle({
                 fillColor: myFillColor,
                 weight: 0,
@@ -70,6 +55,22 @@ function recolorIsles(name) {
                 fillOpacity: 0.7
         });
     });
+    
+//    islands_multi.eachLayer(function(layer) {
+//        // Your function that determines a fill color for a particular
+//        // property name and value.
+//        //var myFillColor = generateRandomColors();
+//        var myFillColor = colorControl.getColor(layer.feature.properties);
+//
+//        layer.setStyle({
+//                fillColor: myFillColor,
+//                weight: 0,
+//                opacity: 1,
+//                color: 'black',
+//                dashArray: '1',
+//                fillOpacity: 0.7
+//        });
+//    });
 }
 
 //*********************************************************************************
