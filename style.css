@@ -76,8 +76,8 @@ html, body
 
 /*white box for text overlay*/
 #overlay div {
-     width:300px;
-     height: 50%;
+     width: 60%;
+     height: 75%;
      margin: 50px auto;
      float: center;
      left:  0px;
@@ -125,4 +125,18 @@ a.Xbutton {
 
 a.Xbutton:hover { 
     border-color: powderblue;  
+}
+
+/*table settings*/
+td {
+  width: 4rem;
+  height: 2rem;
+  border: 1px solid #ccc;
+  text-align: center;
+  background: lightblue;
+  border-color: white;
+}
+th {
+  background: lightblue;
+  border-color: white;
 }

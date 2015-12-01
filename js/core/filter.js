@@ -260,6 +260,8 @@ var FilterControl = L.Control.extend({
     }
 });
 
+//******************************************************************************************************
+
 //Create a dropdown object for use in a filter and apply the user defined style
 function createDropdown(object,options){
     var dropdown = document.createElement("SELECT");
@@ -316,8 +318,6 @@ function applyStyle(feature,style){
 
 //********************************************************************************************************
 
-console.log(islands_layer);
-
 //Create a filter object (put it in the top left and flow left to right)
 var fieldsObj = undefined;
 
@@ -332,6 +332,7 @@ if(keys.length>0){
 
 var filter = new FilterControl(fieldsObj,'topleft',function(div){
     div.style.clear = 'both';
+    div.style.zIndex = 1000;
 });
 //define onApply behavior
 filter.onApply = function(e){
@@ -353,8 +354,10 @@ filter.onApply = function(e){
         var feature = feature_layers[i].feature;
         if(!feature.properties.Numero && feature.properties.islands){
             for(var n=0,nLen=feature.properties.islands.length;(n<nLen)&&(show==false);n++){
-                if(feature_layers[islandIndeces[feature.properties.islands[n]]].feature.visible){
-                    show = true;
+                if(islandIndeces[feature.properties.islands[n]]){
+                    if(feature_layers[islandIndeces[feature.properties.islands[n]]].feature.visible){
+                        show = true;
+                    }
                 }
             }
             if(feature.visible != show){

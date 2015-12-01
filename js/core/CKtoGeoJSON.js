@@ -283,7 +283,8 @@ function findLonLat(obj){
             }
         }
     }
-    return [lon,lat];
+    if(parseFloat(lon) && parseFloat(lat))
+        return [parseFloat(lon),parseFloat(lat)];
 }
     
 function isInt(value) {

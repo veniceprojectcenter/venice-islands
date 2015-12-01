@@ -1,3 +1,52 @@
+// ~~~~~~~~ Functions for Retrievings Data ~~~~~~~~~~~~~~~~~~~~~
+
+//Add a data set to be displayed on the map!
+//options = { tag, filter: boolean function(obj)};
+function getGroup(URL,options,customArgs){
+    //$.getJSON(URL,partial(getGroupCallback,tag,customArgs,URL));
+    $.getJSON(URL,function(msg){getGroupCallback(options,customArgs,URL,msg);});
+}
+
+//options = { searchInclude: string[], searchExclude: string[]};
+function getIslands(path,options){
+    $.getJSON(path,function(msg){
+        var layer = msg;
+
+        for(var i=0,iLen=layer.features.length;i<iLen;i++){
+            var feature = layer.features[i];
+            feature.visible = true;
+            islandsCollection[feature.properties.Numero] = feature;
+        }
+        islands_layer.addData(layer);
+        if(!filter.object){
+            filter.setObject(layer.features[0].properties);
+            filter.minimize(filter.minimized);
+        }
+        if(!colorControl.object){
+            colorControl.setObject(layer.features[0].properties);
+            colorControl.minimize(filter.minimized);
+        }
+        
+        if(options){
+            if(options.searchInclude){
+                searchControl.includeKeys(options.searchInclude);
+            }
+            if(options.searchExclude){
+                searchControl.searchExclude(options.searchExclude);
+            }
+        }
+        
+        searchControl.refresh();
+        recolorIsles();
+    });
+}
+
+//***********************************************************************************************
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+getIslands('IslesLagoon_single.geojson',{searchInclude: ['Nome_Isola','Numero']});
+getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero']};
+
 
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
@@ -11,7 +60,9 @@ getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.jso
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap"},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a church");
 }});
-getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets"});
+getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets"},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
+    return new L.marker(latlng, {icon: sewerIcon}).bindPopup("poop");
+}});
 
 // ~~~~~~~~ layers with just lat/long ~~~~~~~~~~~~~~~~~~~~~
 //getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels",{pointToLayer: function(feature,latlng){
@@ -36,6 +87,10 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Island%20Church%20Data.jso
 //getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json", "Convents",{pointToLayer: function(feature,latlng){
 //    return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
 //}});
+
+getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data"},{pointToLayer: function(feature,latlng){
+    return new L.marker(latlng, {icon: vpcicon});
+}});
 
 // the above layer probably matches up with the images in
 //https://cityknowledge.firebaseio.com/groups/convent%20floor%20plans.json"

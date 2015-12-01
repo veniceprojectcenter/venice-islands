@@ -13,6 +13,13 @@ function overlayOff(currentLayer){
     }
 }
 
+//TODO: make this function more flexible:
+//  -to be customized in the getData() file (appearence, content, etc)
+//  -be prettier?
+//  -check boxesfor what appears in general info?
+//  -to work with any layer (not just islands)?
+//  -translate fields
+
 // this function is called from the zoomToFeature() function
 function overlay(currentLayer) {
 	el = document.getElementById("overlay");
@@ -52,9 +59,16 @@ function overlay(currentLayer) {
 //   
     makeHTMLinfo(properties,"inner","JSON");
    
-    // test for appending additional info
-    $(document.getElementById("inner")).append('<br /> <br /><a href="http://www.venipedia.org/wiki/index.php?title=Islands"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
+    addOverlayInfo("inner",properties.Numero);
+    
+    
+    // Add in the venipedia and cartography buttons
+    $(document.getElementById("inner")).append('<br /> <br /><a href="" id="venipedia"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
          + '<a href="http://cartography.veniceprojectcenter.org/" target="_blank" class="button">View on a historical map</a>');
+    
+    // generate correct venipedia link for associated island
+    var link = "http://www.venipedia.org/wiki/index.php?title=Island_of_" + encodeURIComponent(properties.Nome_Isola.replace(/ /g, "_")); 
+    document.getElementById("venipedia").href = link;
     
     // function for getting rid of overlay when you click on the screen
     // update later to remove only when clicking outside of 'overlay' div
@@ -119,7 +133,7 @@ function printObject(props,depth)
     else if(typeof props === 'object'){
         //output+= tabs(depth) + '<b>'+property + '</b>: ';
         for(property in props){
-            output += tabs(depth) + '<b>' + property + ':</b> '+printObject(props[property],depth+1);
+            output += tabs(depth) + '<b>' + dictionary(property) + ':</b> '+printObject(props[property],depth+1);
         }
     }
     else{
@@ -146,3 +160,78 @@ function tabs(int_num){
 * instagram and then showing a feed of pictures tagged by location/hashtag is super easy,
 * so that could be an easy way to add photos later on if we want to use it
 */
+
+function addOverlayInfo(id,num){
+
+    // figure out what overlays are turned on/being used
+    layers = Object.keys(featureCollections);
+    for(var k =0; k<layers.length; k++){
+        // if the layer has objects, keep goung 
+        if (!$.isEmptyObject(featureCollections[layers[k]]._layers)){
+            //console.log(layers[k]);
+            
+            
+            // pull out what's tagged by isle
+            var target = $.map(featureCollections[layers[k]]._layers, function(e){return e.feature.properties});
+            var arrayLength = target.length;
+            var tempData = [];
+            var first = true; // flag for displaying layers[k] (category title)
+            for (var i = 0; i < arrayLength; i++) {  
+                if($.inArray(num,target[i].islands)!=-1) {
+                    if(first) {
+                        $(document.getElementById(id)).append('<br><b><center>'+ layers[k]+'</center></b></br>');
+                        first = false;
+                    }
+                    tempData.push(target[i]);
+                    // bridges
+                    if(target[i].data.Nome_Ponte){
+                        //console.log(target[i].data.Nome_Ponte);
+                        $(document.getElementById(id)).append(target[i].data.Nome_Ponte+'</br>');
+                    }
+                    // bell towers
+                    else if(target[i].data.NAME){
+                        //console.log(target[i].data.NAME);
+                        $(document.getElementById(id)).append(target[i].data.NAME+'</br>');
+                    }
+                    // island churches
+                    else if(target[i].data["Full Name"]){
+                        //console.log(target[i].data["Full Name"]);
+                        $(document.getElementById(id)).append(target[i].data["Full Name"]+'</br>');
+                    }
+                    // canals
+                    else if(target[i].data.Nome_Rio){
+                        $(document.getElementById(id)).append(target[i].data.Nome_Rio+'</br>');
+                    }
+                    else if(layers[k]=="Wiki Data"){
+                        $(document.getElementById(id)).append(
+                            '<b>About: </b>'+ target[i].data.Blurb+'</br>' +
+                            '<a href="" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
+                            '<table border="1" style="width:100%">'+
+                            '<tr>'+
+                                '<td>'+ 'Handicap Accessible' + '</td>' +
+                                '<td>'+ target[i].data.Handicap_Accessibility + '</td>' +
+                            '</tr>' + '<tr>'+
+                                '<td>'+ 'Inhabited?' + '</td>' +
+                                '<td>'+ target[i].data.Inhabited + '</td>' +
+                            '</tr>' + '<tr>'+
+                                '<td>'+ 'Type' + '</td>' +
+                                '<td>'+ target[i].data.Type + '</td>' +
+                            '</tr>' + '<tr>'+
+                                '<td>'+ 'Usage' + '</td>' +
+                                '<td>'+ target[i].data.Usage + '</td>' +
+                            '</tr>' +
+                            '</table>'
+                        );
+                        // add the correct link to the button
+                        document.getElementById("bib").href = target[i].data.Bibliography;
+                    }
+                    // still need to add name support for the following OR just look for a field
+                    // that either has "Name" or "Nome" as part of it
+                    // shops
+                    // hotels
+                    // sewer outlets
+                }
+            }
+        }
+    }
+}

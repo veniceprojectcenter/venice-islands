@@ -4,9 +4,12 @@ var legend = L.control({position: 'bottomright'});
 var legend_div = L.DomUtil.create('div', 'info legend');
 
 var objectColors;
-var gradientColors = ['#f7fcfd','#e0ecf4','#bfd3e6','#9ebcda','#8c96c6','#8c6bb1','#88419d','#810f7c','#4d004b']
+var gradientColors = ['#edf8fb','#bfd3e6','#9ebcda','#8c96c6','#8856a7','#810f7c'];
+//['#f7fcfd','#e0ecf4','#bfd3e6','#9ebcda','#8c96c6','#8c6bb1','#88419d','#810f7c','#4d004b']
 
-legend.grades = [0, 20, 50, 100, 200, 500, 1000, 2000, 3000];
+var gradientFlag=0;
+
+legend.grades = [];//[0, 20, 50, 100, 200, 500, 1000, 2000, 3000];
 
 legend.onAdd = function (map) {
 
@@ -22,8 +25,13 @@ legend.setThresholds = function(thresholds){
     for (var i = 0; i < thresholds.length && i < gradientColors.length; i++) {
         legend_div.innerHTML +=
             '<i style="background:' + gradientColors[i] + '"></i> ' +
-            thresholds[i] + (thresholds[i + 1] ? '&ndash;' + thresholds[i + 1] + '<br>' : '+');
+            thresholds[i] + (thresholds[i + 1] != undefined ? '&ndash;' + thresholds[i + 1] + '<br>' : '+');
     }
+}
+
+function sortNumber(a,b)
+{
+  return a - b;
 }
 
 //**********************************************************************************************
@@ -180,17 +188,18 @@ var ColorControl = L.Control.extend({
                 }
             } 
             if(fxns=="gradient"){
+                this.setGradient;
                 if(value!=undefined){
                     for (var i = Math.min(this.thresholds.length,gradientColors.length); i >= 0; i--) {
-                        if(value > this.thresholds[i]){
+                        if(value >= this.thresholds[i]){
                             return gradientColors[i];
                         }
                     }
-                    return '#ffffff';
+                    //return '#ffffff';
                 }
             }
             // if NOT opaqueflag and field is empty, color pinkish
-            return 'rgba(255, 0, 0, 0.64)';
+            return 'rgba(0, 0, 0, 0.0)';
         }
         
         //TODO: given an object(or value), get its color
@@ -205,8 +214,46 @@ var ColorControl = L.Control.extend({
         //use "this.getAllValues()" to determine range and  "this.thresholds";
         //Many ways: find total range split into equal sized ranges
         //           sort values in order and split into equal sized groups
+       
+        var field = this.appliedField;
+        var arr = $.map(islandsCollection, function(o){return o.properties[field];});
         
-        legend.setThresholds(this.thresholds);
+        if(typeof arr[0] == "string"){ 
+            gradientFlag = 1;
+            return; // indicate failure
+        }
+        
+        var maximum = Math.max.apply(this,arr);
+        var minimum = Math.min.apply(this,arr);
+       
+        legend.grades = [];
+        
+        // sort the array of values from min-max
+        arr = arr.sort(sortNumber);
+        // find the index for each quartile
+        // see https://en.wikipedia.org/wiki/Quartile 
+        // I changed the max/min outliers so it'd display better
+        var Q1 = Math.ceil(0.25*arr.length);
+        var Q3 = Math.ceil(0.75*arr.length);
+        var Qlow = Math.ceil(0.05*arr.length);
+        var Qhigh = Math.ceil(0.95*arr.length);
+        // set the gradient based on the array value for each percentile
+        legend.grades = [minimum, arr[Qlow], arr[Q1], arr[Q3], arr[Qhigh], maximum];
+        
+        legend.setThresholds(legend.grades);
+        this.thresholds = legend.grades;
+        
+        // log things for debug
+//        console.log(field);
+        console.log(arr);
+//        console.log(maximum);
+//        console.log(minimum);
+        console.log(this.thresholds);
+//        console.log(IQR);
+//        console.log(Qlow);
+//        console.log(Qhigh);
+        
+        gradientFlag = 0; //indicate success
     },
     
     selectedFields : function(){
@@ -372,10 +419,14 @@ colorControl.getAllValues = function(e){
     return vals;
 }
 colorControl.onApply = function(e){
+
     opaqueFlag=false;
     if(colorControl.selectedFunctions()[0]!="random"){
         colorControl.setGradient();
-        legend.addTo(map);
+        if (gradientFlag == 0) legend.addTo(map);
+        else if(legend._map) {
+            legend.removeFrom(map);
+        }
     }
     else if(legend._map){
         legend.removeFrom(map);
