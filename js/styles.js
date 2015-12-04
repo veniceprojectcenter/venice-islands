@@ -128,9 +128,20 @@ function ColorElement_style(feature){
 function style2(feature) {
     return {
         fillColor: '#FEB24C',
-        weight: 0,
+        weight: 1.5,
         opacity: 1,
-        color: 'white',
+        color: '#ff0000',
+        dashArray: '3',
+        fillOpacity: 1.0
+    };
+}
+
+function standOut(feature) {
+    return {
+        fillColor: '#FEB24C',
+        weight: 1.5,
+        opacity: 1,
+        color: '#ff0000',
         dashArray: '3',
         fillOpacity: 1.0
     };

@@ -379,6 +379,7 @@ filter.onClear = function(e){
         }
     }
     refreshFilter();
+    recolorIsles();
 }
 filter.getAllValues = function(e){
     var vals = [];

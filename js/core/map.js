@@ -85,11 +85,10 @@ function zoomToFeature(e) {
     overlay(currentLayer);
 }
 
-function saveAndHighlight(parent, feature, layer) {
-    console.log("saveAndHighlight");
-    saveFeature(parent, feature, layer)
-    setupHighlight(feature,layer);
-}
+//function saveAndHighlight(parent, feature, layer) {
+//    saveFeature(parent, feature, layer)
+//    setupHighlight(feature,layer);
+//}
 
 function saveFeature(parent, feature, layer){
     var obj = {
@@ -126,7 +125,11 @@ function setupHighlight(feature, layer) {
 // add base geojson to map with islands data
 var islands_layer = L.geoJson(null, {
     style: Island_style,
-    onEachFeature: partial(saveAndHighlight,islands_layer)
+    onEachFeature: function(feature,layer){
+        saveFeature(islands_layer,feature,layer);
+        setupHighlight(feature,layer);
+    }
+    //onEachFeature: partial(saveAndHighlight,islands_layer)
 }).addTo(map);
 
 function refreshFilter(){
@@ -214,17 +217,45 @@ map.on('locationerror', onLocationError);
 
 //**********************************************************************************************
 
+var helpWindow = document.createElement("DIV").innerHTML = '<iframe src="https://docs.google.com/document/d/11a5uMYyAtVFpasV2QbwML8ftwQgKn9n_pIhnUJoiBo8/pub?embedded=true"></iframe>';
+
 // Displays question mark and vpc logo
 var VPCinfo = L.control({position: "bottomleft"});
     
 VPCinfo.onAdd = function (map) {
     this._div = L.DomUtil.create('div', 'VPCinfo'); // create a div with a class "info"
-    this._div.innerHTML = '<div class="info" style="width:auto;">'+
-        '<span ng-click="showAbout()"><img src="image/about.png"  style="cursor:pointer;padding-right:7px;"></span>'+
-        '<a href="http://veniceprojectcenter.org" target="_blank"><img src="image/vpc25logo.png"></a>'+
-        '</div>';
+    
+    var vpcSpan = document.createElement("SPAN");
+    vpcSpan.innerHTML = '<img src="image/about.png"  style="cursor:pointer;padding-right:7px;">';
+    vpcSpan.onclick = showAbout;
+    
+    this._div.appendChild(vpcSpan);
+    
+    var vpcLogo = document.createElement("A");
+    vpcLogo.innerHTML = '<img src="image/vpc25logo.png">';
+    vpcLogo.href = "http://veniceprojectcenter.org";
+    vpcLogo.target ="_blank";
+    
+    this._div.appendChild(vpcLogo);
+    
     return this._div;
 };
+
+function showAbout(){
+    console.log("show");
+    el = document.getElementById("help");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+    document.getElementById("innerHelp").innerHTML = '<a onclick = "hideAbout()" class = "Xbutton">X</a>';
+    $(document.getElementById("innerHelp")).append(
+        '<center>'+
+        '</br></br></br><iframe src="https://docs.google.com/document/d/11a5uMYyAtVFpasV2QbwML8ftwQgKn9n_pIhnUJoiBo8/pub?embedded=true" style="height:1036px;width:calc(100% - 40px);"></iframe>' +
+        '</center>'
+    );
+}
+function hideAbout(){
+    console.log("hide");
+    el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
 
 VPCinfo.addTo(map);
 
@@ -258,7 +289,7 @@ layerController.getContainer().ondblclick = function(e){
 var loadStatus = [];
 
 function getGroupCallback(options,customArgs,groupURL,msg) {
-    jsonList = msg;
+    var jsonList = msg;
     //console.log(jsonList.members);
     var statusIndex = loadStatus.length;
     loadStatus.push({});
@@ -276,26 +307,16 @@ function getGroupCallback(options,customArgs,groupURL,msg) {
     
     var count = 0;
     for(var obj in jsonList.members){
-        //var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
-        //console.log(URL);
-        //$.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
         if(count == 0){
             getNextEntry(statusIndex,options,customArgs,groupURL,jsonList);
         }
-        
-//        $.ajax({
-//            dataType: "json",
-//            url: URL,
-//            success: function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);},
-//            async:false
-//        });
         count++;
     }
     loadStatus[statusIndex].maxCount = count;
 }
 
 function getNextEntry(statusIndex,options,customArgs,groupURL,groupMSG){
-    jsonList = groupMSG;
+    var jsonList = groupMSG;
     //console.log(jsonList.members);
     
     if(options && options.tag){
@@ -319,7 +340,7 @@ function getNextEntry(statusIndex,options,customArgs,groupURL,groupMSG){
 }
 
 function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
-    jsonList = msg;
+    var jsonList = msg;
     //console.log(jsonList.members);
     
     if(options && options.tag){
@@ -332,7 +353,20 @@ function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
         if(count>=loadStatus[statusIndex].count){
             var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
             //console.log(URL);
-            $.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
+            //$.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
+            $.ajax({
+                dataType: "json",
+                url: URL,
+                success: function(msg){
+                    getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);
+                },
+                complete: function(){
+                    loadingScreen.remove();
+                },
+                beforeSend: function(){
+                    loadingScreen.add();
+                }
+            });
         }
         count++;
         loadStatus[statusIndex].count=count;
@@ -345,7 +379,7 @@ function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) 
     var jsonObj = msg;
     //console.log(jsonObj);
     
-    if(!options){
+    if(!options || typeof options != 'object'){
         options = {};
     }
     
@@ -361,8 +395,13 @@ function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) 
         //var layer = L.geoJson(feature,customArgs);
         //featureCollections[options.tag].addLayer(layer);
         //saveFeature(featureCollections[options.tag],feature,layer);
-        
-        featureCollections[options.tag].addData(CKtoGeoJSON(jsonObj));
+        try {
+            featureCollections[options.tag].addData(CKtoGeoJSON(jsonObj));
+        }
+        catch(err) {
+            console.error("Could Not Make Valid GeoJSON from CK Data:");
+            console.log(jsonObj);
+        }
     }
 }
 
@@ -387,6 +426,8 @@ function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
             finishGetEntries(statusIndex,options,customArgs,groupURL,groupMSG);
             originalOnAdd.call(featureCollections[tag],map);
         }
+        
+        featureCollections[tag].groupOptions = options;
         
         layerController.addOverlay(featureCollections[tag],tag);
         

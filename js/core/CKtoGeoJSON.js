@@ -1,4 +1,6 @@
 //Take a JSON object from the CK console and return a valid GeoJSON object with the same information.
+//Looks for geometry (points or polygons) --> feature.geometry
+//Original Object --> feature.properties
 function CKtoGeoJSON(CKjson){
     
     //Create an empty GeoJSON object to be filled with data and returned
@@ -277,14 +279,16 @@ function findLonLat(obj){
                 if(stringContains((property.toString()).toUpperCase(),"LATITUDE")){
                     lat = obj[property];
                 }
-                else if(stringContains((property.toString()).toUpperCase(),"LONGTITUDE")||stringContains((property.toString()).toUpperCase(),"LONGITUDE")){
+                else if(stringContains((property.toString()).toUpperCase(),"LONGTITUDE") || 
+                        stringContains((property.toString()).toUpperCase(),"LONGITUDE")){
                     lon = obj[property];
                 }
             }
         }
     }
-    if(parseFloat(lon) && parseFloat(lat))
-        return [parseFloat(lon),parseFloat(lat)];
+//    if(lon && lat && parseFloat(lon) && parseFloat(lat))
+//        return [parseFloat(lon),parseFloat(lat)];
+    return[lon,lat];
 }
     
 function isInt(value) {

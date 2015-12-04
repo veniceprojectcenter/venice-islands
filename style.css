@@ -1,9 +1,12 @@
 html, body
 {
-    height: 98%;
+    height: 100%;
+    width: 100%;
+    margin: 0px;
 }
 
 #map { 
+    position: relative;
     height: 100%;
     z-index:1;
 } 
@@ -62,37 +65,104 @@ html, body
 
 /* grey background */
 #overlay {
-     visibility: hidden;
-     position: absolute;
-     left: 0px;
-     top: 0px;
-     width:100%;
-     height:100%;
-     text-align:left;
-     z-index: 1000;
-     background: rgba(0,0,0,0.2);
-    
+    visibility: hidden; 
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width:100%;
+    height:100%;
+    text-align:left;
+    z-index: 1000;
+    background: rgba(0,0,0,0.2);
 }
 
 /*white box for text overlay*/
 #overlay div {
-     width: 60%;
-     height: 75%;
-     margin: 50px auto;
-     float: center;
-     left:  0px;
-     text-align:left;
-     padding: 6px 8px;
-     font: 14px/16px Arial, Helvetica, sans-serif;
-     background: white;
-     background: rgba(255,255,255,0.8);
-     box-shadow: 0 0 15px rgba(0,0,0,0.2);
-     border-radius: 5px;
-     overflow: auto;
+    width: 80%;
+    max-width: 500px;
+    height: calc(100% - 150px);
+    margin: auto;
+    float: center;
+    top:0; bottom:0; left:0; right:0;
+    text-align:left;
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    overflow: auto;
+    position: absolute;
 }
 
 #overlay::first-line { 
     text-align:center;
+}
+
+/*Help window*/
+#help {
+    visibility: hidden;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width:100%;
+    height:100%;
+    text-align:left;
+    background: rgba(0,0,0,0.3);
+    z-index:100;
+    position: absolute;
+}
+
+#help div{
+    width: calc(100% - 100px);
+    max-width: 890px;
+    height: calc(100% - 100px);
+    float: center;
+    margin: auto;
+    top:0; bottom:0; left:0; right:0;
+    text-align:left;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.6);
+    border-radius: 5px;
+    overflow: auto;
+    z-index:150;
+    position: absolute;
+}
+
+/*Loading screen stuff*/
+#loadingScreen {
+    visibility: hidden;
+    position: absolute;
+    left: 0px;
+    bottom:0px;
+    width:100%;
+    height:100%;
+    text-align: center;
+    background: rgba(0,0,0,0.6);
+    z-index:100;
+    position: absolute;
+}
+
+#loadingTop{
+    z-index:101;
+    font-family:"Comic Sans MS", cursive, sans-serif;
+    font-size: 70px;
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+    color: whitesmoke;
+    text-shadow: 2px 2px #000000;
+}
+
+#loadingBottom{
+    z-index:101;
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
+    text-align: center;
 }
 
 /*button (so you can use href with a button set from script)*/
@@ -125,6 +195,25 @@ a.Xbutton {
 
 a.Xbutton:hover { 
     border-color: powderblue;  
+}
+
+/*Button for closing out of the "loading..." screen*/
+a.Close {
+    border: 3px solid;
+    border-radius: 10px;
+    border-color: paleturquoise;
+    height: auto;
+    float: center;
+    background: snow;
+    color: initial;
+    padding: 4px;
+    font-family:"Comic Sans MS", cursive, sans-serif;
+    font: 14px/16px; /* Arial, Helvetica, sans-serif;*/
+}
+
+a.Close:hover { 
+    border-color: dimgray;  
+    background-color: chartreuse;
 }
 
 /*table settings*/

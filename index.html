@@ -9,51 +9,67 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!--    LEAFLET LIBRARY     -->
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
     <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
     
-    <!-- My external GeoJSON file - MAKE WITH QGIS AND GIVE A VAR DECLARATION -->
-<!--
-    <script src="IslesLagoon_single.geojson" type="text/javascript"></script>
-    <script src="IslesLagoon_multi.geojson" type="text/javascript"></script>
--->
-    
+<!--    JQUERY  (AJAX)  -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
+<!--    Awesomeplete Library (For Autocompleting text box)-->
     <link rel="stylesheet" href="js/libraries/awesomplete.css" />
     <script src="js/libraries/awesomplete.min.js" type="text/javascript"></script>
     
+<!--    Search Library for Leaflet  -->
     <link rel="stylesheet" href="js/libraries/leaflet-search.min.css" />
     <script src="js/libraries/leaflet-search.src.js"></script>
     
+<!--    Fuzzy Search Library (Used in conjunction with Leaftet Search)  -->
     <script src="js/libraries/fuse.js" type="text/javascript"></script>
     
+<!--    Spinner Library     -->
+    <script src="js/libraries/spin.min.js" type="text/javascript"></script>
+    
+<!--    Gradient Calculations   -->
+    <link rel="stylesheet" href="js/libraries/geostats.css" />
+    <script src="js/libraries/geostats.min.js" type="text/javascript"></script>
+    
     <link REL=StyleSheet HREF="style.css" TYPE="text/css" MEDIA=screen> 
-    <script type ='text/javascript' src='js/libraries/randColor.js'></script>
     
 </head>
 <body>    
 	<div id="map" style="style.css">
-        
     </div>
     
+    <div id="overlay" style = "style.css">
+        <div id="inner"></div>
+    </div>
+    <div id="help" style = "style.css">
+        <div id="innerHelp"></div>
+    </div>
+    <div id="loadingScreen" style = "style.css">
+        <div id="loadingTop"></div>
+        <div id="spinPanel"></div>
+        <div id="loadingBottom"></div>
+    </div>
+    
+    <script type ='text/javascript' src='js/libraries/randColor.js'></script>
     <script type ='text/javascript' src='js/dictionary.js'></script>
     <script type ='text/javascript' src='js/styles.js'></script>
     <script type ='text/javascript' src='js/icons.js'></script>
     
     <script type ='text/javascript' src='js/core/geom.js'></script>
     <script type ='text/javascript' src='js/core/CKtoGeoJSON.js'></script>
+    <script type ='text/javascript' src='js/core/loading.js'></script>
     
     <script type ='text/javascript' src='js/core/map.js'></script>
     <script type ='text/javascript' src='js/core/search.js'></script>
     <script type ='text/javascript' src='js/core/filter.js'></script>
     <script type ='text/javascript' src='js/core/color.js'></script>
-<!--    <script type ='text/javascript' src='js/baseLayer.js'></script>-->
     <script type ='text/javascript' src='js/core/moreInfo.js'></script>
+    
 
     <script type ='text/javascript' src='js/getData.js'></script>
-    <div id="overlay" style = "style.css">
-        <div id="inner"></div>
-    </div>
+    
 </body>
 </html>
