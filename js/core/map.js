@@ -243,8 +243,6 @@ map.on('locationerror', onLocationError);
 
 //**********************************************************************************************
 
-var helpWindow = document.createElement("DIV").innerHTML = '<iframe src="https://docs.google.com/document/d/11a5uMYyAtVFpasV2QbwML8ftwQgKn9n_pIhnUJoiBo8/pub?embedded=true"></iframe>';
-
 // Displays question mark and vpc logo
 var VPCinfo = L.control({position: "bottomleft"});
     
@@ -268,15 +266,13 @@ VPCinfo.onAdd = function (map) {
 };
 
 function showAbout(){
-    console.log("show");
     el = document.getElementById("help");
 	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-    document.getElementById("innerHelp").innerHTML = '<a onclick = "hideAbout()" class = "Xbutton">X</a>';
-    $(document.getElementById("innerHelp")).append(
-        '<center>'+
-        '</br></br></br><iframe src="https://docs.google.com/document/d/11a5uMYyAtVFpasV2QbwML8ftwQgKn9n_pIhnUJoiBo8/pub?embedded=true" style="height:1036px;width:calc(100% - 40px);"></iframe>' +
-        '</center>'
-    );
+    $(document.getElementById("innerHelp")).append('<div class="floatingX" onclick = "hideAbout()" ></div>');
+    document.getElementById("innerHelp").innerHTML = 
+        '<a id="helpX" onclick = "hideAbout()" class = "Xbutton">Close Window</a>'+
+        '<iframe id=helpContent src="https://docs.google.com/document/d/11a5uMYyAtVFpasV2QbwML8ftwQgKn9n_pIhnUJoiBo8/pub?embedded=true"></iframe>';
+
 }
 function hideAbout(){
     console.log("hide");
@@ -388,7 +384,11 @@ function getGroupCallback(options,customArgs,groupURL,groupMSG) {
                         var layer = findLayer(params.layerTag,key,params[key]);
                         console.log(layer);
                         if(layer){
-                            map.fitBounds(layer.getBounds());
+                            if(layer.getBounds)
+                                map.fitBounds(layer.getBounds());
+                            else if(layer.getLatLng){
+                                map.setView(layer.getLatLng(),25)
+                            }
                             return;
                         }
                     }

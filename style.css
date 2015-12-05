@@ -140,9 +140,11 @@ width: 10px;
 }
 
 #help div{
-    width: calc(100% - 100px);
-    max-width: 890px;
+
+    
     height: calc(100% - 100px);
+    width: calc(100% - 100px);
+    max-width:830px;
     float: center;
     margin: auto;
     top:0; bottom:0; left:0; right:0;
@@ -155,6 +157,18 @@ width: 10px;
     overflow: auto;
     z-index:150;
     position: absolute;
+}
+
+#helpContent{
+    width: 100%;
+    height:100%;
+}
+#helpX{
+    width: auto;
+    height:auto;
+    bottom: 60px;
+    right:calc(50% - 55px);
+    position:fixed;
 }
 
 /*Loading screen stuff*/
@@ -216,7 +230,7 @@ a.Xbutton{
     border-color: rgba(255,255,255,0.0);
     height: auto;
     float: right;
-    background:  rgba(255,255,255,0.0);
+    background: rgba(87, 87, 87, 1);
     box-shadow: 0 0 15px rgba(0,0,0,0.0);
     color: #e5e5e5;
     width:auto;
