@@ -81,7 +81,7 @@ var loadingScreen = {
 document.getElementById("loadingTop").innerHTML = "<b>Loading...</b>";
 $(document.getElementById("loadingBottom")).append(
     '<a onclick = "loadingScreen.hide()" class = "Close">' +
-    'Load in Background (Im Impatient)' +
+    'Load in Background' +
     '</a>'
 );
 

@@ -283,7 +283,7 @@ function createDropdown(object,options){
         if(object.length>0){
             for(var i = 0;i<object.length;i++){
                 var option = document.createElement("OPTION");
-                option.text = object[i];
+                option.text = dictionary(object[i]);
                 option.value = object[i];
                 dropdown.add(option);
             }
@@ -292,23 +292,21 @@ function createDropdown(object,options){
     else if(typeof object === 'object'){
         for(property in object){
             var option = document.createElement("OPTION");
-            option.text = property;
+            option.text = dictionary(property);
             option.value = property;
             dropdown.add(option);
         }
     }
     else{
         var option = document.createElement("OPTION");
-        option.text = property;
-        option.value = property;
+        option.text = dictionary(object);
+        option.value = object;
         dropdown.add(option);
     }
     
     dropdown.onmousedown = dropdown.ondblclick = L.DomEvent.stopPropagation;
     return dropdown;
 }
-
-
 
 function applyStyle(feature,style){
     for(property in style){
@@ -398,7 +396,6 @@ filter.getAllValues = function(e){
     }
     return vals;
 }
-
 
 map.addControl(filter);
 filter.minimize(true);
