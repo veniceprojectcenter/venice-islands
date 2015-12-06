@@ -212,15 +212,7 @@ function addOverlayInfo(id,num){
     // append a new div element to the more info window
     var info = getOverlayInfo(num);
     if(info!=''){
-        $(outer).append(
-         $('<div>')
-            //specify the class of the div
-            .addClass("moreInfo")
-            //tag that div by the key
-            .attr("id", key.replace(/ /g, "_"))
-            // fill in moreInfo stuff into the new div
-            .append(info)
-        );
+        $(outer).append(info);
     }   
 }
 
@@ -236,7 +228,13 @@ function getOverlayInfo(num){
                 });
             });
             if(targets.length>0){
-                output += featureCollections[key].groupOptions.moreInfo(targets,key);
+                output += $('<div>').append($('<div>')
+                    //specify the class of the div
+                    .addClass("moreInfo")
+                    //tag that div by the key
+                    .attr("id", key.replace(/ /g, "_"))
+                    // fill in moreInfo stuff into the new div
+                    .append(featureCollections[key].groupOptions.moreInfo(targets,key)).clone()).html();
             }
         }
     }
