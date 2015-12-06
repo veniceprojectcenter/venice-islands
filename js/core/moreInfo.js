@@ -60,7 +60,7 @@ function overlayMulti(islandLayer) {
 
     document.getElementById('inner').innerHTML=
         '<div id ="topBar">'+'<a class = "Xbutton" id = "Xbutton" onclick = "overlay()">X</a>'+
-        '<h2><center>' + ('Island Information') + '</center></h2></div>'
+        '<h2><center>' + ('Filter Results') + '</center></h2></div>'
         +' <br />';
     
     var nums = [];
