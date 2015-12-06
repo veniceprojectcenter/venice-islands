@@ -208,19 +208,28 @@ mapInfo.addTo(map);
 // set this to true to auto-zoom on your location
 map.locate({setView: false, maxZoom: 18, watch:true});
 
+markerFlag = false;
 // create a global var for the location layer - must be global so it can be toggled
 var locationLayer = L.layerGroup().addTo(map); 
+var locationMarker, locationRadius, locationGeoJSON;
 
 // function to excecute when the user's location is found
 function onLocationFound(e) {
+    console.log("added new marker");
+    // close old current location marker if it's outdated
+    if (markerFlag==true){
+        map.removeLayer(locationMarker);
+        map.removeLayer(locationRadius);
+    }
+    
     var radius = e.accuracy / 2;
     
     // Create a marker with a popup at the location 
-    var locationMarker =  L.marker(e.latlng);
+    locationMarker =  L.marker(e.latlng);
         //.bindPopup("You are within " + radius + " meters from this point").openPopup();
 
     // Create an additional circle showing the approximate radius
-    var locationRadius = L.circle(e.latlng, radius, {
+    locationRadius = L.circle(e.latlng, radius, {
         color: 'red',
         fillColor: '#f03',
         fillOpacity: 0.5 
@@ -229,9 +238,24 @@ function onLocationFound(e) {
     // add the marker and popup to the location layer
     locationLayer.addLayer(locationMarker);
     locationLayer.addLayer(locationRadius);
-    locationMarker.bindPopup("<center><b>You are here!</b><br>Within " + radius + " meters </center>");//.openPopup();
-    // make sure it stays on top of everything else
-    //locationLayer.bringToFront();
+    if (markerFlag == false) markerFlag = true;
+
+    locationGeoJSON = locationMarker.toGeoJSON();
+    var nearestIsles = queryIslands_COLLECTION(islandsCollection,locationGeoJSON);
+    
+//  locationMarker.bindPopup("<center><b>Nearest Features</b><br>Within " + radius + " meters </center>" + '</br>' + getOverlayInfo(nearestIsles));
+   
+    
+    console.log(nearestIsles);
+    locationMarker.on('click', function(){
+        var bodyString = getOverlayInfo(nearestIsles);
+        if(bodyString!='') overlayHTML('Nearest Features','<b><center> Island of ' + islandsCollection[nearestIsles[0]].properties.Nome_Isola +'</b></center><div class=moreInfo>'+ bodyString+'</div>');
+        else if(nearestIsles.length>0) overlayHTML('Nearest Features','<b><center>Island of ' +islandsCollection[nearestIsles[0]].properties.Nome_Isola + '</b></center></br>No additional features found');
+        else{
+            overlayHTML('Nearest Features','No features found');
+        }
+    });
+    
 }
 map.on('locationfound', onLocationFound);
 

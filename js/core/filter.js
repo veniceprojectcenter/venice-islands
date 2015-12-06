@@ -147,6 +147,9 @@ var FilterControl = L.Control.extend({
             applyButton.setAttribute("type", "button");
             applyButton.setAttribute("value","Apply");
             applyButton.onclick = this.onApply;
+            applyButton.ondblclick = function(){
+                
+            }
             this.div.appendChild(applyButton);
 
             var clearButton = document.createElement("INPUT");
@@ -155,6 +158,15 @@ var FilterControl = L.Control.extend({
             clearButton.setAttribute("value","Clear");
             clearButton.onclick = this.onClear;
             this.div.appendChild(clearButton);
+            
+            var infoButton = document.createElement("INPUT");
+            applyStyle(infoButton,FilterElement_style(infoButton));
+            infoButton.setAttribute("type", "button");
+            infoButton.setAttribute("value","Info");
+            infoButton.onclick = function(){
+                overlayMulti(islands_layer);
+            };
+            this.div.appendChild(infoButton);
         }
     },
     
@@ -366,6 +378,7 @@ filter.onApply = function(e){
     }
     
     refreshFilter();
+    searchControl.refresh();
 }
 //define onClear behavior
 filter.onClear = function(e){
@@ -378,6 +391,7 @@ filter.onClear = function(e){
     }
     refreshFilter();
     recolorIsles();
+    searchControl.refresh();
 }
 filter.getAllValues = function(e){
     var vals = [];

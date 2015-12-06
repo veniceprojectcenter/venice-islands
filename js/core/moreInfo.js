@@ -4,7 +4,12 @@
 
 function overlayOn(currentLayer){
     if(!overlayFlag){
-        overlay(currentLayer);
+        if(currentLayer._layers){
+            overlayMulti(currentLayer);
+        }
+        else{
+            overlay(currentLayer);
+        }
     }
 }
 function overlayOff(currentLayer){
@@ -20,6 +25,62 @@ function overlayOff(currentLayer){
 //  -to work with any layer (not just islands)?
 //  -translate fields
 
+function overlayHTML(HEAD,BODY) {
+	el = document.getElementById("overlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+    
+    // toggle the state of the function flag, this affects hilighting 
+    overlayFlag ^= true;
+
+    // if the info box is being turned off don't do any additional work
+    if(!overlayFlag){return;}
+
+    document.getElementById('inner').innerHTML = '<div id ="topBar">'+'<a class = "Xbutton" id = "Xbutton" onclick = "overlay()">X</a>'+
+        '<h2><center>' + (HEAD ? HEAD : '') + '</center></h2></div>'
+        +' <br />' + (BODY ? BODY : '');
+    
+    // function for getting rid of overlay when you click on the screen
+    // update later to remove only when clicking outside of 'overlay' div
+    $(document).ready(function() {
+        $('#overlay').on('dblclick', function(e) { 
+            overlayOff(islandLayer);
+        });
+    });
+};
+
+function overlayMulti(islandLayer) {
+	el = document.getElementById("overlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+    
+    // toggle the state of the function flag, this affects hilighting 
+    overlayFlag ^= true;
+
+    // if the info box is being turned off don't do any additional work
+    if(!overlayFlag){return;}
+
+    document.getElementById('inner').innerHTML=
+        '<div id ="topBar">'+'<a class = "Xbutton" id = "Xbutton" onclick = "overlay()">X</a>'+
+        '<h2><center>' + ('Island Information') + '</center></h2></div>'
+        +' <br />';
+    
+    var nums = [];
+    
+    islandLayer.eachLayer(function(layer){
+        nums.push(layer.feature.properties.Numero);
+    });
+    
+    // add in info on all overlays with information shown on selected isle
+    addOverlayInfo("inner",nums);
+    
+    // function for getting rid of overlay when you click on the screen
+    // update later to remove only when clicking outside of 'overlay' div
+    $(document).ready(function() {
+        $('#overlay').on('dblclick', function(e) { 
+            overlayOff(islandLayer);
+        });
+    });
+};
+
 // this function is called from the zoomToFeature() function
 function overlay(currentLayer) {
 	el = document.getElementById("overlay");
@@ -29,7 +90,7 @@ function overlay(currentLayer) {
     overlayFlag ^= true;
 
     // if the info box is being turned off don't do any additional work
-    if(!currentLayer){return;}
+    if(!overlayFlag){return;}
     
     // make life a little easier
     var properties = currentLayer.feature.properties;
@@ -143,26 +204,42 @@ function tabs(int_num){
 */
 
 function addOverlayInfo(id,num){
+    if(!(num.constructor === Array)){
+        num=[num];
+    }
     
+    var outer = document.getElementById(id);
+    // append a new div element to the more info window
+    var info = getOverlayInfo(num);
+    if(info!=''){
+        $(outer).append(
+         $('<div>')
+            //specify the class of the div
+            .addClass("moreInfo")
+            //tag that div by the key
+            .attr("id", key.replace(/ /g, "_"))
+            // fill in moreInfo stuff into the new div
+            .append(info)
+        );
+    }   
+}
+
+function getOverlayInfo(num){
+    var output = '';
     for(key in featureCollections){
         if(featureCollections[key].groupOptions && featureCollections[key].groupOptions.moreInfo){
             var targets = $.map(featureCollections[key]._layers, function(e){return e.feature.properties}).filter(function(target){
-                return $.inArray(num,target.islands)!=-1;
+                return target.islands.some(function(obj1){
+                    return num.some(function(obj2){
+                        return obj2 == obj1;
+                    });
+                });
             });
             if(targets.length>0){
-                var outer = document.getElementById(id);
-                // append a new div element to the more info window
-                $(outer).append(
-                     $('<div>')
-                        //specify the class of the div
-                        .addClass("moreInfo")
-                        //tag that div by the key
-                        .attr("id", key.replace(/ /g, "_"))
-                        // fill in moreInfo stuff into the new div
-                        .append(featureCollections[key].groupOptions.moreInfo(targets,key))
-                );
+                output += featureCollections[key].groupOptions.moreInfo(targets,key);
             }
         }
     }
+    return output;
 }
 

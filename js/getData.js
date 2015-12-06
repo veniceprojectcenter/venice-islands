@@ -169,7 +169,15 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",
 
 //------- Sewer Outlet Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets",generalInfo: function(target){
-    return printObject(target);
+    return printObject(target.data,function(str){
+        switch(str){
+            case 'HOLE_NUM':
+            case 'AREA':
+                return true;
+            default:
+                return false;
+        }
+    });
 },moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
@@ -184,14 +192,26 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{ta
 
 //------- Convent Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{generalInfo: function(target){
-    return printObject(target);
+    return printObject(target.data,function(str){
+        switch(str){
+            case 'Full Name':
+            case 'Current Use':
+                return true;
+            default:
+                return false;
+        }
+    });
 },moreInfo:function(targets,tag){
     var count=0;
     var output = '';
     targets.forEach(function(target){
-        output += 'About: ' + target.data["Historic Background"] + '</br>' +
-            'Current Use: ' + target.data["Curret Use"] + '</br>' +
-            'Founded in' + target.data["Year Founded"] + '</br>';
+        if(count>0){
+            output+='</br>';
+        }
+        output += 'Name: ' + target.data["Full Name"] + '</br>' +
+            'About: ' + target.data["Historic Background"] + '</br>' +
+            'Current Use: ' + target.data["Current Use"] + '</br>' +
+            'Founded in ' + target.data["Year Founded"] + '</br>';
         count++;
     });
     output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;

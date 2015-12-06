@@ -59,7 +59,8 @@ function CKtoGeoJSON(CKjson){
     Array.prototype.push.apply(geoJson.properties.islands,findIslands(geoJson.properties));
     
     if(geoJson.properties.islands.length === 0){
-        Array.prototype.push.apply(geoJson.properties.islands,queryIslands_LAYER(islands_layer,geoJson));
+        Array.prototype.push.apply(geoJson.properties.islands,queryIslands_COLLECTION(islandsCollection,geoJson));
+        //Array.prototype.push.apply(geoJson.properties.islands,queryIslands_LAYER(islands_layer,geoJson));
 //        if(singleLayer){
 //            Array.prototype.push.apply(geoJson.properties.islands,queryIslands_JSON(singleLayer,geoJson));
 //        }
@@ -99,6 +100,21 @@ function nearestIsland(islands_geoJson,point){
         }
     }
     return island;
+}
+
+function queryIslands_COLLECTION(islands_collection,obj_geoJson){
+    var output = new Array(0);
+    
+    for(property in islands_collection){
+        if(islands_collection.hasOwnProperty(property)){
+            if(queryIsland(islands_collection[property],obj_geoJson)){
+                if(output.indexOf(islands_collection[property].properties.Numero)<0){
+                    output.push(islands_collection[property].properties.Numero);
+                }
+            }
+        }
+    }
+    return output;
 }
 
 function queryIslands_JSON(islands_geoJson,obj_geoJson){
