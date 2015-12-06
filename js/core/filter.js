@@ -147,6 +147,9 @@ var FilterControl = L.Control.extend({
             applyButton.setAttribute("type", "button");
             applyButton.setAttribute("value","Apply");
             applyButton.onclick = this.onApply;
+            applyButton.ondblclick = function(){
+                
+            }
             this.div.appendChild(applyButton);
 
             var clearButton = document.createElement("INPUT");
@@ -155,6 +158,15 @@ var FilterControl = L.Control.extend({
             clearButton.setAttribute("value","Clear");
             clearButton.onclick = this.onClear;
             this.div.appendChild(clearButton);
+            
+            var infoButton = document.createElement("INPUT");
+            applyStyle(infoButton,FilterElement_style(infoButton));
+            infoButton.setAttribute("type", "button");
+            infoButton.setAttribute("value","Info");
+            infoButton.onclick = function(){
+                overlayMulti(islands_layer);
+            };
+            this.div.appendChild(infoButton);
         }
     },
     
@@ -283,7 +295,7 @@ function createDropdown(object,options){
         if(object.length>0){
             for(var i = 0;i<object.length;i++){
                 var option = document.createElement("OPTION");
-                option.text = object[i];
+                option.text = dictionary(object[i]);
                 option.value = object[i];
                 dropdown.add(option);
             }
@@ -292,23 +304,21 @@ function createDropdown(object,options){
     else if(typeof object === 'object'){
         for(property in object){
             var option = document.createElement("OPTION");
-            option.text = property;
+            option.text = dictionary(property);
             option.value = property;
             dropdown.add(option);
         }
     }
     else{
         var option = document.createElement("OPTION");
-        option.text = property;
-        option.value = property;
+        option.text = dictionary(object);
+        option.value = object;
         dropdown.add(option);
     }
     
     dropdown.onmousedown = dropdown.ondblclick = L.DomEvent.stopPropagation;
     return dropdown;
 }
-
-
 
 function applyStyle(feature,style){
     for(property in style){
@@ -368,6 +378,7 @@ filter.onApply = function(e){
     }
     
     refreshFilter();
+    searchControl.refresh();
 }
 //define onClear behavior
 filter.onClear = function(e){
@@ -380,6 +391,7 @@ filter.onClear = function(e){
     }
     refreshFilter();
     recolorIsles();
+    searchControl.refresh();
 }
 filter.getAllValues = function(e){
     var vals = [];
@@ -398,7 +410,6 @@ filter.getAllValues = function(e){
     }
     return vals;
 }
-
 
 map.addControl(filter);
 filter.minimize(true);

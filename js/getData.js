@@ -38,57 +38,100 @@ function getIslands(path,options){
             }
         }
         
+        var params = getUrlParameters();
+        
+        if(!params.layerTag || params.layerTag == 'islands'){
+            for(key in params){
+                if(params.hasOwnProperty(key)&&key!='layerTag'){
+                    var layer = findIslandLayer(key,params[key]);
+                    if(layer){
+                        map.fitBounds(layer.getBounds());
+                        return;
+                    }
+                }
+            }
+        }
+        
         searchControl.refresh();
         recolorIsles();
     });
 }
 
 //***********************************************************************************************
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//------- Island Layers --------//
 getIslands('IslesLagoon_single.geojson',{searchInclude: ['Nome_Isola','Numero','Codice']});
 getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero','Codice']};
 
-// ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
-//var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",moreInfo:function(targets){
+//------- Bridge Layers --------//
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",generalInfo: function(target){
+    return printObject(target.data,function(str){
+        switch(str){
+            case 'Nome_Ponte':
+            case 'Superficie':
+                return true;
+            default:
+                return false;
+        }
+    });
+},moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
     targets.forEach(function(target){
-        output += target.data.Nome_Ponte+'</br>'
+        output += '<a target="_blank" href=http://www.venipedia.org/wiki/index.php?title='+ encodeURIComponent(target.data.Nome_Ponte.replace(/ /g, "_")) + '>' + target.data.Nome_Ponte+'</a></br>';
         count++;
     });
-    output += '<b>Count:</b> '+count+'</br>';
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
-}},{style: standOut, onEachFeature:setupHighlight});
+}},{style: standOut});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals",moreInfo:function(targets){
+
+//------- Canal Layers --------//
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals",generalInfo: function(target){
+    return printObject(target.data,function(str){
+        switch(str){
+            case 'Nome_Rio':
+            case 'Superficie':
+                return true;
+            default:
+                return false;
+        }
+    });
+},moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
     targets.forEach(function(target){
-        output += target.data.Nome_Rio+'</br>'
+        output += '<a target="_blank" href=http://www.venipedia.org/wiki/index.php?title='+ encodeURIComponent(target.data.Nome_Rio.replace(/ /g, "_")) + '>' + target.data.Nome_Rio+'</a></br>';
         count++;
     });
-    output += '<b>Count:</b> '+count+'</br>';
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
 }},{onEachFeature:function(feature,layer){
-    setupHighlight(feature,layer);
     layer.bindPopup(
         '<b><center>' + feature.properties.data.Nome_Rio + '</center></b>'
     );
 }});
 
-//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
-getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",moreInfo:function(targets){
+//------- Belltower Layers --------//
+getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",generalInfo: function(target){
+    return printObject(target.data,function(str){
+        switch(str){
+            case 'NAME':
+                return true;
+            default:
+                return false;
+        }
+    });
+},moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
     targets.forEach(function(target){
         output += target.data.NAME+'</br>'
         count++;
     });
-    output += '<b>Count:</b> '+count+'</br>';
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
-}},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
+}},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: churchIcon}).bindPopup(
     "<b>" + feature.properties.data.NAME + "</b></br>" +
     "Code: " + feature.properties.data.CODE + "</br>" +
@@ -96,51 +139,91 @@ getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.jso
     );
 }});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap",moreInfo:function(targets){
+
+//------- Hotel Layers --------//
+getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap",generalInfo: function(target){
+    return printObject(target.data,function(str){
+        switch(str){
+            case 'name':
+            case 'beds':
+                return true;
+            default:
+                return false;
+        }
+    });
+},moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
+    var bedCount = 0;
     targets.forEach(function(target){
         count++;
+        bedCount += target.data.beds;
     });
-    output += '<b>Count:</b> '+count+'</br>';
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
+    output += '<b> Total Beds: </b>'+bedCount+'</br>';
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a hotel");
 }});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets",moreInfo:function(targets){
+
+//------- Sewer Outlet Layers --------//
+getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets",generalInfo: function(target){
+    return printObject(target.data,function(str){
+        switch(str){
+            case 'HOLE_NUM':
+            case 'AREA':
+                return true;
+            default:
+                return false;
+        }
+    });
+},moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
     targets.forEach(function(target){
         count++;
     });
-    output += '<b>Count:</b> '+count+'</br>';
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
-}},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
+}},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: sewerIcon}).bindPopup("outlet");
 }});
 
-// ~~~~~~~~ layers with just lat/long ~~~~~~~~~~~~~~~~~~~~~
-//getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels",{pointToLayer: function(feature,latlng){
-//    return new L.marker(latlng, {icon: churchIcon});
-//}});
-//getGroup("https://cityknowledge.firebaseio.com/groups/Bed%20&%20Bfast,%20Apartments.json","Bed and Breakfasts");
-
-// ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
-//getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json");
-getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{moreInfo:function(targets){
+//------- Convent Layers --------//
+getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{generalInfo: function(target){
+    return printObject(target.data,function(str){
+        switch(str){
+            case 'Full Name':
+            case 'Current Use':
+                return true;
+            default:
+                return false;
+        }
+    });
+},moreInfo:function(targets,tag){
+    var count=0;
     var output = '';
     targets.forEach(function(target){
-        output += 'About: ' + target.data["Historic Background"] + '</br>' +
-            'Current Use: ' + target.data["Curret Use"] + '</br>' +
-            'Founded in' + target.data["Year Founded"] + '</br>'
+        if(count>0){
+            output+='</br>';
+        }
+        output += 'Name: ' + target.data["Full Name"] + '</br>' +
+            'About: ' + target.data["Historic Background"] + '</br>' +
+            'Current Use: ' + target.data["Current Use"] + '</br>' +
+            'Founded in ' + target.data["Year Founded"] + '</br>';
+        count++;
     });
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
 }});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",moreInfo: function(targets){
+//------- WikiData Minor Lagoon Islands Layers --------//
+getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",generalInfo: function(target){
+    return printObject(target);
+},moreInfo: function(targets,tag){
     var output = '';
     targets.forEach(function(target){
         output+='<b>About: </b>'+ target.data.Blurb+'</br>' +
@@ -153,37 +236,54 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
             '<td>'+ 'Inhabited?' + '</td>' +
             '<td>'+ target.data.Inhabited + '</td>' +
         '</tr>' + '<tr>'+
-            '<td>'+ 'Type' + '</td>' +
-            '<td>'+ targets.data.Type + '</td>' +
-        '</tr>' + '<tr>'+
             '<td>'+ 'Usage' + '</td>' +
             '<td>'+ target.data.Usage + '</td>' +
         '</tr>' +
         '</table>'
     });
+    output = '<center><b>'+ dictionary(tag) +'</b></br></center>' + output;
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: vpcicon});
 }});
 
-// the above layer probably matches up with the images in
-//https://cityknowledge.firebaseio.com/groups/convent%20floor%20plans.json"
 
-getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{filter:function(obj){
+//------- Store Layers --------//
+getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{tag:'Stores',filter:function(obj){
     if(obj["2015"]) return true;
     
-},moreInfo: function(targets){
+},generalInfo: function(target){
+    return printObject(target);
+},moreInfo: function(targets,tag){
+// **************************************
+// !!!!!!!! THIS IS A TEST ONLY !!!!!!!! - I'm going to be modifying it 
+// further as I explore making a table-generation function, setting up titles, and overall styling
+// **************************************
     var output = '';
     var count = 0;
+    output ='<table border="1" style="width:100%">' +
+                    '<tr>' +
+                        '<th>Name</th>' +
+                        '<th>Address</th>' +
+                        '<th>Good Sold</th>' +
+                    '</tr>';
     targets.forEach(function(target){
-        output+=  'Name: ' + (target["2015"].name ? target["2015"].name : 'N/A') + '</br>' +
-                 'Location: ' + target["2015"].address_number 
-                 +' '+ target['2015'].address_street + 
-                 '</br>Good sold: ' + (target["2015"].nace_plus_descr ? target["2015"].nace_plus_descr : 'N/A')
-                + '</br>'+'</br>';
+        output +=
+        '<tr>'+
+            '<td>'+ (target["2015"].name ? target["2015"].name : 'N/A') + '</td>' +
+            '<td>'+ target["2015"].address_number 
+                 +' '+ target['2015'].address_street + '</td>' +
+            '<td>'+ (target["2015"].nace_plus_descr=='undefined' ? 'N/A': target["2015"].nace_plus_descr) + '</td>' +
+        '</tr>' ;        
+            
+//                'Name: ' + (target["2015"].name ? target["2015"].name : 'N/A') + '</br>' +
+//                 'Location: ' + target["2015"].address_number 
+//                 +' '+ target['2015'].address_street + 
+//                 '</br>Good sold: ' + (target["2015"].nace_plus_descr ? target["2015"].nace_plus_descr : 'N/A')
+//                + '</br>'+'</br>';
         count++;
     });
-    output = '<b>Total Number of Stores:</b> '+ count + '</br></br>' + output;
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: storeIcon}).bindPopup(

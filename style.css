@@ -72,30 +72,56 @@ html, body
     width:100%;
     height:100%;
     text-align:left;
-    z-index: 1000;
+    z-index: 10;
     background: rgba(0,0,0,0.2);
 }
 
 /*white box for text overlay*/
-#overlay div {
+#inner{
     width: 80%;
     max-width: 500px;
-    height: calc(100% - 150px);
+    height: calc(100% - 260px);
     margin: auto;
     float: center;
-    top:0; bottom:0; left:0; right:0;
+    top:120px;
+    left:0; 
+    right:0;
     text-align:left;
-    padding: 6px 8px;
+    padding-top:0px;
+    padding-bottom:0px;
+    max-height:100%;
+    padding-left:8px;
+    padding-right:8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
     background: white;
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    border-radius: 5px;
-    overflow: auto;
+    border-radius: 0px;
+    overflow:auto;
     position: absolute;
+    
+}
+/* Apply to all divs within inner, this lets you
+*   dynamically resize boxes with overlay info
+*   BE CAREFUL, this is applied to
+*   #topBar, .bottomBar, and .moreInfo
+*/
+#inner * {
+    max-height:40%;
+}
+
+#inner::-webkit-scrollbar {
+-webkit-appearance: none;
+width: 10px;
+}
+#inner::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
 
 #overlay::first-line { 
+    margin-top:20px;
     text-align:center;
 }
 
@@ -114,9 +140,11 @@ html, body
 }
 
 #help div{
-    width: calc(100% - 100px);
-    max-width: 890px;
+
+    
     height: calc(100% - 100px);
+    width: calc(100% - 100px);
+    max-width:830px;
     float: center;
     margin: auto;
     top:0; bottom:0; left:0; right:0;
@@ -129,6 +157,18 @@ html, body
     overflow: auto;
     z-index:150;
     position: absolute;
+}
+
+#helpContent{
+    width: 100%;
+    height:100%;
+}
+#helpX{
+    width: auto;
+    height:auto;
+    bottom: 60px;
+    right:calc(50% - 55px);
+    position:fixed;
 }
 
 /*Loading screen stuff*/
@@ -147,14 +187,13 @@ html, body
 
 #loadingTop{
     z-index:101;
-    font-family:"Comic Sans MS", cursive, sans-serif;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 70px;
     position: absolute;
     top: 10%;
     width: 100%;
     text-align: center;
     color: whitesmoke;
-    text-shadow: 2px 2px #000000;
 }
 
 #loadingBottom{
@@ -175,6 +214,7 @@ a.button {
     background-color: white;
     text-decoration: none;
     color: initial;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
 }
 
 a.button:hover { 
@@ -183,18 +223,20 @@ a.button:hover {
 }
 
 /*button (so you can use href with a button set from script)*/
-a.Xbutton {
+
+a.Xbutton{
     border: 4px solid;
     border-radius: 15px;
     border-color: rgba(255,255,255,0.0);
     height: auto;
     float: right;
-    background:  rgba(255,255,255,0.0);
-    color: initial;
+    background: rgba(87, 87, 87, 1);
+    box-shadow: 0 0 15px rgba(0,0,0,0.0);
+    color: #e5e5e5;
+    width:auto;
 }
-
-a.Xbutton:hover { 
-    border-color: powderblue;  
+a.Xbutton:hover{
+    border-color: powderblue; 
 }
 
 /*Button for closing out of the "loading..." screen*/
@@ -207,7 +249,7 @@ a.Close {
     background: snow;
     color: initial;
     padding: 4px;
-    font-family:"Comic Sans MS", cursive, sans-serif;
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font: 14px/16px; /* Arial, Helvetica, sans-serif;*/
 }
 
@@ -217,15 +259,124 @@ a.Close:hover {
 }
 
 /*table settings*/
+
 td {
   width: 4rem;
   height: 2rem;
   border: 1px solid #ccc;
   text-align: center;
   background: lightblue;
-  border-color: white;
 }
 th {
   background: lightblue;
   border-color: white;
+}
+
+/*id styling for title bar of more info window*/
+#topBar	{ 
+    color: rgb(250, 250, 250);
+    position: fixed;
+    width: 80%;
+    max-width: 500px;
+    top:70px;
+    margin-left:-8px;
+    padding-right:16px;
+    background: rgba(87, 87, 87, 1);
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    z-index:100;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+}
+
+/*class styling for bottom bar of more info window*/
+.bottomBar{
+    color: rgb(250, 250, 250);
+    position: fixed;
+    width: 80%;
+    max-width: 500px;
+    bottom:60px;
+    margin-left:-8px;
+    padding-right:0px;
+    background: rgb(255, 255, 255);
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    z-index:100;
+    border-bottom-left-radius:0px;
+    border-bottom-right-radius:0px;
+    height:60px;
+    padding:6px 8px;
+    padding-bottom:15px;
+    border:10px;
+    border-bottom-left-radius:5px;
+    border-bottom-right-radius:5px;
+        
+}
+
+/* Default class for overlay info box
+*       this can be overridden using specific ids 
+*       for the various overlays, such as #Bell_Towers{}
+*/
+.moreInfo{
+    padding:10px;
+    margin-top:10px;
+    margin-bottom:5px;
+    top:0;bottom:0;left:0;right:0;
+    /*max-height:inherit; /*was 250px*/
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    border-radius: 5px;
+    overflow: auto;
+    height:auto;
+    background-color:whitesmoke;
+}
+.moreInfo::-webkit-scrollbar {
+-webkit-appearance: none;
+width: 10px;
+}
+.moreInfo::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+
+/*box containing venipedia and cartography links*/
+#inner2{
+    
+}
+
+/*venipedia link setup*/
+#venipediaImage {
+    position:absolute;
+    width:18%;
+    max-width:250px;
+    padding:80px 70px;
+    background-image: url('image/venipedia.png');
+    background-size:80px 70px;
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+    
+}
+#venipediaImage:hover {
+    padding:80px 70px;
+    background-image: url('image/venipedia2.png');
+    background-size:80px 70px;
+    background-repeat: no-repeat;
+    
+}
+
+/*cartography link setup*/
+#cartographyImage{
+    position:inherit;
+    padding:80px 70px;
+    background-image: url('image/hMap.png');
+    background-size:80px 70px;
+    background-repeat: no-repeat;
+    background-position: 100% 0px;
+    
+}
+#cartographyImage:hover{
+    padding:80px 70px;
+    background-image: url('image/hMap2.png');
+    background-size:80px 70px;
+    background-repeat: no-repeat;
+    
 }

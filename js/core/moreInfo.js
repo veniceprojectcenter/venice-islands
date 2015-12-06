@@ -4,7 +4,12 @@
 
 function overlayOn(currentLayer){
     if(!overlayFlag){
-        overlay(currentLayer);
+        if(currentLayer._layers){
+            overlayMulti(currentLayer);
+        }
+        else{
+            overlay(currentLayer);
+        }
     }
 }
 function overlayOff(currentLayer){
@@ -20,6 +25,62 @@ function overlayOff(currentLayer){
 //  -to work with any layer (not just islands)?
 //  -translate fields
 
+function overlayHTML(HEAD,BODY) {
+	el = document.getElementById("overlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+    
+    // toggle the state of the function flag, this affects hilighting 
+    overlayFlag ^= true;
+
+    // if the info box is being turned off don't do any additional work
+    if(!overlayFlag){return;}
+
+    document.getElementById('inner').innerHTML = '<div id ="topBar">'+'<a class = "Xbutton" id = "Xbutton" onclick = "overlay()">X</a>'+
+        '<h2><center>' + (HEAD ? HEAD : '') + '</center></h2></div>'
+        +' <br />' + (BODY ? BODY : '');
+    
+    // function for getting rid of overlay when you click on the screen
+    // update later to remove only when clicking outside of 'overlay' div
+    $(document).ready(function() {
+        $('#overlay').on('dblclick', function(e) { 
+            overlayOff(islandLayer);
+        });
+    });
+};
+
+function overlayMulti(islandLayer) {
+	el = document.getElementById("overlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+    
+    // toggle the state of the function flag, this affects hilighting 
+    overlayFlag ^= true;
+
+    // if the info box is being turned off don't do any additional work
+    if(!overlayFlag){return;}
+
+    document.getElementById('inner').innerHTML=
+        '<div id ="topBar">'+'<a class = "Xbutton" id = "Xbutton" onclick = "overlay()">X</a>'+
+        '<h2><center>' + ('Island Information') + '</center></h2></div>'
+        +' <br />';
+    
+    var nums = [];
+    
+    islandLayer.eachLayer(function(layer){
+        nums.push(layer.feature.properties.Numero);
+    });
+    
+    // add in info on all overlays with information shown on selected isle
+    addOverlayInfo("inner",nums);
+    
+    // function for getting rid of overlay when you click on the screen
+    // update later to remove only when clicking outside of 'overlay' div
+    $(document).ready(function() {
+        $('#overlay').on('dblclick', function(e) { 
+            overlayOff(islandLayer);
+        });
+    });
+};
+
 // this function is called from the zoomToFeature() function
 function overlay(currentLayer) {
 	el = document.getElementById("overlay");
@@ -28,53 +89,36 @@ function overlay(currentLayer) {
     // toggle the state of the function flag, this affects hilighting 
     overlayFlag ^= true;
 
-//    currentLayer.setStyle({
-//        fillColor: '#FEB24C',
-//        weight: 0,
-//        opacity: 1,
-//        color: 'white',
-//        dashArray: '3',
-//        fillOpacity: 1.0
-//    });
-    
     // if the info box is being turned off don't do any additional work
-    if(!currentLayer){return;}
+    if(!overlayFlag){return;}
     
     // make life a little easier
     var properties = currentLayer.feature.properties;
-    // print out whatever info you want to the 'inner' div of the 'overlay' div of index.html
-    
-    // currently have an issue with the scroll bar appearing on the outer div containing the map
-    // instead of the info window
-    document.getElementById("inner").innerHTML= '<a onclick = "overlay()" class = "Xbutton">X</a> <b><center>Island Information</center></b>'
+
+    document.getElementById('inner').innerHTML=
+        '<div id ="topBar">'+'<a class = "Xbutton" id = "Xbutton" onclick = "overlay()">X</a>'+
+        '<h2><center>' + (properties.Nome_Isola ? properties.Nome_Isola : 'Island Information') + '</center></h2></div>'
         +' <br />';
-//        + (properties ?
-//        '<b>' + 'Name: ' + properties.Nome_Isola + '</b><br />' 
-//        + 'Codice: ' + properties.Codice + '</b><br />'
-//        + 'Island Number: ' + properties.Insula_Num + '</b><br />'
-//        + '2011 Census Tract Number: ' + properties.Numero + '</b><br />'
-//        + 'Total Population: ' + properties.sum_pop_11 + '</b><br />' 
-//        + '<b><br />Overlays: </b>' + layerController._layers
-//        :''); 
-//   
+    
+    // add in info on the base geoJSON layers
     makeHTMLinfo(properties,"inner","JSON");
    
+    // add in info on all overlays with information shown on selected isle
     addOverlayInfo("inner",properties.Numero);
     
-    
-    // Add in the venipedia and cartography buttons
-    $(document.getElementById("inner")).append('<br /> <br /><a href="" id="venipedia"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
-         + '<a id="historical" href="" target="_blank" class="button">View on a historical map</a>');
+    // add in the bottom bar
+    $(document.getElementById("inner")).append('<div id="inner2" class="bottomBar">');
+    // populate it with the venipedia and cartography links
+    $(document.getElementById("inner2")).append('<a href="" id="venipedia"  target="_blank">'+ '<div id="venipediaImage"></div></a>' + '<a href="" id="cartography" target="_blank">'+ '<div id="cartographyImage"></div></a>');
     
     // generate correct venipedia link for associated island
     var link = "http://www.venipedia.org/wiki/index.php?title=Island_of_" + encodeURIComponent(properties.Nome_Isola.replace(/ /g, "_")); 
     document.getElementById("venipedia").href = link;
     
     // now generate the cartography app link
-    // link should be cartography.veniceprojectcenter.org/#?feature="Island%20of%20Blah"
-    link = 'http://cartography.veniceprojectcenter.org/index.html?feature=' +
+    link = 'http://cartography.veniceprojectcenter.org/index.html?map=debarbari&layer=island&feature=' +
         encodeURIComponent('Island of '+properties.Nome_Isola);
-    document.getElementById("historical").href = link;
+    document.getElementById("cartography").href = link;
     
     // function for getting rid of overlay when you click on the screen
     // update later to remove only when clicking outside of 'overlay' div
@@ -83,24 +127,7 @@ function overlay(currentLayer) {
             overlayOff(currentLayer);
         });
     });
-    
-    var myimgobj = document.images["jsbutton"];
-    
 };
-
-//supporting functions for venipedia button
-//http://www.javascript-coder.com/button/javascript-button-p1.phtml
-function changeImage()
-{
-    document.images["jsbutton"].src= "image/venipedia2.png";
-    return true;
-}
-
-function changeImageBack()
-{
-    document.images["jsbutton"].src = "image/venipedia.png";
-    return true;
-}
 
 function makeHTMLinfo(props,id,type)
 {
@@ -117,35 +144,44 @@ function makeHTMLinfo(props,id,type)
     }
 }
 
-function printObject(props,depth)
+function printObject(obj,filter,path)
 {
-    depth = depth || 0;
+    path = path || [];
     var output = '';
 
-    if(!props){
-        return  props + '<br />';
+    if(!obj){
+        if(!filter || path.some(filter)){
+            output +=  obj + '<br />';
+        }
+        return output;
     }
     
-    if(props.constructor === Array){
+    if(obj.constructor === Array){
         output += "["
-        if(props.length>0){
-            output+=props[0];
-            for(var i = 1;i<props.length;i++){
-                output += ', '+props[i];
+        if(obj.length>0){
+            output+=obj[0];
+            for(var i = 1;i<obj.length;i++){
+                output += ', '+obj[i];
             }
         }
         output += ']<br />';
     }
-    else if(typeof props === 'object'){
-        //output+= tabs(depth) + '<b>'+property + '</b>: ';
-        for(property in props){
-            output += tabs(depth) + '<b>' + dictionary(property) + ':</b> '+printObject(props[property],depth+1);
+    else if(typeof obj === 'object'){
+        for(var property in obj){
+            var result = printObject(obj[property],filter,path.concat([property]));
+            if(!filter || filter (property) || typeof obj[property] == 'object' || path.some(filter)){
+                if(result != '') {
+                    output += tabs(path.length) + '<b>' + dictionary(property) + ':</b> '+result;
+                }
+            }
+        }
+        if(path.length>0 && output != ''){
+            output = '<br />' + output;
         }
     }
     else{
-        output += props + '<br />';
+        output += obj + '<br />';
     }
-    
     return output;
 }
 
@@ -168,54 +204,42 @@ function tabs(int_num){
 */
 
 function addOverlayInfo(id,num){
+    if(!(num.constructor === Array)){
+        num=[num];
+    }
     
+    var outer = document.getElementById(id);
+    // append a new div element to the more info window
+    var info = getOverlayInfo(num);
+    if(info!=''){
+        $(outer).append(
+         $('<div>')
+            //specify the class of the div
+            .addClass("moreInfo")
+            //tag that div by the key
+            .attr("id", key.replace(/ /g, "_"))
+            // fill in moreInfo stuff into the new div
+            .append(info)
+        );
+    }   
+}
+
+function getOverlayInfo(num){
+    var output = '';
     for(key in featureCollections){
         if(featureCollections[key].groupOptions && featureCollections[key].groupOptions.moreInfo){
             var targets = $.map(featureCollections[key]._layers, function(e){return e.feature.properties}).filter(function(target){
-                return $.inArray(num,target.islands)!=-1;
+                return target.islands.some(function(obj1){
+                    return num.some(function(obj2){
+                        return obj2 == obj1;
+                    });
+                });
             });
             if(targets.length>0){
-                $(document.getElementById(id)).append('<br><b><center>'+ key+'</center></b></br>');
-                $(document.getElementById(id)).append(featureCollections[key].groupOptions.moreInfo(targets));
+                output += featureCollections[key].groupOptions.moreInfo(targets,key);
             }
         }
     }
+    return output;
 }
 
-//function addOverlayInfo(id,num){
-//
-//    // figure out what overlays are turned on/being used
-//    layers = Object.keys(featureCollections);
-//    var tempData = [];
-//    for(var k =0; k<layers.length; k++){
-//        // if the layer has objects, keep goung 
-//        if (!$.isEmptyObject(featureCollections[layers[k]]._layers)){
-//            // pull out what's tagged by isle
-//            var target = $.map(featureCollections[layers[k]]._layers, function(e){return e.feature.properties});
-//            var arrayLength = target.length;
-//            var first = true; // flag for displaying layers[k] (category title)
-//            for (var i = 0; i < arrayLength; i++) {  
-//                if($.inArray(num,target[i].islands)!=-1) {
-//// **************** TO DO *********************************************************                  
-//                    // everything below gone except for making a new div for the overlay set,
-//                    // pulling in your html (specified in the object)
-//                    // possibly keep the following for future stuff:
-//                    //      making the title (next 4 lines) 
-//                    //      adding all objects on the isle to tempData[];
-//// ******^^^^^^***** TO DO ********************************************************* 
-//                    if(first) {
-//                        $(document.getElementById(id)).append('<br><b><center>'+ layers[k]+'</center></b></br>');
-//                        first = false;
-//                    }
-//                    // otherwise add the function returns to the div that I already created
-//                    // for that object layer (deals w/ case of more than 1 obj per layer per isle)
-//                    
-//                    
-//                    tempData.push(target[i]); // populate with all objs on the isle for debugging
-//                }
-//            }
-//        }
-//        
-//    }
-//    console.log(tempData);
-//}

@@ -3,8 +3,16 @@ function dictionary(original){
         case 'Numero':              return "Island Number";
         case 'Nome_Isola':          return "Island Name";
         case 'Superficie':          return "Area";
-        case 'sum_pop_11':          return "2011 Population Total";
-        case 'pop_den_11':          return "2011 Population Density";
+        case 'sum_pop_11':          return "Population Total";
+        case 'pop_den_11':          return "Population Density";
+        case 'Codice':              return "ID Code";
+        case 'Codice_Ses':          return "Sestiere";
+        case 'Tipo':                return "Type";
+        case 'Categoria':           return "Category";
+        case 'Perimetro':           return "Perimeter";
+        case 'Gndr_Ratio':          return "Genter Ratio (M:F)";
+        case 'Avg_Age':             return "Average Age";
+        case 'Insula_Num':          return "Insula Number";
         default:                    return original;
     }
 }
