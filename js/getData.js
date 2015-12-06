@@ -227,7 +227,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
     var output = '';
     targets.forEach(function(target){
         output+='<b>About: </b>'+ target.data.Blurb+'</br>' +
-        '<a href="" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
+        '<a href="'+ target.data.Bibliography +'" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
         '<table border="1" style="width:100%">'+
         '<tr>'+
             '<td>'+ 'Handicap Accessible' + '</td>' +
