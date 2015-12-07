@@ -1,7 +1,17 @@
 // create a legend for the colors
 // Create grades using http://colorbrewer2.org/
 var legend = L.control({position: 'bottomright'});
-var legend_div = L.DomUtil.create('div', 'info legend');
+var legend_div = L.DomUtil.create('div', 'legend');
+ // Disable dragging when user's cursor enters the element
+legend_div.addEventListener('mouseover', function () {
+    map.dragging.disable();
+    map.scrollWheelZoom.disable();
+});
+// Re-enable dragging when user's cursor leaves the element
+legend_div.addEventListener('mouseout', function () {
+    map.dragging.enable();
+    map.scrollWheelZoom.enable();
+});
 
 // color gradients
 //var gradientColors = [
@@ -26,19 +36,29 @@ legend.grades = [];
 
 legend.onAdd = function (map) {
 
-    legend.setThresholds(legend.grades);
+    //legend.setThresholds(legend.grades);
 
     return legend_div;  
 };
 
 legend.setThresholds = function(thresholds){
     legend.grades = thresholds;
-    legend_div.innerHTML='';
+    legend_div.innerHTML='<center><b>'+dictionary(colorControl.appliedField)+'</b></center>';
     
     for (var i = 0; i < thresholds.length && i < gradientColors[gradientColorIndex].length; i++) {
         legend_div.innerHTML +=
             '<i style="background:' + gradientColors[gradientColorIndex][i] + '"></i> ' +
             thresholds[i] + (thresholds[i + 1] != undefined ? '&ndash;' + thresholds[i + 1] + '<br>' : '+');
+    }
+}
+
+legend.setValues = function(objColors){
+    legend_div.innerHTML='<center><b>'+dictionary(colorControl.appliedField)+'</b></center>';
+    
+    for (var i = 0; i < objColors.length; i++) {
+        legend_div.innerHTML +=
+            '<i style="background:' + objColors[i].color + '"></i> ' +
+            objColors[i].id + (objColors[i + 1] != undefined ? '<br>' : '');
     }
 }
 
@@ -68,7 +88,7 @@ var ColorControl = L.Control.extend({
         this.object = object;
         this.thresholds = legend.grades;
         this.modifyDiv = modifyDiv;
-        this.div = this.div || L.DomUtil.create('div', 'info legend');
+        this.div = this.div || L.DomUtil.create('div', 'info');
         
         //on click, stop propogation
         this.div.onclick = function(e){
@@ -189,13 +209,13 @@ var ColorControl = L.Control.extend({
             return 'rgba(0,0,0,0)';
         } else{
             if(fxns=="random"){
-               return applyRandomColors(colorControl.selectedFields()[0],value);
+               return applyRandomColors(this.appliedField,value);
             } 
             if(fxns=="gradient"){
                 // add a gradient
                 this.setGradient;
                 // and update the value of tempFields
-                tempField = colorControl.selectedFields()[0];
+                tempField = this.appliedField;
                 if(value!=undefined){
                     for (var i = Math.min(this.thresholds.length,gradientColors[gradientColorIndex].length)-1; i >= 0; i--) {
                         if(value >= this.thresholds[i]){
@@ -203,7 +223,7 @@ var ColorControl = L.Control.extend({
                         }
                     }
                     // if the field isn't a number, apply random colorization to it
-                    return applyRandomColors(colorControl.selectedFields()[0],value);
+                    return applyRandomColors(this.appliedField,value);
                 }
             }
             // if NOT opaqueflag and field is empty, color clear
@@ -416,19 +436,34 @@ colorControl.getAllValues = function(e){
 
 colorControl.onApply = function(e){
     opaqueFlag=false;
-    if(colorControl.selectedFunctions()[0]!="random"){
-        colorControl.setGradient();
-        if (gradientFlag == 0) legend.addTo(map);
-        else if(legend._map) {
-            legend.removeFrom(map);
-        }
-    }
-    else if(legend._map){
-        // change the gradient coloration
+    if(legend._map){
         legend.removeFrom(map);
     }
-    objectColors = []; // discard random colors that have been saved
-    recolorIsles();
+    if(colorControl.selectedFunctions()[0]!="random"){
+        colorControl.setGradient();
+        objectColors = []; // discard random colors that have been saved
+        recolorIsles();
+        
+        if (gradientFlag == 1){
+            objectColors=objectColors.sort(function(obj1,obj2){
+                return obj1.id-obj2.id;
+            });
+            legend.setValues(objectColors);
+        }
+        else{
+            legend.setThresholds(legend.grades);
+        }
+    }
+    else{
+        objectColors = []; // discard random colors that have been saved
+        recolorIsles();
+        objectColors=objectColors.sort(function(obj1,obj2){
+            return obj1.id-obj2.id;
+        });
+        legend.setValues(objectColors);
+        legend.addTo(map);
+    }
+    legend.addTo(map);
 }
 colorControl.onClear = function(e){
     opaqueFlag=true;

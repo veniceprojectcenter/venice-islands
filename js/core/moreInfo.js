@@ -42,8 +42,13 @@ function overlayHTML(HEAD,BODY) {
     // function for getting rid of overlay when you click on the screen
     // update later to remove only when clicking outside of 'overlay' div
     $(document).ready(function() {
-        $('#overlay').on('dblclick', function(e) { 
-            overlayOff(islandLayer);
+//        $('#overlay').on('dblclick', function(e) { 
+//            overlayOff(islandLayer);
+//        });
+        $('#overlay').on('click', function(event) {
+          if (!$(event.target).closest('#inner').length) {
+            overlayOff(currentLayer);
+          }
         });
     });
 };
@@ -75,8 +80,13 @@ function overlayMulti(islandLayer) {
     // function for getting rid of overlay when you click on the screen
     // update later to remove only when clicking outside of 'overlay' div
     $(document).ready(function() {
-        $('#overlay').on('dblclick', function(e) { 
-            overlayOff(islandLayer);
+//        $('#overlay').on('dblclick', function(e) { 
+//            overlayOff(islandLayer);
+//        });
+        $('#overlay').on('click', function(event) {
+          if (!$(event.target).closest('#inner').length) {
+            overlayOff(currentLayer);
+          }
         });
     });
 };
@@ -101,7 +111,9 @@ function overlay(currentLayer) {
         +' <br />';
     
     // add in info on the base geoJSON layers
-    makeHTMLinfo(properties,"inner","JSON");
+    $(document.getElementById("inner")).append('<div id = "layerInfo" class=moreInfo></div>');
+    $(document.getElementById("layerInfo")).append("<b><center>Base Layer Data</center></b>");
+    makeHTMLinfo(properties,"layerInfo","JSON");
    
     // add in info on all overlays with information shown on selected isle
     addOverlayInfo("inner",properties.Numero);
@@ -123,8 +135,13 @@ function overlay(currentLayer) {
     // function for getting rid of overlay when you click on the screen
     // update later to remove only when clicking outside of 'overlay' div
     $(document).ready(function() {
-        $('#overlay').on('dblclick', function(e) { 
+//        $('#overlay').on('dblclick', function(e) { 
+//            overlayOff(currentLayer);
+//        });
+        $('#overlay').on('click', function(event) {
+          if (!$(event.target).closest('#inner').length) {
             overlayOff(currentLayer);
+          }
         });
     });
 };

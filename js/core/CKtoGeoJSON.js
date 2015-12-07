@@ -42,7 +42,7 @@ function CKtoGeoJSON(CKjson){
     //If there is no shape and no data, look through the object for Lat/Long fields.
     else{
         geoJson.geometry["type"]="Point";
-        geoJson.geometry["coordinates"] = findLonLat(CKjson.data);
+        geoJson.geometry["coordinates"] = findLonLat(CKjson);
         //Then add all fields to properties
         for(property in CKjson){
             if(Object.prototype.hasOwnProperty.call(CKjson, property)){

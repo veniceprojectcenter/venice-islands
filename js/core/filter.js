@@ -18,7 +18,7 @@ var FilterControl = L.Control.extend({
         this.save = {};
         
         this.modifyDiv = modifyDiv;
-        this.div = this.div || L.DomUtil.create('div', 'info legend');
+        this.div = this.div || L.DomUtil.create('div', 'info');
         
         //on click, stop propogation
         this.div.onclick = function(e){
@@ -43,7 +43,7 @@ var FilterControl = L.Control.extend({
     },
 
     onAdd: function (map) {
-        this.div = this.div || L.DomUtil.create('div', 'info legend');
+        this.div = this.div || L.DomUtil.create('div', 'info');
         
         this.setObject(this.object);
         

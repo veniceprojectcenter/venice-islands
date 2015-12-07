@@ -34,7 +34,7 @@ function getIslands(path,options){
                 searchControl.includeKeys(options.searchInclude);
             }
             if(options.searchExclude){
-                searchControl.searchExclude(options.searchExclude);
+                searchControl.excludeKeys(options.searchExclude);
             }
         }
         
@@ -61,7 +61,7 @@ function getIslands(path,options){
 
 //------- Island Layers --------//
 getIslands('IslesLagoon_single.geojson',{searchInclude: ['Nome_Isola','Numero','Codice']});
-getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero','Codice']};
+getIslands('IslesLagoon_multi.geojson',{searchInclude: ['Nome_Isola','Numero','Codice']});
 
 //------- Bridge Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",generalInfo: function(target){
@@ -221,9 +221,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{gen
 }});
 
 //------- WikiData Minor Lagoon Islands Layers --------//
-getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",generalInfo: function(target){
-    return printObject(target);
-},moreInfo: function(targets,tag){
+getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",preLoad: true,toggle:false,moreInfo: function(targets,tag){
     var output = '';
     targets.forEach(function(target){
         output+='<b>About: </b>'+ target.data.Blurb+'</br>' +
@@ -244,7 +242,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
     output = '<center><b>'+ dictionary(tag) +'</b></br></center>' + output;
     return output;
 }},{pointToLayer: function(feature,latlng){
-    return new L.marker(latlng, {icon: vpcicon});
+    return new L.marker(latlng, {icon: noIcon});
 }});
 
 
