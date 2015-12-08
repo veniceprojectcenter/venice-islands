@@ -2,7 +2,6 @@
 //Looks for geometry (points or polygons) --> feature.geometry
 //Original Object --> feature.properties
 function CKtoGeoJSON(CKjson){
-    
     //Create an empty GeoJSON object to be filled with data and returned
     var geoJson={
         type: "Feature",
@@ -52,7 +51,12 @@ function CKtoGeoJSON(CKjson){
             }
         }
     }
-        
+    
+    return geoJson;
+}
+
+function attachIslands(geoJson){
+    
     //add list of all islands associated with this oject to the properties
     geoJson.properties.islands = new Array(0);
     //search through properties of the newly created GeoJSON object to find Islands.
@@ -60,13 +64,6 @@ function CKtoGeoJSON(CKjson){
     
     if(geoJson.properties.islands.length === 0){
         Array.prototype.push.apply(geoJson.properties.islands,queryIslands_COLLECTION(islandsCollection,geoJson));
-        //Array.prototype.push.apply(geoJson.properties.islands,queryIslands_LAYER(islands_layer,geoJson));
-//        if(singleLayer){
-//            Array.prototype.push.apply(geoJson.properties.islands,queryIslands_JSON(singleLayer,geoJson));
-//        }
-//        if(multiLayer){
-//            Array.prototype.push.apply(geoJson.properties.islands,queryIslands_JSON(multiLayer,geoJson));
-//        }
     }
     
     //TODO: ??? IF STILLL no islands, find nearest Island/Islands??? (nearest to each point if a polygon)

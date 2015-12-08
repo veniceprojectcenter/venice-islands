@@ -293,4 +293,3 @@ function getOverlayInfo(num){
     }
     return output;
 }
-

@@ -121,7 +121,7 @@ width: 10px;
 *   #topBar, .bottomBar, and .moreInfo
 */
 #inner * {
-    max-height:40%;
+    max-height:60%;
 }
 
 #inner::-webkit-scrollbar {
@@ -228,11 +228,12 @@ width: 10px;
 
 /*button (so you can use href with a button set from script)*/
 a.button {
+    margin:10px;
     border: 5px solid;
     border-radius: 5px;
     border-color: white;
     height: auto;
-    float: right;
+    float:right;
     background-color: white;
     text-decoration: none;
     color: initial;
@@ -358,6 +359,8 @@ width: 10px;
     background-color: rgba(0,0,0,.5);
     -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
+
+
 /*Gis layer info box in more info window
 *   overrides properties set by #inner * {} 
 */
@@ -406,4 +409,16 @@ width: 10px;
     background-size:80px 70px;
     background-repeat: no-repeat;
     
+}
+/*Embedded Image stuff*/
+#embeddedImage{
+    border:2px solid black;
+    height:150px;
+    position:inherit;
+    float: left;
+    margin-right:10px;
+    margin-bottom:10px;
+    
+}
+#embeddedImage:hover{
 }
