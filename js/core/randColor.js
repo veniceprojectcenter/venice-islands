@@ -25,9 +25,7 @@ function applyRandomColors(field,value){
         // otherwise, make a new color for it 
         var temp = {id:value,color:generateRandomColors()};
         objectColors.push(temp);
-        objectColors=objectColors.sort(function(obj1,obj2){
-            return obj1.id-obj2.id;
-        });
+        
         return temp.color;
     }
 }

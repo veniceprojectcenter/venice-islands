@@ -6,6 +6,9 @@ var searchControl = L.control.search({
     layer: searchLayers,
     propertyName: 'Nome_Isola',
     circleLocation: false,
+//    collapse: false,
+//    collapsed: false,
+//    autoCollapse: false,
     filterData: function(text, records) {
         var jsons = searchControl.fuse.search(text),
             ret = {}, key;
@@ -128,3 +131,4 @@ searchControl.refresh();
 
 searchControl.addTo(map);
 searchControl._container.style.clear = 'none';
+searchControl._container.style.zIndex = 1010;

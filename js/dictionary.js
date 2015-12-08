@@ -13,6 +13,7 @@ function dictionary(original){
         case 'Gndr_Ratio':          return "Genter Ratio (M:F)";
         case 'Avg_Age':             return "Average Age";
         case 'Insula_Num':          return "Insula Number";
+        case 'Access_Han':          return "Handicap Access";
         default:                    return original;
     }
 }

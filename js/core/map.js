@@ -142,15 +142,9 @@ var islands_layer = L.geoJson(null, {
     onEachFeature: function(feature,layer){
         saveFeature(islands_layer,feature,layer);
         setupHighlight(feature,layer);
-        setupGeneralInfo(printObject(feature.properties,function(str){
-            switch(str){
-                case 'Nome_Isola':
-                case 'Numero':
-                    return true;
-                default:
-                    return false;
-            }
-        }),feature,layer);
+        if(islands_layer.islandOptions.generalInfo){
+            setupGeneralInfo(islands_layer.islandOptions.generalInfo(feature.properties),feature,layer);
+        }
     }
     //onEachFeature: partial(saveAndHighlight,islands_layer)
 }).addTo(map);

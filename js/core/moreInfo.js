@@ -47,7 +47,7 @@ function overlayHTML(HEAD,BODY) {
 //        });
         $('#overlay').on('click', function(event) {
           if (!$(event.target).closest('#inner').length) {
-            overlayOff(currentLayer);
+            overlayOff();
           }
         });
     });
@@ -68,6 +68,18 @@ function overlayMulti(islandLayer) {
         '<h2><center>' + ('Filter Results') + '</center></h2></div>'
         +' <br />';
     
+//    var array = $.map(islandsCollection, function(o){return {name: o.properties.Nome_Isola, visible: o.visible};}); //collection to array
+//    array = $.grep(array, function(e){ return e.visible == true; }); //search array for visible ones
+//    array = $.map(array, function(o){return o.name;});// convert back to array of strings
+//    if (array.length>0){
+//        if(islandLayer.islandOptions && islandLayer.islandOptions.moreInfo){
+//            var str = islandLayer.islandOptions.moreInfo(targets);
+//
+//            str = '<div class=moreInfo>'+ str + '</div>';
+//            $(document.getElementById("inner")).append(str);
+//        }
+//    }
+    
     var nums = [];
     
     islandLayer.eachLayer(function(layer){
@@ -85,7 +97,7 @@ function overlayMulti(islandLayer) {
 //        });
         $('#overlay').on('click', function(event) {
           if (!$(event.target).closest('#inner').length) {
-            overlayOff(currentLayer);
+            overlayOff(islandLayer);
           }
         });
     });
@@ -111,9 +123,13 @@ function overlay(currentLayer) {
         +' <br />';
     
     // add in info on the base geoJSON layers
-    $(document.getElementById("inner")).append('<div id = "layerInfo" class=moreInfo></div>');
-    $(document.getElementById("layerInfo")).append("<b><center>Base Layer Data</center></b>");
-    makeHTMLinfo(properties,"layerInfo","JSON");
+//    $(document.getElementById("inner")).append('<div id = "layerInfo" class=moreInfo></div>');
+//    $(document.getElementById("layerInfo")).append("<b><center>Base Layer Data</center></b>");
+//    if(islands_layer.islandOptions.moreInfo){
+//        $(document.getElementById("layerInfo")).append(islands_layer.moreInfo([properties]));
+//    }
+    
+    //makeHTMLinfo(properties,"layerInfo","JSON");
    
     // add in info on all overlays with information shown on selected isle
     addOverlayInfo("inner",properties.Numero);
@@ -235,6 +251,26 @@ function addOverlayInfo(id,num){
 
 function getOverlayInfo(num){
     var output = '';
+    if(!(num.constructor === Array)){
+        num=[num];
+    }
+    if(islands_layer.islandOptions && islands_layer.islandOptions.moreInfo){
+        var targets = $.map(islands_layer._layers, function(e){return e.feature.properties}).filter(function(target){
+            return num.some(function(obj1){
+                return obj1 == target.Numero;
+            });
+        });
+        //console.log(targets);
+        if(targets.length>0){
+            output += $('<div>').append($('<div>')
+                    //specify the class of the div
+                    .addClass("moreInfo")
+                    //tag that div by the key
+                    .attr("id", "baseLayer")//key.replace(/ /g, "_"))
+                    // fill in moreInfo stuff into the new div
+                    .append(islands_layer.islandOptions.moreInfo(targets)).clone()).html();
+        }
+    }
     for(key in featureCollections){
         if(featureCollections[key].groupOptions && featureCollections[key].groupOptions.moreInfo){
             var targets = $.map(featureCollections[key]._layers, function(e){return e.feature.properties}).filter(function(target){

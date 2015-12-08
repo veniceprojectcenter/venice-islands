@@ -44,6 +44,10 @@ var loadingScreen = {
         }
         return set;
     },
+    updateQueue: function(newQueue){
+        this.queue = newQueue || this.queue;
+        document.getElementById("loadingTop").innerHTML = "<b>Loading "+this.queue+" features</b>";
+    },
     
     show: function(){
         this.visibile(true);
@@ -57,6 +61,7 @@ var loadingScreen = {
             this.show();
         }
         this.queue++;
+        this.updateQueue();
     },
     remove: function(){
         this.queue--;
@@ -64,6 +69,7 @@ var loadingScreen = {
             this.hide();
         }
         this.queue = this.queue<0 ? 0 : this.queue;
+        this.updateQueue();
     }
 }
 

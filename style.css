@@ -157,7 +157,7 @@ width: 10px;
 #help div{
     height: calc(100% - 100px);
     width: calc(100% - 100px);
-    max-width:830px;
+    max-width:835px;
     float: center;
     margin: auto;
     top:0; bottom:0; left:0; right:0;
@@ -361,9 +361,9 @@ width: 10px;
 /*Gis layer info box in more info window
 *   overrides properties set by #inner * {} 
 */
-#layerInfo{
-    height:230px;
-    max-height:230px;
+#baseLayer{
+    height:240px;
+    max-height:240px;
 }
 /*box containing venipedia and cartography links*/
 #inner2{

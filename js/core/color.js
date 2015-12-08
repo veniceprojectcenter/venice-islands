@@ -13,6 +13,17 @@ legend_div.addEventListener('mouseout', function () {
     map.scrollWheelZoom.enable();
 });
 
+legend.minimize = function(bool){
+    if(bool!=undefined){
+        legend.minimized=bool;
+        legend_div.innerHTML = legend.minimized ? legend.miniHtml : legend.fullHtml;
+    }
+}
+
+legend.minimized = false;
+legend.fullHtml;
+legend.miniHtml;
+
 // color gradients
 //var gradientColors = [
 //    ['#edf8fb','#b3cde3','#8c96c6','#8856a7','#810f7c'],
@@ -41,25 +52,33 @@ legend.onAdd = function (map) {
     return legend_div;  
 };
 
+legend_div.onclick = function(e){
+    legend.minimize(!legend.minimized);
+}
+
 legend.setThresholds = function(thresholds){
     legend.grades = thresholds;
-    legend_div.innerHTML='<center><b>'+dictionary(colorControl.appliedField)+'</b></center>';
+    legend.miniHtml='<center><b>'+dictionary(colorControl.appliedField)+'</b></center>';
     
+    legend.fullHtml = legend.miniHtml;
     for (var i = 0; i < thresholds.length && i < gradientColors[gradientColorIndex].length; i++) {
-        legend_div.innerHTML +=
+        legend.fullHtml +=
             '<i style="background:' + gradientColors[gradientColorIndex][i] + '"></i> ' +
             thresholds[i] + (thresholds[i + 1] != undefined ? '&ndash;' + thresholds[i + 1] + '<br>' : '+');
     }
+    
+    legend.minimize(legend.minimized);
 }
 
 legend.setValues = function(objColors){
-    legend_div.innerHTML='<center><b>'+dictionary(colorControl.appliedField)+'</b></center>';
-    
+    legend.miniHtml='<center><b>'+dictionary(colorControl.appliedField)+'</b></center>';
+    legend.fullHtml = legend.miniHtml;
     for (var i = 0; i < objColors.length; i++) {
-        legend_div.innerHTML +=
+        legend.fullHtml +=
             '<i style="background:' + objColors[i].color + '"></i> ' +
             objColors[i].id + (objColors[i + 1] != undefined ? '<br>' : '');
     }
+    legend.minimize(legend.minimized);
 }
 
 // used to sort an array from lowest-highest
