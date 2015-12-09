@@ -17,6 +17,10 @@ legend.minimize = function(bool){
     if(bool!=undefined){
         legend.minimized=bool;
         legend_div.innerHTML = legend.minimized ? legend.miniHtml : legend.fullHtml;
+        if(bool){
+            map.dragging.enable();
+            map.scrollWheelZoom.enable();
+        }
     }
 }
 
