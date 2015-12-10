@@ -202,13 +202,15 @@ function nearestIslands(island_features,obj_geoJson){
             });
         });
     }
+    var seen = {};
     return islands.filter(function(number,index,array){
-        return array.indexOf(number) === index;
+        return seen[number] ? false : (seen[number]=true);
     });
 }
 
 //Return list of all Island ID numbers an object is in/intersects
 function queryIslands(island_features,obj_geoJson,useNearest){
+    var seen = {};
     return useNearest ? nearestIslands(island_features,obj_geoJson) : 
         island_features.filter(function(island){
             //keep islands that intersect
@@ -218,7 +220,8 @@ function queryIslands(island_features,obj_geoJson,useNearest){
             return island.properties.Numero;
         }).filter(function(number,index,array){
             //remove duplicates
-            return array.indexOf(number) == index;
+            return seen[number] ? false : (seen[number]=true);
+            //return array.indexOf(number) == index;
         });
 }
 

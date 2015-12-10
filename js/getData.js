@@ -391,8 +391,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
     getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{generalInfo: function(target){
         return printObject(target.data,function(str){
             switch(str){
-                case 'Full Name':
-                case 'Current Use':
+                case 'Page Title':
                     return true;
                 default:
                     return false;
@@ -400,21 +399,16 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
         });
     },moreInfo:function(targets,tag){
         var output = '';
-        var first = true;
         targets.forEach(function(target){
-            if(!first){
-                output+='</br>';
-            }
-            first=false;
-            output += 'Name: ' + target.data["Full Name"] + '</br>' +
-                'About: ' + target.data["Historic Background"] + '</br>' +
-                'Current Use: ' + target.data["Current Use"] + '</br>' +
-                'Founded in ' + target.data["Year Founded"] + '</br>';
+            output +=
+                (target.data["Page Title"] ? '<a target="_blank" href=http://www.venipedia.org/wiki/index.php?title='+ encodeURIComponent(target.data["Page Title"].replace(/ /g, "_")) + '>' + target.data["Page Title"]+'</a></br>':'') + 
+                (target.data["Historic Background"] ? 'About: ' + target.data["Historic Background"] + '</br>':'') +
+                (target.data["Current Use"] ? 'Current Use: ' + target.data["Current Use"] + '</br>':'');
         });
         output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
         return output;
     }},{pointToLayer: function(feature,latlng){
-        return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
+        return new L.marker(latlng, {icon: conventIcon}).bindPopup("Convent");
     }});
 
 
