@@ -13,7 +13,7 @@ function dist2(v, w) { return sqr(v.x - w.x) + sqr(v.y - w.y); }
 //w     : point (point being compared)
 function distToSegmentSquared(p, v, w) {
     var l2 = dist2(v, w);
-    if (l2 == 0) return dist2(p, v);
+    if (l2 === 0) return dist2(p, v);
     var t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
     if (t < 0) return dist2(p, v);
     if (t > 1) return dist2(p, w);
@@ -24,12 +24,12 @@ function distToSegmentSquared(p, v, w) {
 }
 function distToSegment(p, v, w) { return Math.sqrt(distToSegmentSquared(p, v, w)); }
 
-function distToPolySquared(poly, point) { 
+function distToPolySquared(poly, point) {
     var l = poly.length-1; 
-    var min = null;
+    var min = undefined;
     for (var i = 0; i < l ; i++) {
-        var d2 = distToSegmentSquared(poly[i],poly[i+1],point);
-        if(min){
+        var d2 = distToSegmentSquared(point,poly[i],poly[i+1]);
+        if(min!==undefined){
             if(d2<min){
                 min=d2;
             }
@@ -38,8 +38,24 @@ function distToPolySquared(poly, point) {
             min=d2;
         }
     }
+    return min;
 }
-function distToPoly(poly, point){ return Math.sqrt(distToPolySquared(poly,point)); }
+function distToPoly(poly, point){ 
+    var l = poly.length-1; 
+    var min = undefined;
+    for (var i = 0; i < l ; i++) {
+        var d2 = distToSegment(poly[i],poly[i+1],point);
+        if(min!=undefined){
+            if(d2<min){
+                min=d2;
+            }
+        }
+        else{
+            min=d2;
+        }
+    }
+    return min; 
+}
 
 // From http://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function
 

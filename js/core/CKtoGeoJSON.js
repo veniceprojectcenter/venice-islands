@@ -55,15 +55,18 @@ function CKtoGeoJSON(CKjson){
     return geoJson;
 }
 
-function attachIslands(geoJson){
+//************************
+//Spatial Query Functions
+//************************
+
+function attachIslands(geoJson,useNearest){
     
     //add list of all islands associated with this oject to the properties
-    geoJson.properties.islands = new Array(0);
+    geoJson.properties.islands = [];
     //search through properties of the newly created GeoJSON object to find Islands.
     Array.prototype.push.apply(geoJson.properties.islands,findIslands(geoJson.properties));
-    
     if(geoJson.properties.islands.length === 0){
-        Array.prototype.push.apply(geoJson.properties.islands,queryIslands_COLLECTION(islandsCollection,geoJson));
+        Array.prototype.push.apply(geoJson.properties.islands,queryIslands_COLLECTION(islandsCollection,geoJson,useNearest));
     }
     
     //TODO: ??? IF STILLL no islands, find nearest Island/Islands??? (nearest to each point if a polygon)
@@ -75,79 +78,170 @@ function attachIslands(geoJson){
     return geoJson;
 }
 
-function nearestIsland(islands_geoJson,point){
-    var min = null, island;
-    for(var i=0;i<islands_geoJson.features.length;i++){
-        var islandGeom = islands_geoJson.features[i].geometry;
+//Return the number of the island closest to any point in an object
+function nearestIsland(island_features,obj_geoJson){
+    var min = undefined;
+    var island;
+    var objGeom = obj_geoJson.geometry || obj_geoJson;
+    for(var i=0,iLen=island_features.length;i<iLen;i++){
+        var islandGeom = island_features[i].geometry;
         if(islandGeom.type === "Polygon"){
-            var dist = distToPolySquared(coordsToPoly(islandGeom.coordinates),coordsToPoint(point));
-            if(!min || dist<min){
-                min=dist;
-                island = islands_geoJson.features[i].properties.Numero;
+            if(objGeom.type === "Point"){
+                var dist = distToPolySquared(coordsToPoly(islandGeom.coordinates),coordsToPoint(objGeom.coordinates));
+                if((min===undefined) || dist<min){
+                    min=dist;
+                    island = island_features[i].properties.Numero;
+                }
+            }
+            else if(objGeom.type === "MultiPoint"){
+                objGeom.coordinates.forEach(function(point){
+                    var dist = distToPolySquared(coordsToPoly(islandGeom.coordinates),coordsToPoint(point));
+                    if((min===undefined) || dist<min){
+                        min=dist;
+                        island = island_features[i].properties.Numero;
+                    }
+                });
+            }
+            else if(objGeom.type === "Polygon"){
+                objGeom.coordinates.forEach(function(linearRing){
+                    linearRing.forEach(function(point){
+                        var dist = distToPolySquared(coordsToPoly(islandGeom.coordinates),coordsToPoint(point));
+                        if((min===undefined) || dist<min){
+                            min=dist;
+                            island = island_features[i].properties.Numero;
+                        }
+                    });
+                });
+            }
+            else if(objGeom.type === "MultiPolygon"){
+                objGeom.coordinates.forEach(function(polygon){
+                    polygon.forEach(function(linearRing){
+                        linearRing.forEach(function(point){
+                            var dist = distToPolySquared(coordsToPoly(islandGeom.coordinates),coordsToPoint(point));
+                            if((min===undefined) || dist<min){
+                                min=dist;
+                                island = island_features[i].properties.Numero;
+                            }
+                        });
+                    });
+                });
             }
         }
         else if(islandGeom.type === "MultiPolygon"){
-            for(var n = 0; n<island.coordinates.length;n++){
-                var dist = distToPolySquared(coordsToPoly(islandGeom.coordinates[n]),coordsToPoint(point));
-                if(!min || dist<min){
-                    min=dist;
-                    island = islands_geoJson.features[i].properties.Numero;
+            islandGeom.coordinates.forEach(function(islandPoly){
+                if(objGeom.type === "Point"){
+                    var dist = distToPolySquared(coordsToPoly(islandPoly),coordsToPoint(objGeom.coordinates));
+                    if((min===undefined) || dist<min){
+                        min=dist;
+                        island = island_features[i].properties.Numero;
+                    }
                 }
-            }
+                else if(objGeom.type === "MultiPoint"){
+                    objGeom.coordinates.forEach(function(point){
+                        var dist = distToPolySquared(coordsToPoly(islandPoly),coordsToPoint(point));
+                        if((min===undefined) || dist<min){
+                            min=dist;
+                            island = island_features[i].properties.Numero;
+                        }
+                    });
+                }
+                else if(objGeom.type === "Polygon"){
+                    objGeom.coordinates.forEach(function(linearRing){
+                        linearRing.forEach(function(point){
+                            var dist = distToPolySquared(coordsToPoly(islandPoly),coordsToPoint(point));
+                            if((min===undefined) || dist<min){
+                                min=dist;
+                                island = island_features[i].properties.Numero;
+                            }
+                        });
+                    });
+                }
+                else if(objGeom.type === "MultiPolygon"){
+                    objGeom.coordinates.forEach(function(polygon){
+                        polygon.forEach(function(linearRing){
+                            linearRing.forEach(function(point){
+                                var dist = distToPolySquared(coordsToPoly(islandPoly),coordsToPoint(point));
+                                if((min===undefined) || dist<min){
+                                    min=dist;
+                                    island = island_features[i].properties.Numero;
+                                }
+                            });
+                        });
+                    });
+                }
+            });
         }
     }
     return island;
 }
+//Return the numbers of the islands closest to each point in an object
+function nearestIslands(island_features,obj_geoJson){
+    var islands = [];
+    var objGeom = obj_geoJson.geometry || obj_geoJson;
+    if(objGeom.type === "Point"){
+        islands.push(nearestIsland(island_features,objGeom));
+    }
+    else if(objGeom.type === "MultiPoint"){
+        objGeom.coordinates.forEach(function(point){
+            islands.push(nearestIsland(island_features,{type:"Point",coordinates:point}));
+        });
+    }
+    else if(objGeom.type === "Polygon"){
+        objGeom.coordinates.forEach(function(linearRing){
+            linearRing.forEach(function(point){
+                islands.push(nearestIsland(island_features,{type:"Point",coordinates:point}));
+            });
+        });
+    }
+    else if(objGeom.type === "MultiPolygon"){
+        objGeom.coordinates.forEach(function(polygon){
+            polygon.forEach(function(linearRing){
+                linearRing.forEach(function(point){
+                    islands.push(nearestIsland(island_features,{type:"Point",coordinates:point}));
+                });
+            });
+        });
+    }
+    return islands.filter(function(number,index,array){
+        return array.indexOf(number) === index;
+    });
+}
 
-function queryIslands_COLLECTION(islands_collection,obj_geoJson){
+//Return list of all Island ID numbers an object is in/intersects
+function queryIslands(island_features,obj_geoJson,useNearest){
+    return useNearest ? nearestIslands(island_features,obj_geoJson) : 
+        island_features.filter(function(island){
+            //keep islands that intersect
+            return queryIsland(island,obj_geoJson);
+        }).map(function(island){
+            //convert to number
+            return island.properties.Numero;
+        }).filter(function(number,index,array){
+            //remove duplicates
+            return array.indexOf(number) == index;
+        });
+}
+
+function queryIslands_COLLECTION(islands_collection,obj_geoJson,useNearest){
     var output = new Array(0);
     
     for(property in islands_collection){
         if(islands_collection.hasOwnProperty(property)){
-            if(queryIsland(islands_collection[property],obj_geoJson)){
-                if(output.indexOf(islands_collection[property].properties.Numero)<0){
-                    output.push(islands_collection[property].properties.Numero);
-                }
-            }
+            output.push(islands_collection[property]);
         }
     }
-    return output;
+    return queryIslands(output,obj_geoJson,useNearest);
+}
+function queryIslands_JSON(islands_geoJson,obj_geoJson,useNearest){
+    return queryIslands(islands_geoJson.features,obj_geoJson,useNearest);
+}
+function queryIslands_LAYER(islands_geoLayer,obj_geoJson,useNearest){
+    return queryIslands(islands_geoLayer._layers.map(function(layer){
+        return layer.feature;
+    }),obj_geoJson,useNearest);
 }
 
-function queryIslands_JSON(islands_geoJson,obj_geoJson){
-    var output = new Array(0);
-    
-    for(var i=0;i<islands_geoJson.features.length;i++){
-        if(queryIsland(islands_geoJson.features[i],obj_geoJson)){
-            if(output.indexOf(islands_geoJson.features[i].properties.Numero)<0){
-                output.push(islands_geoJson.features[i].properties.Numero);
-            }
-        }
-    }
-    return output;
-}
-
-function queryIslands_LAYER(islands_geoLayer,obj_geoJson){
-    var output = new Array(0);
-    
-    islands_geoLayer.eachLayer(function(layer){
-        if(queryIsland(layer.feature,obj_geoJson)){
-            if(output.indexOf(layer.feature.properties.Numero)<0){
-                output.push(layer.feature.properties.Numero);
-            }
-        }
-    });
-    
-//    for(var i=0;i<islands_geoJson.features.length;i++){
-//        if(queryIsland(islands_geoJson.features[i],obj_geoJson)){
-//            if(output.indexOf(islands_geoJson.features[i].properties.Numero)<0){
-//                output.push(islands_geoJson.features[i].properties.Numero);
-//            }
-//        }
-//    }
-    return output;
-}
-
+//Check if a single object is in/overlaps a single island
 function queryIsland(island_geoJson,obj_geoJson){
     var islandGeom = island_geoJson.geometry || islands_geoJson;
     var objGeom = obj_geoJson.geometry || obj_geoJson;
@@ -157,86 +251,51 @@ function queryIsland(island_geoJson,obj_geoJson){
             return pointInPoly(coordsToPoint(objGeom.coordinates),coordsToPoly(islandGeom.coordinates));
         }
         else if(objGeom.type === "MultiPoint"){
-            for(var i=0;i<objGeom.coordinates.length;i++){
-                if(pointInPoly(coordsToPoint(objGeom.coordinates[i]),coordsToPoly(islandGeom.coordinates))){
-                    return true;
-                }
-            }
-            return false;
+            return objGeom.coordinates.some(function(point){
+                return pointInPoly(coordsToPoint(point),coordsToPoly(islandGeom.coordinates));
+            });
         }
         else if(objGeom.type === "Polygon"){
             return polyInterset(coordsToPoly(objGeom.coordinates),coordsToPoly(islandGeom.coordinates));
         }
         else if(objGeom.type === "MultiPolygon"){
-            for(var i=0;i<objGeom.coordinates.length;i++){
-                if(polyInterset(coordsToPoly(objGeom.coordinates[i]),coordsToPoly(islandGeom.coordinates))){
-                    return true;
-                }
-            }
-            return false;
+            return objGeom.coordinates.some(function(polygon){
+                return polyInterset(coordsToPoly(polygon),coordsToPoly(islandGeom.coordinates));
+            });
         }
     }
     else if(islandGeom.type === "MultiPolygon"){
         if(objGeom.type === "Point"){
-            for(var i=0;i<islandGeom.coordinates.length;i++){
-                if(pointInPoly(coordsToPoint(objGeom.coordinates),coordsToPoly(islandGeom.coordinates[i]))){
-                    return true;
-                }
-            }
+            return islandGeom.coordinates.some(function(islandPoly){
+                return pointInPoly(coordsToPoint(objGeom.coordinates),coordsToPoly(islandPoly));
+            });
         }
         else if(objGeom.type === "MultiPoint"){
-            for(var i=0;i<islandGeom.coordinates.length;i++){
-                for(var i2=0;i2<objGeom.coordinates.length;i2++){
-                    if(pointInPoly(coordsToPoint(objGeom.coordinates[i2]),coordsToPoly(islandGeom.coordinates[i]))){
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return islandGeom.coordinates.some(function(islandPoly){
+                return objGeom.coordinates.some(function(point){
+                    return pointInPoly(coordsToPoint(point),coordsToPoly(islandPoly));
+                });
+            });
         }
         else if(objGeom.type === "Polygon"){
-            for(var i=0;i<islandGeom.coordinates.length;i++){
-                if(polyInterset(coordsToPoly(objGeom.coordinates),coordsToPoly(islandGeom.coordinates[i]))){
-                    return true;
-                }
-            }
+            return islandGeom.coordinates.some(function(islandPoly){
+                return polyInterset(coordsToPoly(objGeom.coordinates),coordsToPoly(islandPoly));
+            });
         }
         else if(objGeom.type === "MultiPolygon"){
-            for(var i=0;i<islandGeom.coordinates.length;i++){
-                for(var i2=0;i2<objGeom.coordinates.length;i2++){
-                    if(polyInterset(coordsToPoly(objGeom.coordinates[i2]),coordsToPoly(islandGeom.coordinates[i]))){
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return islandGeom.coordinates.some(function(islandPoly){
+                return objGeom.coordinates.some(function(polygon){
+                    return polyInterset(coordsToPoly(polygon),coordsToPoly(islandPoly));
+                });
+            });
         }
     }
     return false
 }
     
-function coordsToPoint(coordinates){
-    if(coordinates.x && coordinates. y){
-        return coordinates;
-    }
-    return {
-        x: coordinates[0],
-        y: coordinates[1]
-    }
-}
-function coordsToPoly(coordinates){
-    var output = new Array(0);
-    
-    if(coordinates.length>1){
-        for(var i=0;i<coordinates.length;i++){
-            output.push(coordsToPoint(coordinates[i]));
-        }
-    }
-    else if(coordinates.length == 1){
-        return coordsToPoly(coordinates[0]);
-    }
-    return output;
-}
+//************************
+//Object Query Functions
+//************************
 
 function findIslands(obj){
     var output = new Array(0);
@@ -303,6 +362,33 @@ function findLonLat(obj){
 //    if(lon && lat && parseFloat(lon) && parseFloat(lat))
 //        return [parseFloat(lon),parseFloat(lat)];
     return[lon,lat];
+}
+
+//************************
+//Helper Functions
+//************************
+
+function coordsToPoint(coordinates){
+    if(coordinates.x && coordinates. y){
+        return coordinates;
+    }
+    return {
+        x: coordinates[0],
+        y: coordinates[1]
+    }
+}
+function coordsToPoly(coordinates){
+    var output = new Array(0);
+    
+    if(coordinates.length>1){
+        for(var i=0;i<coordinates.length;i++){
+            output.push(coordsToPoint(coordinates[i]));
+        }
+    }
+    else if(coordinates.length == 1){
+        return coordsToPoly(coordinates[0]);
+    }
+    return output;
 }
     
 function isInt(value) {

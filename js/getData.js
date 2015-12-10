@@ -5,7 +5,9 @@
 //customArgs = SEE http://leafletjs.com/reference.html#geojson-options
 function getGroup(URL,groupOptions,customArgs){
     //$.getJSON(URL,partial(getGroupCallback,tag,customArgs,URL));
-    $.getJSON(URL,function(msg){getGroupCallback(groupOptions,customArgs,URL,msg);});
+    $.getJSON(URL,function(msg){
+        if(!msg) return;
+        getGroupCallback(groupOptions,customArgs,URL,msg);});
 }
 
 function setIslandOptions(islandOptions){
@@ -75,7 +77,10 @@ function getIslands(path,islandOptions){
     $.ajax({
         dataType: "json",
         url: path,
-        success: addIslands,
+        success: function(msg){
+            if(!msg) return;
+            addIslands(msg);
+        },
         complete: function(){
             loadingScreen.remove();
             if(loadingScreen.queue==0)  onAllIslandsLoaded();
@@ -134,6 +139,7 @@ function getIslandsGroup(path,islandOptions){
         dataType: "json",
         url: path,
         success: function(msg){
+            if(!msg) return;
             for(property in msg.members){
                 if(msg.members.hasOwnProperty(property)){
                     var newURL = "https://"+ path.split("/")[2]+"/data/" + msg.members[property] + ".json";
@@ -251,10 +257,34 @@ function onAllIslandsLoaded(){
     }});
 
     //------- Belltower Layers --------//
-    getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",generalInfo: function(target){
+//getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",generalInfo: function(target){
+//    return printObject(target.data,function(str){
+//            switch(str){
+//                    case 'NAME':
+//                     return true;
+//                default:
+//                    return false;
+//            }
+//    });
+//    },moreInfo:function(targets,tag){
+//        var output = '';
+//        targets.forEach(function(target){
+//            output += target.data.NAME+'</br>'
+//            });
+//        output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
+//        return output;
+//    }},{pointToLayer: function(feature,latlng){
+//        return new L.marker(latlng, {icon: churchIcon}).bindPopup(
+//        "<b>" + feature.properties.data.NAME + "</b></br>" +
+//        "Code: " + feature.properties.data.CODE + "</br>" +
+//        "Date Recorded: " + feature.properties.birth_certificate.dor + "</br>"
+//        );
+//    }});
+    
+getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Final.json",{tag:"Bell Towers",useNearest:true,generalInfo: function(target){
         return printObject(target.data,function(str){
             switch(str){
-                case 'NAME':
+                case 'Page name':
                     return true;
                 default:
                     return false;
@@ -263,15 +293,16 @@ function onAllIslandsLoaded(){
     },moreInfo:function(targets,tag){
         var output = '';
         targets.forEach(function(target){
-            output += target.data.NAME+'</br>'
+            output+= '<a target="_blank" href=http://www.venipedia.org/wiki/index.php?title='+ encodeURIComponent(target.data["Page name"].replace(/ /g, "_")) + '>' + target.data["Page name"]+'</a></br>' +
+                (target.data["Decoration description"]!="Null" ? "Decorations: " + target.data["Decoration description"] + '</br>':'');
         });
         output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
         return output;
     }},{pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: churchIcon}).bindPopup(
-        "<b>" + feature.properties.data.NAME + "</b></br>" +
-        "Code: " + feature.properties.data.CODE + "</br>" +
-        "Date Recorded: " + feature.properties.birth_certificate.dor + "</br>"
+        "<b>" + feature.properties.data["Common name"] + "</b></br>" +
+        "Tower ID: " + feature.properties.data["Bell Tower ID"] + "</br>" +
+        "Tower Height: " + feature.properties.data["Bell Tower ID"] + "</br>"
         );
     }});
 
@@ -296,10 +327,11 @@ function onAllIslandsLoaded(){
         output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
         output += '<b> Total Beds: </b>'+bedCount+'</br>';
         return output;
-    }},{pointToLayer: function(feature,latlng){
+    }},{style: hotelStyle,pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a hotel");
     }});
 
+    
 
 //------- Wiki Data Islands --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{tag:"Wiki Data",preLoad: true,toggle:false,moreInfo: function(targets,tag){

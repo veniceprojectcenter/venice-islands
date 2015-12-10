@@ -125,12 +125,12 @@ function ColorElement_style(feature){
 }
 
 // this section contains an alternate styling for polygons
-function style2(feature) {
+function hotelStyle(feature) {
     return {
-        fillColor: '#FEB24C',
+        fillColor: '#f04cfe',
         weight: 1.5,
         opacity: 1,
-        color: '#ff0000',
+        color: '#000000',
         dashArray: '3',
         fillOpacity: 1.0
     };

@@ -9,7 +9,7 @@ var customIcon = L.Icon.extend({
 // then define the individual icons by feeding in the image URLs
 var hotelIcon = new customIcon({iconUrl: 'image/icons/lodging-2.png'});
 var churchIcon = new customIcon({iconUrl: 'image/icons/cathedral.png'});
-var conventIcon = new customIcon({iconUrl: 'image/icons/convent-2.png'});
+var conventIcon = new customIcon({iconUrl: 'image/icons/convent-1.png'});
 var storeIcon = new customIcon({iconUrl: 'image/icons/mall.png'});
 var sewerIcon = new customIcon({iconUrl: 'image/icons/latrine.png'});
 var vpcicon = new customIcon({iconUrl: 'image/icons/vpcicon.png'});
