@@ -16,7 +16,7 @@ var map = L.map('map').setView([45.4375, 12.3358], 13);
 //**********************************************************************************************
 var defaultLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-hike/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
     maxZoom: 20, minZoom: 10,
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+    attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
     id: 'mapbox.run-bike-hike'
@@ -24,7 +24,7 @@ var defaultLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-
 
 var satelliteLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets-satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
     maxZoom: 20, minZoom: 10,
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+    attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
     id: 'mapbox.streets-satellite'
@@ -32,7 +32,7 @@ var satelliteLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets
 
 var basicLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
     maxZoom: 20, minZoom: 10,
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+    attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
     id: 'mapbox.outdoors'
@@ -111,7 +111,7 @@ function setupHighlight(feature, layer) {
             if(originalEvents.dblclick){
                 originalEvents.dblclick(e);
             }
-            zoomToFeature(e)
+            zoomToFeature(e);
         }
     });
 }

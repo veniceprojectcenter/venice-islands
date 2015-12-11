@@ -1,4 +1,11 @@
-function dictionary(original){
+//object for dynamically adding to dictionary
+var dictionary ={};
+
+//translate property name to legible name
+function lookup(original){
+    if(dictionary.hasOwnProperty(original)){
+        return dictionary[original];
+    }
     switch (original){
         case 'Numero':              return "Island Number";
         case 'Nome_Isola':          return "Island Name";

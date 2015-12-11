@@ -204,7 +204,7 @@ function printObject(obj,filter,path)
             var result = printObject(obj[property],filter,path.concat([property]));
             if(!filter || filter (property) || typeof obj[property] == 'object' || path.some(filter)){
                 if(result != '') {
-                    output += tabs(path.length) + '<b>' + dictionary(property) + ':</b> '+result;
+                    output += tabs(path.length) + '<b>' + lookup(property) + ':</b> '+result;
                 }
             }
         }

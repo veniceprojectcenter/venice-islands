@@ -62,7 +62,7 @@ legend_div.onclick = function(e){
 
 legend.setThresholds = function(thresholds){
     legend.grades = thresholds;
-    legend.miniHtml='<center><b>'+dictionary(colorControl.appliedField)+'</b></center>';
+    legend.miniHtml='<center><b>'+lookup(colorControl.appliedField)+'</b></center>';
     
     legend.fullHtml = legend.miniHtml;
     for (var i = 0; i < thresholds.length && i < gradientColors[gradientColorIndex].length; i++) {
@@ -75,7 +75,7 @@ legend.setThresholds = function(thresholds){
 }
 
 legend.setValues = function(objColors){
-    legend.miniHtml='<center><b>'+dictionary(colorControl.appliedField)+'</b></center>';
+    legend.miniHtml='<center><b>'+lookup(colorControl.appliedField)+'</b></center>';
     legend.fullHtml = legend.miniHtml;
     for (var i = 0; i < objColors.length; i++) {
         legend.fullHtml +=
@@ -390,7 +390,7 @@ function createDropdown(object,options){
         if(object.length>0){
             for(var i = 0;i<object.length;i++){
                 var option = document.createElement("OPTION");
-                option.text = dictionary(object[i]);
+                option.text = lookup(object[i]);
                 option.value = object[i];
                 dropdown.add(option);
             }
@@ -399,14 +399,14 @@ function createDropdown(object,options){
     else if(typeof object === 'object'){
         for(property in object){
             var option = document.createElement("OPTION");
-            option.text = dictionary(property);
+            option.text = lookup(property);
             option.value = property;
             dropdown.add(option);
         }
     }
     else{
         var option = document.createElement("OPTION");
-        option.text = dictionary(object);
+        option.text = lookup(object);
         option.value = object;
         dropdown.add(option);
     }

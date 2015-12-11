@@ -52,6 +52,10 @@ function CKtoGeoJSON(CKjson){
         }
     }
     
+    //attach visibility flags which are used by the filter to show/hide specific layers
+    geoJson.visible = true;
+    geoJson.visible_changed = false;
+    
     return geoJson;
 }
 
@@ -59,35 +63,43 @@ function CKtoGeoJSON(CKjson){
 //Spatial Query Functions
 //************************
 
+//Add Island information to a geoJSON object
+//array of islands will be saved to feature.properties.islands
 function attachIslands(geoJson,useNearest){
     
     //add list of all islands associated with this oject to the properties
     geoJson.properties.islands = [];
-    //search through properties of the newly created GeoJSON object to find Islands.
+    
+    //search through properties of the GeoJSON object to find Islands.
     Array.prototype.push.apply(geoJson.properties.islands,findIslands(geoJson.properties));
+    
+    //if no existing island information is found in the object, try to find islands using spatial query
     if(geoJson.properties.islands.length === 0){
         Array.prototype.push.apply(geoJson.properties.islands,queryIslands_COLLECTION(islandsCollection,geoJson,useNearest));
     }
     
-    //TODO: ??? IF STILLL no islands, find nearest Island/Islands??? (nearest to each point if a polygon)
-    
-    geoJson.visible = true;
-    geoJson.visible_changed = false;
-    
-    //console.log(geoJson);
     return geoJson;
 }
 
 //Return the number of the island closest to any point in an object
+//island_features = array of geoJSON feature objects
+//object_geojson = geoJSON object (feature or geometry)
 function nearestIsland(island_features,obj_geoJson){
-    var min = undefined;
-    var island;
+    var min = undefined;    //keep track of min dist
+    var island;             //keep track of closest island
+    
+    //find object geometry
     var objGeom = obj_geoJson.geometry || obj_geoJson;
+    
+    //iterate through each island
     for(var i=0,iLen=island_features.length;i<iLen;i++){
+        //find island geometry
         var islandGeom = island_features[i].geometry;
         if(islandGeom.type === "Polygon"){
             if(objGeom.type === "Point"){
+                //find minimum distance from the point to the polygon
                 var dist = distToPolySquared(coordsToPoly(islandGeom.coordinates),coordsToPoint(objGeom.coordinates));
+                //if distance is lower or 1st, override islands and minumum with new values
                 if((min===undefined) || dist<min){
                     min=dist;
                     island = island_features[i].properties.Numero;
@@ -172,11 +184,17 @@ function nearestIsland(island_features,obj_geoJson){
             });
         }
     }
+    //return island number of the island closest to the object
     return island;
 }
+
 //Return the numbers of the islands closest to each point in an object
+//island_features = array of geoJSON feature objects
+//object_geojson = geoJSON object (feature or geometry)
 function nearestIslands(island_features,obj_geoJson){
-    var islands = [];
+    var islands = [];   //keep track of island numbers returned by nearestIsland()
+    
+    //find object geometry
     var objGeom = obj_geoJson.geometry || obj_geoJson;
     if(objGeom.type === "Point"){
         islands.push(nearestIsland(island_features,objGeom));
@@ -197,12 +215,14 @@ function nearestIslands(island_features,obj_geoJson){
         objGeom.coordinates.forEach(function(polygon){
             polygon.forEach(function(linearRing){
                 linearRing.forEach(function(point){
+                    //for each point in this object, push the nearest island to list of islands
                     islands.push(nearestIsland(island_features,{type:"Point",coordinates:point}));
                 });
             });
         });
     }
     var seen = {};
+    //remove duplicate islands and return the result
     return islands.filter(function(number,index,array){
         return seen[number] ? false : (seen[number]=true);
     });
@@ -211,6 +231,7 @@ function nearestIslands(island_features,obj_geoJson){
 //Return list of all Island ID numbers an object is in/intersects
 function queryIslands(island_features,obj_geoJson,useNearest){
     var seen = {};
+    //if useNearest option is selected, call useNearest, else perform query and filter
     return useNearest ? nearestIslands(island_features,obj_geoJson) : 
         island_features.filter(function(island){
             //keep islands that intersect
@@ -246,6 +267,7 @@ function queryIslands_LAYER(islands_geoLayer,obj_geoJson,useNearest){
 
 //Check if a single object is in/overlaps a single island
 function queryIsland(island_geoJson,obj_geoJson){
+    //find just geometries
     var islandGeom = island_geoJson.geometry || islands_geoJson;
     var objGeom = obj_geoJson.geometry || obj_geoJson;
     
@@ -293,13 +315,14 @@ function queryIsland(island_geoJson,obj_geoJson){
             });
         }
     }
-    return false
+    return false;
 }
     
 //************************
 //Object Query Functions
 //************************
 
+//Search the objects properties for information pertaining to islands
 function findIslands(obj){
     var output = new Array(0);
     
@@ -307,23 +330,28 @@ function findIslands(obj){
         return output;
     }
     
+    //iterate through each property in the object
     for(property in obj){
         if(Object.prototype.hasOwnProperty.call(obj, property)){
+            //if property has island information, extract it
             if(property.toString() == "Numero" ||
                stringContains((property.toString()).toUpperCase(),"ISLAND")||
                stringContains((property.toString()).toUpperCase(),"ISOLA")){
+                //if value is an array, add each element seperately
                 if (obj[property].constructor === Array){
                     for(var i=0;i<obj[property].length;i++){
+                        //Only keep integers and no repeats
                         if(isInt(obj[property])&&(output.indexOf(obj[property])<0)){
                             output.push(obj[property][i]);
                         }
                     }
-                    
                 }
+                //only keep integers and no repeats
                 else if(isInt(obj[property])&&(output.indexOf(obj[property])<0)){
                     output.push(obj[property]);
                 }
             }
+            //if property is an object, use recursion to search this object as well
             else if(typeof obj[property] === 'object'){
                 var array = findIslands(obj[property]);
                 output = mergeArrays(output,array);
@@ -333,6 +361,7 @@ function findIslands(obj){
     return output;
 }
 
+//search the object's properties for valid Latitude and Longitude coordinates
 function findLonLat(obj){
     var lon = null,lat = null;
     
@@ -340,8 +369,10 @@ function findLonLat(obj){
         return [lon,lat];
     }
     
+    //iterate through all properties in object
     for(property in obj){
         if(Object.prototype.hasOwnProperty.call(obj, property)){
+            //if property is an object, search recursively
             if(typeof obj[property] === 'object'){
                 var LonLat = findLonLat(obj[property]);
                 if(!lon && LonLat[0]){
@@ -371,6 +402,7 @@ function findLonLat(obj){
 //Helper Functions
 //************************
 
+//converty array to {x,y}
 function coordsToPoint(coordinates){
     if(coordinates.x && coordinates. y){
         return coordinates;
@@ -380,6 +412,8 @@ function coordsToPoint(coordinates){
         y: coordinates[1]
     }
 }
+
+//convert array of arrays to [{x,y},{x,y}]
 function coordsToPoly(coordinates){
     var output = new Array(0);
     
@@ -393,7 +427,8 @@ function coordsToPoly(coordinates){
     }
     return output;
 }
-    
+
+//check if something is integer
 function isInt(value) {
   var x;
   if (isNaN(value)) {
@@ -403,16 +438,21 @@ function isInt(value) {
   return (x | 0) === x;
 }
 
+//combine 2 arrays without repeating;
 function mergeArrays(a1,a2){
     return a1.concat(a2.filter(function(item){
         return a1.indexOf(item)<0;
     }));
 }
 
+//check if string is in another string (case sensitive)
 function stringContains(outerString,innerString){
     return outerString.indexOf(innerString) > -1;
 }
 
+//************************
+//Test for valis geoJSON
+//************************
 function isValidGeoJson(jsonObj){
     if(jsonObj.type){
         if(jsonObj.type=="FeatureCollection"){

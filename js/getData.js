@@ -198,10 +198,32 @@ setIslandOptions({searchInclude: ['Nome_Isola','Numero','Codice'],generalInfo: f
     }
     else if(targets.length>1){
         output += '<center><b>Islands</b> ('+targets.length+' Total)</center>';
-        targets.forEach(function(target){
-            output += target.Nome_Isola + '</br>';
-            
+        
+        output += '<b>Islands by Area: </b></br>';
+        targets.sort(function(t1,t2){
+            return t1.Superficie - t2.Superficie;
+        }).forEach(function(target){
+            output += tabs(1) + target.Nome_Isola+': '+target.Superficie+'</br>';
         });
+        
+        var areaTotal = targets.reduce(function(t1,t2){
+           return t1 + t2.Superficie;
+        },0);
+        output += '<b>Total Area </b>(m^2): '+areaTotal+'</br></br>';
+        
+        output += '<b>Islands by Population: </b></br>';
+        targets.sort(function(t1,t2){
+            return t1.sum_pop_11 - t2.sum_pop_11;
+        }).forEach(function(target){
+            output += tabs(1) + target.Nome_Isola+': '+target.sum_pop_11+'</br>';
+        });
+        
+        var pop_total=targets.reduce(function(t1,t2){
+           return t1 + t2.sum_pop_11;
+        },0);
+        output += '<b>Total Population </b>(m^2): '+pop_total+'</br></br>';
+        
+        output += '<b>Population Density </b>(people/km^2): '+pop_total*1000000/(areaTotal)+'';
     }
     return output;
 }});
@@ -209,7 +231,6 @@ setIslandOptions({searchInclude: ['Nome_Isola','Numero','Codice'],generalInfo: f
 //***********************************************************************************************
 
 function onAllIslandsLoaded(){
-    
 
     //------- Bridge Layers --------//
     getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",generalInfo: function(target){
@@ -227,9 +248,15 @@ function onAllIslandsLoaded(){
         targets.forEach(function(target){
             output += '<a target="_blank" href=http://www.venipedia.org/wiki/index.php?title='+ encodeURIComponent(target.data.Nome_Ponte.replace(/ /g, "_")) + '>' + target.data.Nome_Ponte+'</a></br>';
         });
-        output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
+        output = '<center><b>'+ lookup(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
         return output;
-    }},{style: standOut});
+    }},{style: standOut, onEachFeature: function(feature,layer){
+        layer.on({
+            dblclick: function(e){
+                overlayHTML(feature.properties.data.Nome_Ponte||"Bridge",printObject(feature));
+            }
+        });
+    }});
 
 
     //------- Canal Layers --------//
@@ -248,12 +275,17 @@ function onAllIslandsLoaded(){
         targets.forEach(function(target){
             output += '<a target="_blank" href=http://www.venipedia.org/wiki/index.php?title='+ encodeURIComponent(target.data.Nome_Rio.replace(/ /g, "_")) + '>' + target.data.Nome_Rio+'</a></br>';
         });
-        output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
+        output = '<center><b>'+ lookup(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
         return output;
     }},{onEachFeature:function(feature,layer){
         layer.bindPopup(
             '<b><center>' + feature.properties.data.Nome_Rio + '</center></b>'
         );
+        layer.on({
+            dblclick: function(e){
+                overlayHTML(feature.properties.data.Nome_Rio,printObject(feature));
+            }
+        });
     }});
 
     //------- Belltower Layers --------//
@@ -271,7 +303,7 @@ function onAllIslandsLoaded(){
 //        targets.forEach(function(target){
 //            output += target.data.NAME+'</br>'
 //            });
-//        output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
+//        output = '<center><b>'+ lookup(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
 //        return output;
 //    }},{pointToLayer: function(feature,latlng){
 //        return new L.marker(latlng, {icon: churchIcon}).bindPopup(
@@ -296,7 +328,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
             output+= '<a target="_blank" href=http://www.venipedia.org/wiki/index.php?title='+ encodeURIComponent(target.data["Page name"].replace(/ /g, "_")) + '>' + target.data["Page name"]+'</a></br>' +
                 (target.data["Decoration description"]!="Null" ? "Decorations: " + target.data["Decoration description"] + '</br>':'');
         });
-        output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
+        output = '<center><b>'+ lookup(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
         return output;
     }},{pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: churchIcon}).bindPopup(
@@ -304,9 +336,15 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
         "Tower ID: " + feature.properties.data["Bell Tower ID"] + "</br>" +
         "Tower Height: " + feature.properties.data["Bell Tower ID"] + "</br>"
         );
+    },onEachFeature: function(feature,layer){
+        layer.on({
+            dblclick: function(e){
+                overlayHTML(feature.properties.data["Common name"],printObject(feature));
+            }
+        });
     }});
 
-
+    
     //------- Hotel Layers --------//
     getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap",generalInfo: function(target){
         return printObject(target.data,function(str){
@@ -324,11 +362,17 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
         targets.forEach(function(target){
             bedCount += target.data.beds;
         });
-        output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
+        output = '<center><b>'+ lookup(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
         output += '<b> Total Beds: </b>'+bedCount+'</br>';
         return output;
     }},{style: hotelStyle,pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a hotel");
+    },onEachFeature: function(feature,layer){
+        layer.on({
+            dblclick: function(e){
+                overlayHTML(feature.properties.data.name,printObject(feature));
+            }
+        });
     }});
 
     
@@ -359,12 +403,13 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
         '</tr>'  :'' ) +
         '</table>'
     });
-    output = '<center><b>'+ dictionary(tag) +'</b></br></center>' + output;
+    output = '<center><b>'+ lookup(tag) +'</b></br></center>' + output;
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: noIcon});
 }});
 
+    
     //------- Sewer Outlet Layers --------//
     getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets",generalInfo: function(target){
         return printObject(target.data,function(str){
@@ -381,10 +426,16 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
         targets.forEach(function(target){
 
         });
-        output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
+        output = '<center><b>'+ lookup(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
         return output;
     }},{pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: sewerIcon}).bindPopup("outlet");
+    },onEachFeature: function(feature,layer){
+        layer.on({
+            dblclick: function(e){
+                overlayHTML("Sewer Outlet",printObject(feature));
+            }
+        });
     }});
 
     //------- Convent Layers --------//
@@ -405,10 +456,16 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
                 (target.data["Historic Background"] ? 'About: ' + target.data["Historic Background"] + '</br>':'') +
                 (target.data["Current Use"] ? 'Current Use: ' + target.data["Current Use"] + '</br>':'');
         });
-        output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
+        output = '<center><b>'+ lookup(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
         return output;
     }},{pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: conventIcon}).bindPopup("Convent");
+    },onEachFeature: function(feature,layer){
+        layer.on({
+            dblclick: function(e){
+                overlayHTML(feature.properties.data["Full Name"],printObject(feature));
+            }
+        });
     }});
 
 
@@ -442,7 +499,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
     //                 '</br>Good sold: ' + (target["2015"].nace_plus_descr ? target["2015"].nace_plus_descr : 'N/A')
     //                + '</br>'+'</br>';
         });
-        output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
+        output = '<center><b>'+ lookup(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
         return output;
     }},{pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: storeIcon}).bindPopup(
@@ -454,6 +511,12 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
             "<br/> Good Sold: " + feature.properties['2015'].nace_plus_descr +
             "<br/> Store Type: " + feature.properties['2015'].shop_type
         );
+    },onEachFeature: function(feature,layer){
+        layer.on({
+            dblclick: function(e){
+                overlayHTML(feature.properties.data.store_type||feature.properties.data.store_name,printObject(feature));
+            }
+        });
     }});
 
     
