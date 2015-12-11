@@ -242,7 +242,7 @@ function onLocationFound(e) {
     //console.log(nearestIsles);
     locationMarker.on('click', function(){
         var bodyString = getOverlayInfo(nearestIsles);
-        if(bodyString!='') overlayHTML('Nearest Features','<b><center> Island of ' + islandsCollection[nearestIsles[0]].properties.Nome_Isola +'</b></center>'+ bodyString);
+        if(bodyString!='') overlayHTML('Nearest Features','<a id="location"><b><center> Island of ' + islandsCollection[nearestIsles[0]].properties.Nome_Isola +'</b></center>'+ bodyString+'</a>');
         else if(nearestIsles.length>0) overlayHTML('Nearest Features','<b><center>Island of ' +islandsCollection[nearestIsles[0]].properties.Nome_Isola + '</b></center></br>No additional features found');
         else{
             overlayHTML('Nearest Features','No features found');
