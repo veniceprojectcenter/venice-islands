@@ -467,6 +467,32 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
             }
         });
     }});
+    
+//------- Bathroom Layer --------//
+// data taken from http://www.comune.venezia.it/flex/cm/pages/ServeBLOB.php/L/EN/IDPagina/1339
+    getGroup("https://cityknowledge.firebaseio.com/groups/DATA_Bathrooms_2015.json",{tag:"Bathrooms",generalInfo: function(target){
+        return printObject(target.data,function(str){
+            switch(str){
+                case 'Hours':
+                case 'Cost':
+                    return true;
+                default:
+                    return false;
+            }
+        });
+    },moreInfo:function(targets,tag){
+        var output = '';
+        targets.forEach(function(target){
+            output +=
+                (target.data["Address"] ? 'Address: ' + target.data["Address"] + '</br>':'address not given'+ '</br>') +
+                (target.data["Hours"] ? 'Hours: ' + target.data["Hours"] + '</br>':'hours not given'+ '</br>') +
+                (target.data["Cost"] ? 'Cost: ' + target.data["Cost"] + '</br>':'cost not given'+ '</br>');
+        });
+        output = '<center><b>'+ lookup(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
+        return output;
+    }},{pointToLayer: function(feature,latlng){
+        return new L.marker(latlng, {icon: bathroomIcon}).bindPopup("Bathroom");
+    }});
 
 
     //------- Store Layers --------//

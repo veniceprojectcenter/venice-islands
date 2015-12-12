@@ -36,7 +36,7 @@ function overlayHTML(HEAD,BODY) {
     if(!overlayFlag){return;}
 
     document.getElementById('inner').innerHTML = '<div id ="topBar">'+'<a class = "Xbutton" id = "Xbutton" onclick = "overlay()">X</a>'+
-        '<h2><center>' + (HEAD ? HEAD : '') + '</center></h2></div>'
+        '<h2><center>' + (HEAD ? HEAD : '&nbsp') + '</center></h2></div>'
         +' <br />' + (BODY ? BODY : '');
     
     // function for getting rid of overlay when you click on the screen
@@ -103,7 +103,7 @@ function overlayMulti(islandLayer) {
     });
 };
 
-// this function is called from the zoomToFeature() function
+// this function is called from the zoomToIsland() function
 function overlay(currentLayer) {
 	el = document.getElementById("overlay");
 	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
@@ -162,8 +162,7 @@ function overlay(currentLayer) {
     });
 };
 
-function makeHTMLinfo(props,id,type)
-{
+function makeHTMLinfo(props,id,type){
     switch(type){
         case("JSON"): // for geoJSONS that we've made from GIS Layers (info stored in properties)
             $(document.getElementById(id)).append(printObject(props));
@@ -177,8 +176,7 @@ function makeHTMLinfo(props,id,type)
     }
 }
 
-function printObject(obj,filter,path)
-{
+function printObject(obj,filter,path){
     path = path || [];
     var output = '';
 

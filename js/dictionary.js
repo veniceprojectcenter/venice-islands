@@ -10,8 +10,12 @@ function lookup(original){
         case 'Numero':              return "Island Number";
         case 'Nome_Isola':          return "Island Name";
         case 'Superficie':          return "Area";
-        case 'sum_pop_11':          return "Population Total";
-        case 'pop_den_11':          return "Population Density";
+        case 'sum_pop_11':          return "Population 2011";
+        case 'sum_pop_01':          return "Population 2001";
+        case 'sum_pop_91':          return "Population 1991";
+        case 'pop_den_11':          return "Pop Density 2011";
+        case 'pop_den_01':          return "Pop Density 2001";
+        case 'pop_den_91':          return "Pop Density 2091";
         case 'Codice':              return "ID Code";
         case 'Codice_Ses':          return "Sestiere";
         case 'Tipo':                return "Type";

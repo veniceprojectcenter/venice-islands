@@ -13,4 +13,5 @@ var conventIcon = new customIcon({iconUrl: 'image/icons/convent-1.png'});
 var storeIcon = new customIcon({iconUrl: 'image/icons/mall.png'});
 var sewerIcon = new customIcon({iconUrl: 'image/icons/latrine.png'});
 var vpcicon = new customIcon({iconUrl: 'image/icons/vpcicon.png'});
+var bathroomIcon = new customIcon({iconUrl: 'image/icons/bathroom.png'});
 var noIcon = new customIcon({iconUrl: 'image/icons/empty.png'});    //1x1 transparent pixel
