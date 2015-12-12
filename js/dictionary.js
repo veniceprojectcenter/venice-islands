@@ -15,7 +15,7 @@ function lookup(original){
         case 'sum_pop_91':          return "Population 1991";
         case 'pop_den_11':          return "Pop Density 2011";
         case 'pop_den_01':          return "Pop Density 2001";
-        case 'pop_den_91':          return "Pop Density 2091";
+        case 'pop_den_91':          return "Pop Density 1991";
         case 'Codice':              return "ID Code";
         case 'Codice_Ses':          return "Sestiere";
         case 'Tipo':                return "Type";

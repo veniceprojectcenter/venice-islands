@@ -199,11 +199,26 @@ mapInfo.addTo(map);
 //**********************************************************************************************
 // add location functionality
 // set this to true to auto-zoom on your location
-map.locate({setView: false, maxZoom: 18, watch:true});
-
 markerFlag = false;
 // create a global var for the location layer - must be global so it can be toggled
-var locationLayer = L.layerGroup().addTo(map); 
+var locationLayer = L.layerGroup();
+
+var prevOnAdd = locationLayer.onAdd;
+var prevOnRemove = locationLayer.onRemove;
+
+locationLayer.onAdd = function(Imap){
+    if(prevOnAdd){
+        prevOnAdd.call(locationLayer,Imap);
+    }
+    map.locate({setView: false, maxZoom: 18, watch:true});
+}
+locationLayer.onRemove = function(Imap){
+    if(prevOnRemove){
+        prevOnRemove.call(locationLayer,Imap);
+    }
+    map.stopLocate();
+}
+
 var locationMarker, locationRadius, locationGeoJSON;
 
 // function to excecute when the user's location is found
@@ -211,8 +226,12 @@ function onLocationFound(e) {
     //console.log("added new marker");
     // close old current location marker if it's outdated
     if (markerFlag==true){
-        map.removeLayer(locationMarker);
-        map.removeLayer(locationRadius);
+        if(locationLayer.hasLayer(locationMarker)){
+            locationLayer.removeLayer(locationMarker);
+        }
+        if(locationLayer.hasLayer(locationRadius)){
+            locationLayer.removeLayer(locationRadius);
+        }
     }
     
     var radius = e.accuracy / 2;
@@ -231,7 +250,7 @@ function onLocationFound(e) {
     // add the marker and popup to the location layer
     locationLayer.addLayer(locationMarker);
     locationLayer.addLayer(locationRadius);
-    if (markerFlag == false) markerFlag = true;
+    markerFlag = true;
 
     locationGeoJSON = locationMarker.toGeoJSON();
     var nearestIsles = queryIslands_COLLECTION(islandsCollection,locationGeoJSON,true);

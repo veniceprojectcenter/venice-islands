@@ -111,7 +111,7 @@ var ColorControl = L.Control.extend({
         this.object = object;
         this.thresholds = legend.grades;
         this.modifyDiv = modifyDiv;
-        this.div = this.div || L.DomUtil.create('div', 'info');
+        this.div = this.div || L.DomUtil.create('div', 'iconBox');
         
         //on click, stop propogation
         this.div.onclick = function(e){

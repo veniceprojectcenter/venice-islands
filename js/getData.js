@@ -231,6 +231,8 @@ setIslandOptions({searchInclude: ['Nome_Isola','Numero','Codice'],generalInfo: f
 //***********************************************************************************************
 
 function onAllIslandsLoaded(){
+    
+    locationLayer.addTo(map); 
 
     //------- Bridge Layers --------//
     getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",generalInfo: function(target){

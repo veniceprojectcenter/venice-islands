@@ -1,0 +1,149 @@
+/* feature overrides for mobile users 
+* add this to your html page AFTER calling styles.css, since this overrides calls
+* given in styles.css
+* from: https://css-tricks.com/snippets/css/media-queries-for-standard-devices/ 
+*/
+
+/* ----------- iPhone 4 and 4S ----------- */
+
+/* Portrait and Landscape */
+@media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 480px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+      .info{
+       display:none;
+       visibility:hidden;
+      }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
+}
+
+/* ----------- iPhone 5 and 5S ----------- */
+
+/* Portrait and Landscape */
+@media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 568px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+      .info{
+       display:none;
+       visibility:hidden;
+      }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
+
+}
+
+/* ----------- iPhone 6 ----------- */
+
+/* Portrait and Landscape */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2) { 
+      .info{
+       display:none;
+       visibility:hidden;
+      }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
+
+}
+
+/* ----------- iPhone 6+ ----------- */
+
+/* Portrait and Landscape */
+@media only screen 
+  and (min-device-width: 414px) 
+  and (max-device-width: 736px) 
+  and (-webkit-min-device-pixel-ratio: 3) { 
+      .info{
+       display:none;
+       visibility:hidden;
+      }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
+
+}
+
+/* ----------- Galaxy S3 ----------- */
+
+/* Portrait and Landscape */
+@media screen 
+  and (device-width: 320px) 
+  and (device-height: 640px) 
+  and (-webkit-device-pixel-ratio: 2) {
+      .info{
+       display:none;
+       visibility:hidden;
+      }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
+
+}
+
+
+/* ----------- Galaxy S4 ----------- */
+
+/* Portrait and Landscape */
+@media screen 
+  and (device-width: 320px) 
+  and (device-height: 640px) 
+  and (-webkit-device-pixel-ratio: 3) {
+      .info{
+       display:none;
+       visibility:hidden;
+      }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
+
+}
+
+/* ----------- Galaxy S5 ----------- */
+
+/* Portrait and Landscape */
+@media screen 
+  and (device-width: 360px) 
+  and (device-height: 640px) 
+  and (-webkit-device-pixel-ratio: 3) {
+      .info{
+       display:none;
+       visibility:hidden;
+      }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
+
+}
+
+/* ----------- HTC One ----------- */
+
+/* Portrait and Landscape */
+@media screen 
+  and (device-width: 360px) 
+  and (device-height: 640px) 
+  and (-webkit-device-pixel-ratio: 3) {
+      .info{
+       display:none;
+       visibility:hidden;
+      }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
+
+}
