@@ -153,7 +153,6 @@ var ColorControl = L.Control.extend({
         var labelDiv = document.createElement("DIV");
         var label = document.createElement("IMG");
         label.setAttribute('src','image/color.png');
-        applyStyle(labelDiv,FilterElement_style(labelDiv));
         labelDiv.style.float = 'left';
         labelDiv.onclick = function(e){
             that.minimize(!that.minimized);
@@ -171,7 +170,6 @@ var ColorControl = L.Control.extend({
         
         this.div.innerHTML = '';
         this.object = object;
-        applyStyle(this.div,Color_style(this.div));
         
         this.setupImage();
         
@@ -193,7 +191,6 @@ var ColorControl = L.Control.extend({
         this.minimized = bool;
         
         this.div.innerHTML = '';
-        applyStyle(this.div,Color_style(this.div));
 
         this.setupImage();
         
@@ -204,7 +201,7 @@ var ColorControl = L.Control.extend({
             this.div.appendChild(this.functionSelect);
             
             var applyButton = document.createElement("INPUT");
-            applyStyle(applyButton,FilterElement_style(applyButton));
+            applyButton.setAttribute("id","iconField");
             applyButton.setAttribute("type", "button");
             applyButton.setAttribute("value","Apply");
             applyButton.onclick = function(e){
@@ -215,7 +212,7 @@ var ColorControl = L.Control.extend({
             this.div.appendChild(applyButton);
 
             var clearButton = document.createElement("INPUT");
-            applyStyle(clearButton,FilterElement_style(clearButton));
+            clearButton.setAttribute("id","iconField");
             clearButton.setAttribute("type", "button");
             clearButton.setAttribute("value","Clear");
             clearButton.onclick = this.onClear;
@@ -264,23 +261,6 @@ var ColorControl = L.Control.extend({
             return; // indicate failure
         }
         
-//        var maximum = Math.max.apply(this,arr);
-//        var minimum = Math.min.apply(this,arr);
-//       
-//        legend.grades = [];
-//        
-//        // sort the array of values from min-max
-//        arr = arr.sort(sortNumber);
-//        // find the index for each quartile
-//        // see https://en.wikipedia.org/wiki/Quartile 
-//        // I changed the max/min outliers so it'd display better
-//        var Q1 = Math.ceil(0.25*arr.length);
-//        var Q3 = Math.ceil(0.75*arr.length);
-//        var Qlow = Math.ceil(0.05*arr.length);
-//        var Qhigh = Math.ceil(0.95*arr.length);
-//        // set the gradient based on the array value for each percentile
-//        legend.grades = [minimum, arr[Qlow], arr[Q1], arr[Q3], arr[Qhigh]];
-        
         var stats = new geostats(arr);
         var a = stats.getClassJenks(8);
         
@@ -288,17 +268,6 @@ var ColorControl = L.Control.extend({
         
         legend.setThresholds(legend.grades);
         this.thresholds = legend.grades;
-        
-        // log things for debug
-//        console.log(field);
-//        console.log(arr);
-//        console.log(maximum);
-//        console.log(minimum);
-//        console.log(this.thresholds);
-//        console.log(IQR);
-//        console.log(Qlow);
-//        console.log(Qhigh);
-//        console.log(c);
         
         // change the gradient if apply is hit for the same field
         // if not, keep it the same
@@ -372,6 +341,7 @@ var ColorControl = L.Control.extend({
 
 function createDropdown(object,options){
     var dropdown = document.createElement("SELECT");
+    dropdown.setAttribute("id","iconField");
     if(options){
         for(property in options){
             if(options.hasOwnProperty(property)){
@@ -379,8 +349,6 @@ function createDropdown(object,options){
             }
         }
     }
-    
-    applyStyle(dropdown,FilterElement_style(option));
     
     if(!object){
         return dropdown;
@@ -390,6 +358,7 @@ function createDropdown(object,options){
         if(object.length>0){
             for(var i = 0;i<object.length;i++){
                 var option = document.createElement("OPTION");
+                option.setAttribute("id","iconField");
                 option.text = lookup(object[i]);
                 option.value = object[i];
                 dropdown.add(option);
@@ -399,6 +368,7 @@ function createDropdown(object,options){
     else if(typeof object === 'object'){
         for(property in object){
             var option = document.createElement("OPTION");
+            option.setAttribute("id","iconField");
             option.text = lookup(property);
             option.value = property;
             dropdown.add(option);
@@ -406,6 +376,7 @@ function createDropdown(object,options){
     }
     else{
         var option = document.createElement("OPTION");
+        option.setAttribute("id","iconField");
         option.text = lookup(object);
         option.value = object;
         dropdown.add(option);
@@ -413,12 +384,6 @@ function createDropdown(object,options){
     
     dropdown.onmousedown = dropdown.ondblclick = L.DomEvent.stopPropagation;
     return dropdown;
-}
-
-function applyStyle(feature,style){
-    for(property in style){
-        feature.style[property] = style[property];
-    }
 }
 
 //********************************************************************************************************

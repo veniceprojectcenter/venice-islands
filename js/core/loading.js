@@ -22,6 +22,7 @@ var loadingScreen = {
     , position: 'absolute' // Element positioning
     },
     
+    miniContainer: document.getElementById('loadingMini'),
     container: document.getElementById('loadingScreen'),
     
     target: document.getElementById('spinPanel'),
@@ -36,10 +37,12 @@ var loadingScreen = {
         }
         else if(set == true || set == "visible"){
             this.container.style.visibility = "visible";
+            this.miniContainer.style.visibility = "hidden";
             this.spinner = new Spinner(this.opts).spin(this.target);
         }
         else{
             this.container.style.visibility = "hidden";
+            this.miniContainer.style.visibility = ((this.queue>0) ? "visible" : "hidden");
             this.spinner.stop();
         }
         return set;
@@ -47,6 +50,7 @@ var loadingScreen = {
     updateQueue: function(newQueue){
         this.queue = newQueue || this.queue;
         document.getElementById("loadingTop").innerHTML = "<b>Loading "+this.queue+" features</b>";
+        document.getElementById("loadingMini").innerHTML = "<b>Loading "+this.queue+" features</b>";
     },
     
     show: function(){
@@ -70,6 +74,10 @@ var loadingScreen = {
         }
         this.queue = this.queue<0 ? 0 : this.queue;
         this.updateQueue();
+    },
+    
+    init: function(){
+        
     }
 }
 

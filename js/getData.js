@@ -1,6 +1,8 @@
 // ~~~~~~~~ Functions for Retrievings Data ~~~~~~~~~~~~~~~~~~~~~
 
 //Add a data set to be displayed on the map!
+//Used to Load a group of objects from the CK console, given a link to the CK entry containing member IDs
+//Should point to a JSON file which has a "members" property. The members property is an object containing IDs of each member of the group
 //groupOptions = { tag: string, filter: boolean function(obj),moreInfo: string(HTML) function(feature)};
 //customArgs = SEE http://leafletjs.com/reference.html#geojson-options
 function getGroup(URL,groupOptions,customArgs){
@@ -232,6 +234,7 @@ setIslandOptions({searchInclude: ['Nome_Isola','Numero','Codice'],generalInfo: f
 
 function onAllIslandsLoaded(){
     
+    layerController.addOverlay(locationLayer,"Current Location");
     locationLayer.addTo(map); 
 
     //------- Bridge Layers --------//

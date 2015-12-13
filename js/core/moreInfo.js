@@ -278,7 +278,7 @@ function getOverlayInfo(num){
                     });
                 });
             });
-            if(targets.length>0){
+            if(targets.length>0 && loadStatusIndex[key]!=undefined && loadStatus[loadStatusIndex[key]].sendComplete){
                 output += $('<div>').append($('<div>')
                     //specify the class of the div
                     .addClass("moreInfo")

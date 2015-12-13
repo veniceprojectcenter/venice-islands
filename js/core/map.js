@@ -330,12 +330,8 @@ var baseMaps = {
     "Basic": basicLayer
 };
 
-var mapOverlays = {
-    "Current Location": locationLayer
-};
-
 // add in layer control so that you can toggle the layers
-var layerController = L.control.layers(baseMaps,mapOverlays).addTo(map);
+var layerController = L.control.layers(baseMaps,{}).addTo(map);
 layerController.getContainer().ondblclick = function(e){
     if(e.stopPropagation){
         e.stopPropagation();
@@ -399,13 +395,32 @@ function findLayer(tag,key,value){
     }
 }
 
+function loadStateFromURL(){
+    var params = getUrlParameters();
+    for(key in params){
+        if(params.hasOwnProperty(key)&&key!='layerTag'){
+            var layer = findLayer(params.layerTag,key,params[key]);
+            if(layer){
+                if(layer.getBounds)
+                    map.fitBounds(layer.getBounds());
+                else if(layer.getLatLng){
+                    map.setView(layer.getLatLng(),25)
+                }
+                return;
+            }
+        }
+    }
+}
 //*******************************************************************************************
 
 //Save the loading status of every data group added
-//array of vars. var = {sendCount,sendComplete,maxCount,recieveCount,recieveComplete,function onInitialize(tag),function onRecieveComplete(tag)}
+//array of vars. var = {tag,sendCount,sendComplete,maxCount,recieveCount,recieveComplete,initComplete,function onInitialize(tag),function onRecieveComplete(tag)}
 var loadStatus = [];
+//once tag is determined, stro the index here so you can find status index using tag
+var loadStatusIndex = {};
 
 function getGroupCallback(options,customArgs,groupURL,groupMSG) {
+    //if no options are given, initialize options as an empty object with default values
     options = options || {};
     if(!options.hasOwnProperty("preLoad")){
         options.preLoad=false;
@@ -415,53 +430,52 @@ function getGroupCallback(options,customArgs,groupURL,groupMSG) {
     }
     
     var jsonList = groupMSG;
-    //console.log(jsonList.members);
+    
+    //Initialize object to store load statuses 
     var statusIndex = loadStatus.length;
     loadStatus.push({});
     
+    //Initialize loadStatus for this group
+    loadStatus[statusIndex].tag = undefined;
     loadStatus[statusIndex].sendCount = 0;
+    loadStatus[statusIndex].sendComplete = false;
     loadStatus[statusIndex].recieveCount = 0;
+    loadStatus[statusIndex].recieveComplete = false;
     loadStatus[statusIndex].onRecieveComplete = function(tag){};
+    loadStatus[statusIndex].initComplete = false;
+    //Once group is initialized (Final tag is determined)
     loadStatus[statusIndex].onInitialize = function(tag){
+        //save index using final tag
+        loadStatusIndex[tag] = statusIndex;
+        loadStatus[statusIndex].tag = tag;
+        loadStatus[statusIndex].initComplete = true;
+        
         var params = getUrlParameters();
         
+        //If this group's tag matches the URL parameter
         if(params.layerTag && params.layerTag == tag){
-            loadStatus[statusIndex].onRecieveComplete = function(){
-                for(key in params){
-                    if(params.hasOwnProperty(key)&&key!='layerTag'){
-                        var layer = findLayer(params.layerTag,key,params[key]);
-                        console.log(layer);
-                        if(layer){
-                            if(layer.getBounds)
-                                map.fitBounds(layer.getBounds());
-                            else if(layer.getLatLng){
-                                map.setView(layer.getLatLng(),25)
-                            }
-                            return;
-                        }
-                    }
-                }
-            }
+            //setup the OnRecieveComplete Functin for zooming to the feature
+            loadStatus[statusIndex].onRecieveComplete = loadStateFromURL;
+            //add the group to map to initialize loading
             featureCollections[tag].addTo(map);
         }
     };
     
+    //If we have the tag, collection can be initialized
     if(options.tag){
         initializeCollection(statusIndex,options,customArgs,groupURL,jsonList);
     }
     
-    if(featureCollections[options.tag]){
-        loadStatus[statusIndex].recieveComplete = false;
-        return;
-    }
-    
     var count = 0;
+    //iterate throght the list once so we can save the total number of entries
     for(var obj in jsonList.members){
-        if(count == 0){
+        //if group has not been initialized, load the 1st object so we can find the tag
+        if(count == 0 && !loadStatus[statusIndex].initComplete){
             getNextEntry(statusIndex,options,customArgs,groupURL,jsonList);
         }
         count++;
     }
+    //save the total number of entries
     loadStatus[statusIndex].maxCount = count;
 };
 
@@ -469,22 +483,49 @@ function getNextEntry(statusIndex,options,customArgs,groupURL,groupMSG){
     var jsonList = groupMSG;
     //console.log(jsonList.members);
     
+    //If done sending requests, return
+    if(loadStatus[statusIndex].sendComplete == true) return;
+    
+    //if we know the tag, try to initialize (initialize does nothing if group is already initialized)
     if(options && options.tag){
-        if(loadStatus[statusIndex].sendComplete == true) return;
         initializeCollection(statusIndex,options,customArgs,groupURL,jsonList);
     }
 
     var count = 0;
+    //Iterate through the members
     for(var obj in jsonList.members){
+        //if we found the next member to load, load it
         if(count>=loadStatus[statusIndex].sendCount){
             var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
-            //console.log(URL);
-            $.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
-            count++;
-            loadStatus[statusIndex].sendCount=count;
+            //$.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
+            $.ajax({
+                dataType: "json",
+                url: URL,
+                success: function(msg){
+                    getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);
+                },
+                complete: function(){
+                    //update load status on recieve
+                    loadStatus[statusIndex].recieveCount++;
+                    //if recieced = sent, we must be done!
+                    if(loadStatus[statusIndex].recieveCount>=loadStatus[statusIndex].sendCount){
+                        loadStatus[statusIndex].recieveComplete=true;
+                        loadStatus[statusIndex].onRecieveComplete(options.tag);
+                    }
+                },
+                beforeSend: function(){
+                    //Increment loading counter before sending
+                    loadStatus[statusIndex].sendCount++;
+                }
+            });
+            //return false because there may be more items to load
             return false;
         }
+        else{
+            count++;
+        }
     }
+    //all messages sent, return true
     loadStatus[statusIndex].sendComplete = true;
     return true;
 };
@@ -493,13 +534,17 @@ function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
     var jsonList = msg;
     //console.log(jsonList.members);
     
+    //If done sending requests, return
+    if(loadStatus[statusIndex].sendComplete == true) return;
+    
+    //if we know the tag, try to initialize (initialize does nothing if group is already initialized)
     if(options && options.tag){
-        if(loadStatus[statusIndex].sendComplete == true) return;
         initializeCollection(statusIndex,options,customArgs,groupURL,jsonList);
     }
 
     var count = 0;
     for(var obj in jsonList.members){
+        //if we see a member we have not yet requested, request it
         if(count>=loadStatus[statusIndex].sendCount){
             var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
             //console.log(URL);
@@ -511,14 +556,18 @@ function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
                     getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);
                 },
                 complete: function(){
+                    //decrement loading counter after sending
                     loadingScreen.remove();
+                    //update load status on recieve
                     loadStatus[statusIndex].recieveCount++;
+                    //if recieced = sent, we must be done!
                     if(loadStatus[statusIndex].recieveCount>=loadStatus[statusIndex].sendCount){
                         loadStatus[statusIndex].recieveComplete=true;
                         loadStatus[statusIndex].onRecieveComplete(options.tag);
                     }
                 },
                 beforeSend: function(){
+                    //Increment loading counter before sending
                     loadingScreen.add();
                     loadStatus[statusIndex].sendCount++;
                 }
@@ -532,44 +581,54 @@ function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
 // callback function for pulling JSON file, run code related to it in HERE ONLY
 function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) {
     var jsonObj = msg;
-    //console.log(jsonObj);
     
+    //ensure options is an object and is initialized
     if(!options || typeof options != 'object'){
         options = {};
     }
     
+    //Determine layerTag
     options.tag = options.tag || jsonObj.birth_certificate.type || "Feature"+(featureCollections.length+1);
     
+    //Let us know stuff is happening
     console.log(options.tag+": get");
     
+    //Initialize Collection (if already initialized, this function does nothing)
     initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG);
     
+    //if this object passes the filter function from groupOptions
     if(!options.filter || (options.filter && options.filter(jsonObj))){
-        
-        //var feature = CKtoGeoJSON(jsonObj);
-        //var layer = L.geoJson(feature,customArgs);
-        //featureCollections[options.tag].addLayer(layer);
-        //saveFeature(featureCollections[options.tag],feature,layer);
-        
+        //try to make a geoJSON from the object. This fails if the object has no geometry, so surround in Try Catch to stop stuff from breaking
         try {
             featureCollections[options.tag].addData(attachIslands(CKtoGeoJSON(jsonObj),options.useNearest));
         }
         catch(err) {
-            console.error("Could Not Make Valid GeoJSON from CK Data:");
+            console.groupCollapsed("Could Not Make Valid GeoJSON from CK Data:");
+            console.groupCollapsed("Rejected Object:")
             console.log(jsonObj);
+            console.groupEnd();
+            console.groupCollapsed("Error Thrown:");
+            console.log(err);
+            console.groupEnd();
+            console.groupEnd();
         }
     }
 };
 
+//Set up the group so that the application can use/display it
 function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
     var tag = options.tag;
+    
     if(!featureCollections.hasOwnProperty(tag)){
         
         customArgs = customArgs || {};
         
+        //Add to onEachFeature without overriding existing function
         var originalOnEachFeature = customArgs.onEachFeature;
         customArgs.onEachFeature = function(feature,layer){
+            //Save feature in feature_layers
             saveFeature(featureCollections[tag],feature,layer);
+            //if generalInfo function is given, setup general Info box for onHover
             if(options.generalInfo){
                 setupGeneralInfo(options.generalInfo(feature.properties),feature,layer);
             }
@@ -580,21 +639,26 @@ function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
         
         featureCollections[tag]=L.geoJson(null,customArgs);
         
+        //Add to onAdd without overriding existing function
         var originalOnAdd = featureCollections[tag].onAdd;
         featureCollections[tag].onAdd = function(map){
-            //Continue Loading 
+            //Load the entire layer when it is first added to the map
             finishGetEntries(statusIndex,options,customArgs,groupURL,groupMSG);
             originalOnAdd.call(featureCollections[tag],map);
         }
         
+        //save options for this featureCollection so they can be accessd later
         featureCollections[tag].groupOptions = options;
         
-        if(!options.preLoad){
+        //if toggle option is not given or true, add layer to layerController so user can toggle
+        if(options.toggle === undefined || options.toggle){
             layerController.addOverlay(featureCollections[tag],tag);
         }
         
+        //call load status initialize function
         loadStatus[statusIndex].onInitialize(tag);
         
+        //if preLoad option is true, add to the map now to begin loading immediately
         if(options.preLoad == true){
             featureCollections[tag].addTo(map);
         }

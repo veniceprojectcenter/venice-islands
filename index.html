@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
 
 <head>
     <link rel="apple-touch-icon" sizes="114x114" href="image/apple-icon-114x114.png" />
@@ -34,21 +34,34 @@
     <link rel="stylesheet" href="js/libraries/geostats.css" />
     <script src="js/libraries/geostats.min.js" type="text/javascript"></script>
     
-    <link REL=StyleSheet HREF="style.css" TYPE="text/css" MEDIA=screen> 
-    <link REL=StyleSheet HREF="css/mobile.css" TYPE="text/css" MEDIA=screen> 
+<!--    PDF Generator Library-->
+    <script src="js/libraries/xepOnline.jqPlugin.js" type="text/javascript"></script>
     
+    <link REL="stylesheet" HREF="css/style.css" TYPE="text/css" MEDIA=screen>
+    <style> 
+        @import url(css/loading.css);
+        @import url(css/overlays.css);
+        @import url(css/mobile.css);
+        @import url(css/help.css);
+        @import url(css/toolbars.css);
+    </style>
+   
 </head>
 <body>    
-	<div id="map" style="style.css">
-    </div>
+	<div id="map"></div>
     
-    <div id="overlay" style = "style.css">
+    <div id="overlay">
         <div id="inner"></div>
     </div>
-    <div id="help" style = "style.css">
+    
+    <div id="help">
         <div id="innerHelp"></div>
     </div>
-    <div id="loadingScreen" style = "style.css">
+    
+    <div id="loadingMini">
+        
+    </div>
+    <div id="loadingScreen">
         <div id="loadingTop"></div>
         <div id="spinPanel"></div>
         <div id="loadingBottom"></div>
@@ -68,7 +81,6 @@
     <script type ='text/javascript' src='js/core/filter.js'></script>
     <script type ='text/javascript' src='js/core/color.js'></script>
     <script type ='text/javascript' src='js/core/moreInfo.js'></script>
-    
 
     <script type ='text/javascript' src='js/getData.js'></script>
     

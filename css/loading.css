@@ -1,0 +1,71 @@
+/*
+*   This file contains styling for the loading screens
+*   invoked when opening the application for the first
+*   time and when loading in new overlays
+*/
+
+#loadingScreen {
+    visibility: hidden;
+    position: absolute;
+    left: 0px;
+    bottom:0px;
+    width:100%;
+    height:100%;
+    text-align: center;
+    background: rgba(0,0,0,0.6);
+    z-index:100;
+    position: absolute;
+}
+
+#loadingMini {
+    background: rgba(255, 255, 255, 0);
+    z-index:101;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: calc(10px + 1vw);
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    text-align: center;
+    color: #000000;
+    text-shadow:
+        -1px -1px 0 #FFF,  
+        1px -1px 0 #FFF,
+        -1px 1px 0 #FFF,
+        1px 1px 0 #FFF;
+}
+
+#loadingTop{
+    z-index:101;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: calc(20px + 6vw);
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+    color: whitesmoke;
+}
+
+#loadingBottom{
+    z-index:101;
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
+    text-align: center;
+}
+/* Bottom button for closing out of the screen*/
+a.Close {
+    border: 3px solid;
+    border-radius: 10px;
+    border-color: paleturquoise;
+    height: auto;
+    float: center;
+    background: snow;
+    color: initial;
+    padding: 4px;
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font: 14px/16px; /* Arial, Helvetica, sans-serif;*/
+}
+a.Close:hover { 
+    border-color: dimgray;  
+    background-color: chartreuse;
+}

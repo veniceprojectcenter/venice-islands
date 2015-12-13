@@ -59,7 +59,6 @@ var FilterControl = L.Control.extend({
         var labelDiv = document.createElement("DIV");
         var label = document.createElement("IMG");
         label.setAttribute('src','image/filter.png');
-        applyStyle(labelDiv,FilterElement_style(labelDiv));
         labelDiv.style.float = 'left';
         labelDiv.onclick = function(e){
             that.minimize(!that.minimized);
@@ -76,7 +75,6 @@ var FilterControl = L.Control.extend({
         var that = this;
         this.div.innerHTML = '';
         this.object = object;
-        applyStyle(this.div,Filter_style(this.div));
         
         this.fieldSelect = createDropdown(object);
         //this.fieldSelect.multiple = true;
@@ -91,8 +89,7 @@ var FilterControl = L.Control.extend({
         this.div.appendChild(this.functionSelect);
             
         this.textInput = document.createElement("INPUT");
-        applyStyle(this.textInput,FilterElement_style(this.textInput));
-        //this.textInput.setAttribute("type", "text");
+        this.textInput.setAttribute("id","iconField");
         this.textInput.onkeypress = function(e){
             var key = e.which || e.keyCode;
             if (key == 27) {  // 27 is the ESC key
@@ -128,7 +125,6 @@ var FilterControl = L.Control.extend({
         this.minimized = bool;
 
         this.div.innerHTML = '';
-        applyStyle(this.div,Filter_style(this.div));
 
         this.setupImage();
         
@@ -143,7 +139,7 @@ var FilterControl = L.Control.extend({
             this.autoComplete = new Awesomplete(this.textInput,{list: this.getAllValues(),minChars:1});
             
             var applyButton = document.createElement("INPUT");
-            applyStyle(applyButton,FilterElement_style(applyButton));
+            applyButton.setAttribute("id","iconField");
             applyButton.setAttribute("type", "button");
             applyButton.setAttribute("value","Apply");
             applyButton.onclick = this.onApply;
@@ -153,14 +149,14 @@ var FilterControl = L.Control.extend({
             this.div.appendChild(applyButton);
 
             var clearButton = document.createElement("INPUT");
-            applyStyle(clearButton,FilterElement_style(clearButton));
+            clearButton.setAttribute("id","iconField");
             clearButton.setAttribute("type", "button");
             clearButton.setAttribute("value","Clear");
             clearButton.onclick = this.onClear;
             this.div.appendChild(clearButton);
             
             var infoButton = document.createElement("INPUT");
-            applyStyle(infoButton,FilterElement_style(infoButton));
+            infoButton.setAttribute("id","iconField");
             infoButton.setAttribute("type", "button");
             infoButton.setAttribute("value","Info");
             infoButton.onclick = function(){
@@ -277,6 +273,7 @@ var FilterControl = L.Control.extend({
 //Create a dropdown object for use in a filter and apply the user defined style
 function createDropdown(object,options){
     var dropdown = document.createElement("SELECT");
+    dropdown.setAttribute("id","iconField");
     if(options){
         for(property in options){
             if(options.hasOwnProperty(property)){
@@ -284,8 +281,6 @@ function createDropdown(object,options){
             }
         }
     }
-    
-    applyStyle(dropdown,FilterElement_style(option));
     
     if(!object){
         return dropdown;
@@ -318,12 +313,6 @@ function createDropdown(object,options){
     
     dropdown.onmousedown = dropdown.ondblclick = L.DomEvent.stopPropagation;
     return dropdown;
-}
-
-function applyStyle(feature,style){
-    for(property in style){
-        feature.style[property] = style[property];
-    }
 }
 
 //********************************************************************************************************

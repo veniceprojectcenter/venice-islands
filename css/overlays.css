@@ -1,0 +1,143 @@
+/*  
+* This file contains css styling for the following items:
+*   - More info window (double click on island or feature)
+*   - Filter results window
+*   - Nearest features window
+*/
+
+/*id styling for title bar of more info window*/
+#topBar	{ 
+    color: rgb(250, 250, 250);
+    position: fixed;
+    width: 80%;
+    max-width: 500px;
+    top:70px;
+    margin-left:-8px;
+    padding-right:16px;
+    background: rgba(87, 87, 87, 1);
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    z-index:100;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+}
+
+/* Default class for overlay info box
+*       this can be overridden using specific ids 
+*       for the various overlays, such as #Bell_Towers{}
+*/
+.moreInfo{
+    padding:10px;
+    margin-top:10px;
+    margin-bottom:5px;
+    top:0;bottom:0;left:0;right:0;
+    /*max-height:inherit; /*was 250px*/
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    border-radius: 5px;
+    overflow: auto;
+    height:auto;
+    background-color:whitesmoke;
+}
+.moreInfo::-webkit-scrollbar {
+-webkit-appearance: none;
+width: 10px;
+}
+.moreInfo::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+/*Gis layer info box in more info window
+*   overrides properties set by #inner * {} 
+*/
+#baseLayer{
+    height:240px;
+    max-height:240px;
+}
+
+/*Embedded Image stuff*/
+#embeddedImage{
+    border:2px solid black;
+    height:150px;
+    position:inherit;
+    float: left;
+    margin-right:10px;
+    margin-bottom:10px;
+    
+}
+#embeddedImage:hover{
+}
+/*table settings*/
+td {
+  width: 4rem;
+  height: 2rem;
+  border: 1px solid #ccc;
+  text-align: center;
+  background: lightblue;
+}
+th {
+  background: lightblue;
+  border-color: white;
+}
+
+/*class styling for bottom bar of more info window*/
+.bottomBar{
+    color: rgb(250, 250, 250);
+    position: fixed;
+    width: 80%;
+    max-width: 500px;
+    bottom:60px;
+    margin-left:-8px;
+    padding-right:0px;
+    background: rgb(255, 255, 255);
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    z-index:100;
+    border-bottom-left-radius:0px;
+    border-bottom-right-radius:0px;
+    height:60px;
+    padding:6px 8px;
+    padding-bottom:15px;
+    border:10px;
+    border-bottom-left-radius:5px;
+    border-bottom-right-radius:5px;
+        
+}
+/*box containing venipedia and cartography links*/
+#inner2{   
+}
+/*venipedia link setup*/
+#venipediaImage {
+    position:absolute;
+    width:18%;
+    max-width:250px;
+    padding:80px 70px;
+    background-image: url('../image/venipedia.png');
+    background-size:80px 70px;
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+    
+}
+#venipediaImage:hover {
+    padding:80px 70px;
+    background-
+    image: url('../image/venipedia2.png');
+    background-size:80px 70px;
+    background-repeat: no-repeat;
+}
+/*cartography link setup*/
+#cartographyImage{
+    position:inherit;
+    padding:80px 70px;
+    background-image: url('../image/hMap.png');
+    background-size:80px 70px;
+    background-repeat: no-repeat;
+    background-position: 100% 0px;
+    
+}
+#cartographyImage:hover{
+    padding:80px 70px;
+    background-image: url('../image/hMap2.png');
+    background-size:80px 70px;
+    background-repeat: no-repeat;
+    
+}

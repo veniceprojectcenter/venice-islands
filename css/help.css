@@ -1,0 +1,56 @@
+/*
+*   This file contains styling for the help screen
+*/
+
+/*Help window background*/
+#help {
+    visibility: hidden;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width:100%;
+    height:100%;
+    text-align:left;
+    background: rgba(0,0,0,0.3);
+    z-index:100;
+    position: absolute;
+}
+/*help window itself*/
+#help div{
+    height: calc(100% - 100px);
+    width: calc(100% - 100px);
+    max-width:835px;
+    float: center;
+    margin: auto;
+    top:0; bottom:0; left:0; right:0;
+    text-align:left;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.6);
+    border-radius: 5px;
+    z-index:150;
+    position: absolute;
+}
+/*iframe within help window*/
+#helpContent{
+    width: 100%;
+    height:100%;
+}
+#helpContent::-webkit-scrollbar {
+-webkit-appearance: none;
+width: 10px;
+}
+#helpContent::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+#helpX{
+    width: auto;
+    height:auto;
+    bottom: 60px;
+    right:calc(50% - 55px);
+    position:fixed;
+}
