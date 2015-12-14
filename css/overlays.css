@@ -67,6 +67,25 @@ width: 10px;
 }
 #embeddedImage:hover{
 }
+
+/* Bibliography button (so you can use href with a button set from script)*/
+a.button {
+    margin:10px;
+    border: 5px solid;
+    border-radius: 5px;
+    border-color: white;
+    height: auto;
+    float:right;
+    background-color: white;
+    text-decoration: none;
+    color: initial;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+a.button:hover { 
+    background-color: powderblue;
+    border-color: powderblue;    
+}
 /*table settings*/
 td {
   width: 4rem;

@@ -152,6 +152,7 @@ var ColorControl = L.Control.extend({
         
         var labelDiv = document.createElement("DIV");
         var label = document.createElement("IMG");
+        label.setAttribute("id","controlIcon");
         label.setAttribute('src','image/color.png');
         labelDiv.style.float = 'left';
         labelDiv.onclick = function(e){

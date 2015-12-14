@@ -6,11 +6,6 @@
 *   - overlaid information windows: overlays.css
 *   - help window:  help.css
 *   - mobile browsers: mobile.css
-*   
-
-TO BE IMPLEMENTED STILL:
-*   - general info window: geninfo.css
-*  ???? - Banner (bottom left with vpc logo and help button) banner.css ?????
 */
 html, body
 {
@@ -24,37 +19,6 @@ html, body
     height: 100%;
     z-index:1;
 } 
-
-.info {
-    padding: 6px 8px;
-    font: 14px/16px Arial, Helvetica, sans-serif;
-    background: white;
-    background: rgba(255,255,255,0.8);
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    border-radius: 5px;
-}
-.info h4 {
-    margin: 0 0 5px;
-    color: #777;
-}
-.info h2 {
-    font: 15px Arial, Helvetica, sans-serif;
-    margin: 0 0 1px;
-    color: #1313f5;
-}
-
-.VPCinfo {
-    padding: 6px 8px;
-    font: 14px/16px Arial, Helvetica, sans-serif;
-    background: white;
-    background: rgba(255,255,255,0.8);
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    border-radius: 5px;
-}
-.VPCinfo h4 {
-    margin: 0 0 5px;
-    color: #777;
-}
 
 /* grey background */
 #overlay {
@@ -94,6 +58,7 @@ html, body
     position: absolute;
     
 }
+
 /* Apply to all divs within inner, this lets you
 *   dynamically resize boxes with overlay info
 *   BE CAREFUL, this is applied to
@@ -118,27 +83,7 @@ width: 10px;
     text-align:center;
 }
 
-/*button (so you can use href with a button set from script)*/
-a.button {
-    margin:10px;
-    border: 5px solid;
-    border-radius: 5px;
-    border-color: white;
-    height: auto;
-    float:right;
-    background-color: white;
-    text-decoration: none;
-    color: initial;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-}
-
-a.button:hover { 
-    background-color: powderblue;
-    border-color: powderblue;    
-}
-
-/*button (so you can use href with a button set from script)*/
-
+/*button used for closing out of most overlay windows*/
 a.Xbutton{
     border: 4px solid;
     border-radius: 15px;
