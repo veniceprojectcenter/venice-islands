@@ -6,7 +6,6 @@
 //groupOptions = { tag: string, filter: boolean function(obj),moreInfo: string(HTML) function(feature)};
 //customArgs = SEE http://leafletjs.com/reference.html#geojson-options
 function getGroup(URL,groupOptions,customArgs){
-    //$.getJSON(URL,partial(getGroupCallback,tag,customArgs,URL));
     $.getJSON(URL,function(msg){
         if(!msg) return;
         getGroupCallback(groupOptions,customArgs,URL,msg);});
@@ -195,7 +194,7 @@ setIslandOptions({searchInclude: ['Nome_Isola','Numero','Codice'],generalInfo: f
 },moreInfo: function(targets){
     var output ='';
     if(targets.length==1){
-        output+='<b><center>Base Layer Data</center></b>';
+        output+='<b><center>Island Statistics</center></b>';
         output += printObject(targets[0]);
     }
     else if(targets.length>1){
@@ -338,8 +337,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
     }},{pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: churchIcon}).bindPopup(
         "<b>" + feature.properties.data["Common name"] + "</b></br>" +
-        "Tower ID: " + feature.properties.data["Bell Tower ID"] + "</br>" +
-        "Tower Height: " + feature.properties.data["Bell Tower ID"] + "</br>"
+        "Tower ID: " + feature.properties.data["Bell Tower ID"]
         );
     },onEachFeature: function(feature,layer){
         layer.on({
@@ -383,14 +381,13 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
     
 
 //------- Wiki Data Islands --------//
-getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{tag:"Wiki Data",preLoad: true,toggle:false,moreInfo: function(targets,tag){
+getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{tag:"Additional Information",preLoad: true,toggle:false,moreInfo: function(targets,tag){
     var output = '';
     targets.forEach(function(target){
         if(target.media) var imageHash = Object.keys(target.media.images)[0];
         output+=
             (target.media ? '<img src="'+target.media.images[imageHash].small+'" id="embeddedImage">':'') +
             (target.data.Blurb?'<b>About: </b>'+ target.data.Blurb+'</br>':'') +
-        '<a href="'+ target.data.Bibliography +'" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
         '</br><table border="1" style="width:100%">'+
         '<tr>'+
             '<td>'+ 'Handicap Accessible' + '</td>' +

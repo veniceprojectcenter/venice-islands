@@ -18,13 +18,14 @@
 }
 
 #loadingMini {
+    position: absolute;
     background: rgba(255, 255, 255, 0);
-    z-index:101;
+    z-index:1;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: calc(10px + 1vw);
-    position: absolute;
     bottom: 15px;
     width: 100%;
+    pointer-events: none;
     text-align: center;
     color: #000000;
     text-shadow:
@@ -43,6 +44,7 @@
     width: 100%;
     text-align: center;
     color: whitesmoke;
+    pointer-events: none;
 }
 
 #loadingBottom{

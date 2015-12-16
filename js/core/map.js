@@ -12,7 +12,6 @@ var overlayFlag = 0;
 
 var map = L.map('map').setView([45.4375, 12.3358], 13);
 
-
 //**********************************************************************************************
 var defaultLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-hike/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
     maxZoom: 20, minZoom: 10,
@@ -37,16 +36,53 @@ var basicLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.outdoors/{z
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
     id: 'mapbox.outdoors'
 });
+
+var pirateLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.pirates/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
+        maxZoom: 20, minZoom: 10,
+        attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        id: 'mapbox.outdoors'
+    });
 //**********************************************************************************************
 
-function partial(func /*, 0..n args */) {
-  var args = Array.prototype.slice.call(arguments, 1);
-  return function() {
-    var allArguments = args.concat(Array.prototype.slice.call(arguments));
-    return func.apply(this, allArguments);
-  };
+//Create element for enabling layer selection
+var enableElement = document.createElement("DIV");
+
+//Style new element
+enableElement.style.height = '50px';
+enableElement.style.width = '50px';
+enableElement.style.background = 'rgba(255, 255, 255, 0)';
+enableElement.style.boxShadow = '0 0 0px';
+enableElement.style.margin = '5px';
+
+//on click, enable layer selection
+enableElement.onclick = function(){
+    
+    //preserve original onAdd function
+    var prevOnAdd = pirateLayer.onAdd;
+    pirateLayer.onAdd = function(map){
+        if(prevOnAdd){
+            prevOnAdd.call(pirateLayer,map);
+        }
+        audio.load();
+        audio.play();
+    }
+    
+    //Preserve original onRemove function
+    var prevOnRemove = pirateLayer.onRemove;
+    pirateLayer.onRemove = function(map){
+        if(prevOnRemove){
+            prevOnRemove.call(pirateLayer,map);
+        }
+        audio.pause();
+    }
+    
+    layerController.addBaseLayer(pirateLayer,"PIRATE!");
+    enableElement.onclick = function(){};
 }
 
+document.getElementById("help").appendChild(enableElement);
 
 //**********************************************************************************************
 
@@ -146,7 +182,6 @@ var islands_layer = L.geoJson(null, {
             setupGeneralInfo(islands_layer.islandOptions.generalInfo(feature.properties),feature,layer);
         }
     }
-    //onEachFeature: partial(saveAndHighlight,islands_layer)
 }).addTo(map);
 
 function refreshFilter(){
@@ -279,6 +314,23 @@ map.on('locationerror', onLocationError);
 
 //**********************************************************************************************
 
+// define the base and overlay maps so that they can be toggled
+var baseMaps = {
+    "Default": defaultLayer,
+    "Satellite": satelliteLayer,
+    "Basic": basicLayer
+};
+
+// add in layer control so that you can toggle the layers
+var layerController = L.control.layers(baseMaps,{}).addTo(map);
+layerController.getContainer().ondblclick = function(e){
+    if(e.stopPropagation){
+        e.stopPropagation();
+    }
+};
+
+//**********************************************************************************************
+
 // Displays question mark and vpc logo
 var VPCinfo = L.control({position: "bottomleft"});
     
@@ -322,23 +374,6 @@ function hideAbout(){
 VPCinfo.addTo(map);
 
 //**********************************************************************************************
-
-// define the base and overlay maps so that they can be toggled
-var baseMaps = {
-    "Default": defaultLayer,
-    "Satellite": satelliteLayer,
-    "Basic": basicLayer
-};
-
-// add in layer control so that you can toggle the layers
-var layerController = L.control.layers(baseMaps,{}).addTo(map);
-layerController.getContainer().ondblclick = function(e){
-    if(e.stopPropagation){
-        e.stopPropagation();
-    }
-};
-
-//*******************************************************************************************
 
 function objHasPropertyEqualTo(object,property,value){
     if(typeof object == 'object'){

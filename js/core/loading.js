@@ -81,6 +81,12 @@ var loadingScreen = {
     }
 }
 
+var audioDiv = document.createElement("DIV");
+audioDiv.innerHTML = "<audio id='audio'> <source src='image/audio.mp3' type='audio/mpeg'> </audio>";
+document.body.appendChild(audioDiv);
+var audio = document.getElementById("audio");
+audio.loop = true;
+
 //var closeButton = document.createElement("INPUT");
 //closeButton.setAttribute("type", "button");
 //closeButton.value = "I'm Impatient";

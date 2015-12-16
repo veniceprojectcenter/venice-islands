@@ -103,7 +103,7 @@ th {
 .bottomBar{
     color: rgb(250, 250, 250);
     position: fixed;
-    width: 80%;
+    width:80%;
     max-width: 500px;
     bottom:60px;
     margin-left:-8px;
@@ -113,50 +113,75 @@ th {
     z-index:100;
     border-bottom-left-radius:0px;
     border-bottom-right-radius:0px;
-    height:60px;
     padding:6px 8px;
-    padding-bottom:15px;
     border:10px;
     border-bottom-left-radius:5px;
     border-bottom-right-radius:5px;
-        
+    height:auto;
+    max-height:100px;
 }
 /*box containing venipedia and cartography links*/
 #inner2{   
 }
 /*venipedia link setup*/
 #venipediaImage {
-    position:absolute;
-    width:18%;
-    max-width:250px;
-    padding:80px 70px;
+    width:33%;
+    padding:35px 0px;
     background-image: url('../image/venipedia.png');
     background-size:80px 70px;
     background-position: 0px 0px;
     background-repeat: no-repeat;
+    float:left;
     
 }
-#venipediaImage:hover {
-    padding:80px 70px;
-    background-
-    image: url('../image/venipedia2.png');
+#venipediaImage:hover{
+    width:33%;
+    padding:35px 0px;
+    background-image: url('../image/venipedia2.png');
     background-size:80px 70px;
+    background-position: 0px 0px;
     background-repeat: no-repeat;
+    float:left;
+}
+/*zotero link setup*/
+#zoteroImage{
+    width:33%;
+    padding:35px 0px;
+    background-image: url('../image/zotero1.png');
+    background-size:70px 70px;
+    background-repeat: no-repeat;
+    background-position: center;
+    float:left;
+    
+}
+#zoteroImage:hover{
+    width:33%;
+    padding:35px 0px;
+    background-image: url('../image/zotero2.png');
+    background-size:70px 70px;
+    background-repeat: no-repeat;
+    background-position: center;
+    float:left;
 }
 /*cartography link setup*/
 #cartographyImage{
-    position:inherit;
-    padding:80px 70px;
+    width:33%;
+    padding:35px 0px;
     background-image: url('../image/hMap.png');
     background-size:80px 70px;
     background-repeat: no-repeat;
-    background-position: 100% 0px;
+    background-position: right;
+    float:right;
+    clear:none;
     
 }
 #cartographyImage:hover{
-    padding:80px 70px;
+    width:33%;
+    padding:35px 0px;
+    background-position: right;
     background-image: url('../image/hMap2.png');
     background-size:80px 70px;
     background-repeat: no-repeat;
-    
+    float:right;
+    clear:none;
 }
