@@ -13,7 +13,7 @@ var overlayFlag = 0;
 var map = L.map('map').setView([45.4375, 12.3358], 13);
 
 //**********************************************************************************************
-var defaultLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-hike/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
+var defaultLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-hike/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY2l0eWtub3dsZWRnZSIsImEiOiJjaWw1YmluZWEwMGZ5d3VtNW1jdjdkd3kyIn0.7KtmSdDinGzAV4ioENVtNg', {
     maxZoom: 20, minZoom: 10,
     attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -21,7 +21,7 @@ var defaultLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-
     id: 'mapbox.run-bike-hike'
 }).addTo(map);
 
-var satelliteLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets-satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
+var satelliteLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets-satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY2l0eWtub3dsZWRnZSIsImEiOiJjaWw1YmluZWEwMGZ5d3VtNW1jdjdkd3kyIn0.7KtmSdDinGzAV4ioENVtNg', {
     maxZoom: 20, minZoom: 10,
     attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -29,7 +29,7 @@ var satelliteLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets
     id: 'mapbox.streets-satellite'
 });
 
-var basicLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
+var basicLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY2l0eWtub3dsZWRnZSIsImEiOiJjaWw1YmluZWEwMGZ5d3VtNW1jdjdkd3kyIn0.7KtmSdDinGzAV4ioENVtNg', {
     maxZoom: 20, minZoom: 10,
     attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -37,7 +37,7 @@ var basicLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.outdoors/{z
     id: 'mapbox.outdoors'
 });
 
-var pirateLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.pirates/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
+var pirateLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.pirates/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY2l0eWtub3dsZWRnZSIsImEiOiJjaWw1YmluZWEwMGZ5d3VtNW1jdjdkd3kyIn0.7KtmSdDinGzAV4ioENVtNg', {
         maxZoom: 20, minZoom: 10,
         attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
             '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
