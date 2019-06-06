@@ -161,6 +161,3 @@ a.Xbutton:hover{
     position: relative;
     top: -90%;
 }
-.border-black{
-    z-index: -1;
-}
