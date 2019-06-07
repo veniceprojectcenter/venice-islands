@@ -58,16 +58,19 @@
 a.Close {
     border: 3px solid;
     border-radius: 10px;
-    border-color: paleturquoise;
+    border-color: grey;
     height: auto;
     float: center;
     background: snow;
     color: initial;
+    color: white;
+    background-color: black;
     padding: 4px;
     font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font: 14px/16px; /* Arial, Helvetica, sans-serif;*/
 }
 a.Close:hover { 
-    border-color: dimgray;  
-    background-color: chartreuse;
+    border-color: white;  
+    background-color: grey;
+    color: white;
 }

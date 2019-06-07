@@ -1,3 +1,4 @@
+$(function(){
 var featureCollections={};
 var islandsCollection={};
 
@@ -684,5 +685,6 @@ function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
     return false;
 };
 
+});
 
 
