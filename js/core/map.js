@@ -333,25 +333,6 @@ layerController.getContainer().ondblclick = function(e){
 
 // Displays question mark and vpc logo
 var VPCinfo = L.control({position: "bottomleft"});
-    
-VPCinfo.onAdd = function (map) {
-    this._div = L.DomUtil.create('div', 'VPCinfo'); // create a div with a class "info"
-    
-    var vpcSpan = document.createElement("SPAN");
-    vpcSpan.innerHTML = '<img src="image/about.png"  style="cursor:pointer;padding-right:7px;">';
-    vpcSpan.onclick = showAbout;
-    
-    this._div.appendChild(vpcSpan);
-    
-    var vpcLogo = document.createElement("A");
-    vpcLogo.innerHTML = '<img src="image/vpc25logo.png">';
-    vpcLogo.href = "http://veniceprojectcenter.org";
-    vpcLogo.target ="_blank";
-    
-    this._div.appendChild(vpcLogo);
-    
-    return this._div;
-};
 
 function showAbout(){
     var el = document.getElementById("help");

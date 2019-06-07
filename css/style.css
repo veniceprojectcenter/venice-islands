@@ -161,3 +161,8 @@ a.Xbutton:hover{
     position: relative;
     top: -90%;
 }
+.leaflet-control-zoom .leaflet-bar .leaflet-contrl{
+    position: absolute; 
+    top: 70vh; 
+    left: 75vw; 
+}
