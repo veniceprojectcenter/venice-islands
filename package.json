@@ -3,7 +3,6 @@
   "private": true,
   "dependencies": {
     "awesomplete": "^1.1.4",
-    "fuse": "^0.4.0",
     "geostats": "^1.7.0",
     "jquery": "^3.4.1",
     "leaflet": "^1.5.1",

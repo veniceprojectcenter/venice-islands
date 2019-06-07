@@ -1,4 +1,3 @@
-$(function(){
 var featureCollections={};
 var islandsCollection={};
 
@@ -333,7 +332,7 @@ layerController.getContainer().ondblclick = function(e){
 //**********************************************************************************************
 
 // Displays question mark and vpc logo
-var VPCinfo = L.control({position: "bottomleft"});
+//var VPCinfo = L.control({position: "bottomleft"});
 
 function showAbout(){
     var el = document.getElementById("help");
@@ -353,7 +352,7 @@ function hideAbout(){
     el.style.visibility = "hidden";
 }
 
-VPCinfo.addTo(map);
+//VPCinfo.addTo(map);
 
 //**********************************************************************************************
 
@@ -685,6 +684,5 @@ function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
     return false;
 };
 
-});
 
 

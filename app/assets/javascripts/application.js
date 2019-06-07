@@ -15,8 +15,9 @@
 //= require leaflet/dist/leaflet.js
 //= require leaflet-search/dist/leaflet-search.src.js
 //= require awesomplete/awesomplete.js
+//= require geostats/lib/geostats.js
 //= require spin/dist/spin.min.js
-
+//= require fuse.js
 
 // ## main app ##
 //= require cookies.js

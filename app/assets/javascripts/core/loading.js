@@ -1,5 +1,3 @@
-$(function(){
-    console.log("pippo");
 var loadingScreen = {
     opts: {
       lines: 13 // The number of lines to draw
@@ -109,4 +107,3 @@ $(document.getElementById("loadingBottom")).append(
 
 loadingScreen.show();
 loadingScreen.hide();
-});
