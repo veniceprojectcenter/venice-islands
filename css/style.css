@@ -16,8 +16,8 @@ html, body
 
 #map { 
     position: relative;
-    height: 80vh;
-    width: 90vw;
+    height: 85vh;
+    width: 80vw;
     z-index:1;
     top: -90%;
     margin-left: 10vw;
@@ -157,7 +157,7 @@ a.Xbutton:hover{
 .filters-header-vpc{
     z-index: 6;
     width: 100vw;
-    height: 10vh;
+    height: 5vh;
     position: relative;
     top: -90%;
 }
