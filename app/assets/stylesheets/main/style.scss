@@ -60,6 +60,10 @@ html, body
     overflow-y:auto;
     position: absolute;
     
+    div,p,b,span,a{
+        color: black;
+    }
+    
 }
 
 /* Apply to all divs within inner, this lets you
