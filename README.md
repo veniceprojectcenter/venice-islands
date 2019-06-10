@@ -23,5 +23,7 @@ yarn add jquery --save
 
 heroku git:remote -a vpc-islands
 
+heroku buildpacks:set heroku/nodejs
 
+heroku buildpacks:set heroku/ruby
 
