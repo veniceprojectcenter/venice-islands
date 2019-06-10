@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="apple-touch-icon" sizes="114x114" href="image/apple-icon-114x114.png" />
-    <link rel="icon" type = "image/png" href="image/favicon.png" />
     <title>Isolario Interattivo</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +16,7 @@
     </script>
   </head>
   <body class="dark-mode">
+    <%= render :partial => "/layouts/about" %>
     <div class="header-vpc dark-mode">
       <span onclick="showAbout()" 
         class="button dark-mode text-header-vpc" 
@@ -27,13 +26,12 @@
       <span class="dark-mode text-header-vpc" style="grid-area: title; text-align: center;font-weight: bold;">
         Interactive Isolario
       </span>
-      <a class="header-visit-vpc" href="http://veniceprojectcenter.org" target="_blank">
+      <a class="header-visit-vpc" href="https://veniceprojectcenter.org" target="_blank">
         <span class="text-header-vpc">Visit VPC</span>
       </a>
     </div>
-    <div class="left-header-vpc dark-mode"></div>
-    <div id="filters" class="filters-header-vpc dark-mode"></div>
-    
+    <!--div class="left-header-vpc dark-mode"></div>
+    <div id="filters" class="filters-header-vpc dark-mode"></div-->
    
     <%= yield %>
 
@@ -45,22 +43,6 @@
         <div id="loadingBottom"></div>
     </div>
 
-    <!--script type ='text/javascript' src='js/core/randColor.js'></script>
-    <script type ='text/javascript' src='js/core/URLParam.js'></script>
-    <script type ='text/javascript' src='js/dictionary.js'></script>
-    <script type ='text/javascript' src='js/styles.js'></script>
-    <script type ='text/javascript' src='js/icons.js'></script>
-    <script type ='text/javascript' src='js/core/geom.js'></script>
-    <script type ='text/javascript' src='js/core/CKtoGeoJSON.js'></script>
-    <script type ='text/javascript' src='js/core/loading.js'></script>
-    
-    <script type ='text/javascript' src='js/core/map.js'></script>
-    <script type ='text/javascript' src='js/core/search.js'></script>
-    <script type ='text/javascript' src='js/core/filter.js'></script>
-    <script type ='text/javascript' src='js/core/color.js'></script>
-    <script type ='text/javascript' src='js/core/moreInfo.js'></script>
-
-    <script type ='text/javascript' src='js/getData.js'></script-->
     <%= javascript_include_tag 'application' %>
   </body>
 </html>

@@ -335,21 +335,13 @@ layerController.getContainer().ondblclick = function(e){
 //var VPCinfo = L.control({position: "bottomleft"});
 
 function showAbout(){
-    var el = document.getElementById("help");
-	el.style.visibility = "visible";
-    //$(document.getElementById("innerHelp")).append('<div class="floatingX" onclick = "hideAbout()" ></div>');
-    document.getElementById("innerHelp").innerHTML = 
-        '<a id="helpX" onclick = "hideAbout()" class = "Xbutton">Close Window</a>'+
-        '<iframe id=helpContent scrolling="yes" src="https://docs.google.com/document/d/11a5uMYyAtVFpasV2QbwML8ftwQgKn9n_pIhnUJoiBo8/pub?embedded=true"></iframe>';
-    $('#help').on('click', function(event) {
-        if (!$(event.target).closest('#innerHelp').length) {
-            hideAbout();
-        }
+   
+    $(".about_modal").show();
+
+    $(".close_modal").on("click",function(){
+        $(".about_modal").hide();
     });
-}
-function hideAbout(){
-    var el = document.getElementById("help");
-    el.style.visibility = "hidden";
+    
 }
 
 //VPCinfo.addTo(map);
