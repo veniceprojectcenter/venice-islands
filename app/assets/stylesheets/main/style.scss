@@ -184,3 +184,15 @@ a.header-visit-vpc:hover{
         margin-top: 25%;
     }
 }
+#map{
+    .awesomplete{
+        display: inline;
+        ul{
+            display: none;
+        }
+    }
+
+    .visually-hidden{
+        display: none;
+    }
+}

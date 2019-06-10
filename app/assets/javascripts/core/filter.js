@@ -44,7 +44,7 @@ var FilterControl = L.Control.extend({
 
     onAdd: function (map) {
         this.div = this.div || L.DomUtil.create('div', 'iconBox');
-        
+        //this.div.style.display = "inline";
         this.setObject(this.object);
         
         if(this.modifyDiv){
@@ -75,6 +75,9 @@ var FilterControl = L.Control.extend({
     setObject : function(object){
         var that = this;
         this.div.innerHTML = '';
+        this.div.style = "inline";
+        this.div.setAttribute("ciao","allora");
+
         this.object = object;
         
         this.fieldSelect = createDropdown(object);
@@ -91,6 +94,7 @@ var FilterControl = L.Control.extend({
             
         this.textInput = document.createElement("INPUT");
         this.textInput.setAttribute("id","iconField");
+        
         this.textInput.onkeypress = function(e){
             var key = e.which || e.keyCode;
             if (key == 27) {  // 27 is the ESC key
@@ -109,6 +113,10 @@ var FilterControl = L.Control.extend({
         
         this.autoComplete = new Awesomplete(this.textInput,{list: this.getAllValues(),minChars:1});
         
+        console.log(this.autoComplete.input.parentNode.style.display = "inline");
+        
+        //this.autoComplete.input.parentNode.style.display = "inline";
+
         L.DomEvent.on(this.textInput, 'mousedown', function(event) {
             L.DomEvent.stopPropagation(event);
         });
