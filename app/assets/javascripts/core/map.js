@@ -82,7 +82,7 @@ enableElement.onclick = function(){
     enableElement.onclick = function(){};
 }
 
-document.getElementById("help").appendChild(enableElement);
+//document.getElementById("help").appendChild(enableElement);
 
 //**********************************************************************************************
 

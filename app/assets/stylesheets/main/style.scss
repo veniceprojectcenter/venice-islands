@@ -20,6 +20,7 @@ html, body
     width: 90%;
     margin: 0 auto;
     margin-top: 15px;
+    z-index: 1;
     .awesomplete{
         display: inline;
         ul{
@@ -32,16 +33,6 @@ html, body
     }
 }
 
-/*#map { 
-    position: relative;
-    height: 85vh;
-    width: 80vw;
-    z-index:1;
-    top: -90%;
-    margin-left: 10vw;
-} */
-
-/* grey background */
 #overlay {
     visibility: hidden; 
     position: absolute;
@@ -60,7 +51,7 @@ html, body
     max-width: 500px;
     margin: auto;
     float: center;
-    top:120px;
+    top: 15px;
     left:0; 
     right:0;
     text-align:left;
@@ -160,25 +151,16 @@ a.Xbutton:hover{
     padding-top: 15px;
 }
 
-.button{    
-    cursor: pointer;
-}
-.button:hover{    
-    cursor: pointer;
-    color: orange !important;
+.how-area{
+  grid-area: how; 
+  margin-left: 15px;
 }
 
 .header-visit-vpc{
     grid-area: vpc;
-    cursor: pointer;
-    text-decoration: none;
     text-align: right;
     margin-right: 15px;
     color: white;
-}
-
-a.header-visit-vpc:hover{
-   color: orange !important;
 }
 
 .left-header-vpc{
@@ -236,8 +218,8 @@ a.header-visit-vpc:hover{
   color: orange;
 } 
 
-.my_link:after{
-  content: '  →';
+.my_link:hover:after{
+  //content: '  →';
 } 
 
 .close_modal{
@@ -254,5 +236,5 @@ a.header-visit-vpc:hover{
 }
 
 .close_modal:hover{
-  background-color: rgba(63,63,63,0.8);
+  background-color: rgba(63,63,63,0.95);
 }
