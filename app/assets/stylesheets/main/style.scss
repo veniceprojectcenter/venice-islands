@@ -12,6 +12,7 @@ html, body
     height: 100%;
     width: 100%;
     margin: 0px;
+    overflow: hidden;
 }
 
 #map { 
@@ -40,7 +41,6 @@ html, body
 #inner{
     width: 80%;
     max-width: 500px;
-    height: calc(100% - 260px);
     margin: auto;
     float: center;
     top:120px;
@@ -50,8 +50,6 @@ html, body
     padding-top:0px;
     padding-bottom:0px;
     max-height:100%;
-    padding-left:8px;
-    padding-right:8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
     background: white;
     background: rgba(255,255,255,0.8);
@@ -60,7 +58,7 @@ html, body
     overflow-y:auto;
     position: absolute;
     
-    div,p,b,span,a{
+    div,p,b,span{
         color: black;
     }
     
@@ -101,7 +99,10 @@ a.Xbutton{
     box-shadow: 0 0 15px rgba(0,0,0,0.0);
     color: #e5e5e5;
     width:auto;
+    font-weight: bold;
+    font-size: 18px;
 }
+
 a.Xbutton:hover{
     border-color: powderblue; 
 }
@@ -124,10 +125,7 @@ a.Xbutton:hover{
 /*NEW*/
 .text-header-vpc{
     font-family: sans-serif;
-    margin-top: 20px;
-    margin-left: 15px;
-    margin-right: 15px;
-    font-size: x-large;
+    font-size: 18px;
     text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 }
 .white-mode{
@@ -140,19 +138,27 @@ a.Xbutton:hover{
 }
 .header-vpc{
     z-index: 5;
-    width: 100vw;
-    height: 10vh;
+    display: grid;
+    grid-template-areas: 'how title vpc';
+    margin-top: 15px;
 }
-.button{
-    border: solid 1px #ffffff;
-    background: transparent;
-    border-radius: 50px;
-    padding: .7em 2.4em;
+.button{    
     cursor: pointer;
-    transition: .3s ease-in-out;
-    display: inline-grid;
-    max-height: 30px;
 }
+
+.header-visit-vpc{
+    grid-area: vpc;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: right;
+    margin-right: 15px;
+    color: white;
+}
+
+a.header-visit-vpc:hover{
+   color: orange !important;
+}
+
 .left-header-vpc{
     z-index: 5;
     width: 10vw;
@@ -169,4 +175,12 @@ a.Xbutton:hover{
     position: absolute; 
     top: 70vh; 
     left: 75vw; 
+}
+
+
+#spinPanel{
+    .spinner{
+        margin-left: 50%;
+        margin-top: 25%;
+    }
 }
