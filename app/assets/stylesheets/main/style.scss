@@ -19,7 +19,7 @@ html, body
     height: 600px;
     width: 90%;
     margin: 0 auto;
-    margin-top: 15px;
+    margin-top: 100px;
     z-index: 1;
     .awesomplete{
         display: inline;
@@ -192,19 +192,21 @@ a.Xbutton:hover{
 .about_modal{
   position: absolute;
   z-index: 9999;
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0,0,0,0.8);
   width: 100%;
   min-height: 100%;
   display: none;
   .container{
-    margin-top: 100px;
+    margin-top: 60px;
     text-align: center;
+    h1{
+      font-size: 22px;
+      text-transform: uppercase;
+    }
   }
   .image_container{
     margin: 0 auto;
-    img{
-      width: 80%;
-    }
+    
   }
 }
 
@@ -212,24 +214,35 @@ a.Xbutton:hover{
   text-decoration: none;
   cursor: pointer;
   color: white;
-}  
+} 
+
+.guida{
+  padding: 4px;
+  border: 3px solid #e5b106;
+  border-radius: 10px;
+  color: #e5b106;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+} 
+
+.guida:hover{
+  background-color: rgba(63,63,63,0.95);
+}
 
 .my_link:hover{
-  color: orange;
+  color: #e5b106;
 } 
-
-.my_link:hover:after{
-  //content: '  →';
-} 
+ 
 
 .close_modal{
   margin-top: 15px; 
   font-size: 20px;
   font-weight: 800;
   float: right;
-  color: red;
+  color: #cc2f0c;
   margin-right: 15px;
-  border: 3px solid red;
+  border: 3px solid #cc2f0c;
   border-radius: 10px;
   min-width: 64px;
   padding: 5px;
