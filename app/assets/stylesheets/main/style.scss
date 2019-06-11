@@ -118,6 +118,19 @@ a.Xbutton:hover{
 
 /*Search Bar Width*/
 /*Modifica css prova Giugie*/
+#iconField {
+  color: white;
+  background-color: black;
+  }
+#controlIcon{
+  background-color: #2b2b2b;
+}
+.iconBox{
+  top: -644px;
+  left: 230px;
+  margin-left: 35px;
+  background-color: black;
+}
 .leaflet-control{
   clear: inherit!important;
 }
@@ -142,16 +155,17 @@ a.Xbutton:hover{
   background-color: #0000!important;
   position: absolute;
   top: 50px;
-  margin-left: 25px;
+  margin-left: 45px;
 }
 .leaflet-control-layers-toggle{
   display: none!important;/*DELETED IMAGE*/
 }
 .search-cancel{
-    top: 1px;
+  top: 1px;
 }
 .search-button{
-   margin-top:3.0px;
+  display: none!important;/*DELETED IMAGE*/
+  margin-top:3.0px;
 }
 
 /*Rip Giugie*/
