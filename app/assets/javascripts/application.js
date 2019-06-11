@@ -35,5 +35,4 @@
 //= require core/color.js
 //= require core/moreInfo.js
 //= require main/getData.js
-
-
+//= require main/move_filter.js
