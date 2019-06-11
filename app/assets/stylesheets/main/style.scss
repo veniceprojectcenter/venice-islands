@@ -17,10 +17,11 @@ html, body
 
 #map{
     height: 600px;
-    width: 90%;
+    width: 80%;
     margin: 0 auto;
-    margin-top: 100px;
+    margin-top: 25px;
     z-index: 1;
+    margin-right: 155px;
     .awesomplete{
         display: inline;
         ul{
@@ -116,20 +117,44 @@ a.Xbutton:hover{
 }
 
 /*Search Bar Width*/
+/*Modifica css prova Giugie*/
+.leaflet-control{
+  clear: inherit!important;
+}
+.leaflet-control-layers-list{
+  position: absolute;
+  right: 10px;
+  top: 120px;
+}
 .leaflet-control-search .search-input {
+    background-color: black!important;
+    color: white!important;
     height:25px;
     width: 150px;
     font-size: 12pt;
 }
 .search-tip{
     min-width: 150px;
+    color: white!important;
+    background-color: black!important;
+}
+.leaflet-control-search.search-exp{
+  background-color: #0000!important;
+  position: absolute;
+  top: 50px;
+  margin-left: 25px;
+}
+.leaflet-control-layers-toggle{
+  display: none!important;/*DELETED IMAGE*/
 }
 .search-cancel{
-    top: 4px;
+    top: 1px;
 }
 .search-button{
    margin-top:3.0px;
 }
+
+/*Rip Giugie*/
 /*NEW*/
 .text-header-vpc{
     font-family: sans-serif;
