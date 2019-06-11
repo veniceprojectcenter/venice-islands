@@ -410,4 +410,4 @@ filter.getAllValues = function(e){
 }
 
 map.addControl(filter);
-filter.minimize(true);
+//filter.minimize(true);
