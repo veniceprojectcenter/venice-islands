@@ -34,6 +34,18 @@ html, body
     }
 }
 
+#custom-map-controls-right{
+  .awesomplete{
+    display: inline;
+    ul{
+        display: none;
+    }
+  }
+  .visually-hidden{
+        display: none;
+    }
+}
+
 #overlay {
     visibility: hidden; 
     position: absolute;
