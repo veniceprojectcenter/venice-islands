@@ -143,7 +143,7 @@ a.Xbutton:hover{
 }
 .iconBox{
   z-index: 7!important;
-  top: -644px;
+  //top: -644px;
   margin-left: 35px;
   background-color: black;
 }
@@ -170,7 +170,7 @@ a.Xbutton:hover{
 .leaflet-control-search.search-exp{
   background-color: #0000!important;
   position: relative;
-  top: -645px;
+  //top: -645px;
   margin-left: 45px;
 }
 .leaflet-control-layers-toggle{
@@ -234,6 +234,7 @@ a.Xbutton:hover{
     top: 70vh; 
     left: 75vw; 
 }
+
 
 
 #spinPanel{

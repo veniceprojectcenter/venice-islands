@@ -76,7 +76,7 @@ var FilterControl = L.Control.extend({
         var that = this;
         this.div.innerHTML = '';
         this.div.style = "inline";
-        this.div.setAttribute("ciao","allora");
+        
 
         this.object = object;
         
