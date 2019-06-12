@@ -26,6 +26,14 @@ function moveFilter(){
   newParent.appendChild(oldParent[0]);
 };
 
+function moveLegend(){
+  var oldParent = document.getElementsByClassName("legend leaflet-control");
+  var newParent = document.getElementById('custom-map-controls-left');
+  while (oldParent[0].childNodes.length > 0) {
+    newParent.appendChild(oldParent[0].childNodes[0]);
+  };
+}
+
 $(document).ready(function (){
   moveLeft();
   moveRight();

@@ -1,6 +1,6 @@
 // create a legend for the colors
 // Create grades using http://colorbrewer2.org/
-var legend = L.control({position: 'bottomright'});
+var legend = L.control({position: 'bottomleft'});
 var legend_div = L.DomUtil.create('div', 'legend');
  // Disable dragging when user's cursor enters the element
 legend_div.addEventListener('mouseover', function () {
