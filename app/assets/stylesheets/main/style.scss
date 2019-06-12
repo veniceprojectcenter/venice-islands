@@ -306,3 +306,21 @@ a.Xbutton:hover{
 .close_modal:hover{
   background-color: rgba(63,63,63,0.95);
 }
+
+.prova{
+  display: grid;
+  grid-template-areas: 'menu mappa';
+  grid-template-columns: 20% 80%;
+}
+
+.mappa{
+  display: grid !important;
+  grid-area: 'mappa' !important;
+}
+
+.menu{
+  grid-area: menu !important;
+  display: grid !important;
+}
+
+
