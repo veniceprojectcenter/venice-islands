@@ -1,5 +1,5 @@
 function moveLeft(){
-  var newParent = document.getElementById('custom-map-controls-left');
+  var newParent = document.getElementById('filters');
   var oldParent = document.getElementsByClassName("leaflet-control-layers leaflet-control");
   while (oldParent[0].childNodes.length > 0) {
     newParent.appendChild(oldParent[0].childNodes[0]);
@@ -7,7 +7,7 @@ function moveLeft(){
 };
 
 function moveRight() {
-  var newParent = document.getElementById('custom-map-controls-right');
+  var newParent = document.getElementById('filters');
   var oldParent = document.getElementsByClassName("leaflet-top leaflet-left");
   //var oldParent = document.getElementsByClassName("leaflet-control-container")
   var i = 0;
@@ -22,7 +22,7 @@ function moveRight() {
 
 function moveFilter(){
   var oldParent = document.getElementsByClassName("iconBox leaflet-control");
-  var newParent = document.getElementById('custom-map-controls-right');
+  var newParent = document.getElementById('filters');
   newParent.appendChild(oldParent[0]);
 };
 
