@@ -42,8 +42,8 @@ html, body
     }
   }
   .visually-hidden{
-        display: none;
-    }
+    display: none;
+  } 
 }
 
 #overlay {
@@ -130,14 +130,19 @@ a.Xbutton:hover{
 
 /*Search Bar Width*/
 /*Modifica css prova Giugie*/
+#inner{
+  z-index: 10!important;
+}
 #iconField {
   color: white;
   background-color: black;
+  border-radius: 5px;
   }
 #controlIcon{
   background-color: #2b2b2b;
 }
 .iconBox{
+  z-index: 7!important;
   top: -644px;
   margin-left: 35px;
   background-color: black;
