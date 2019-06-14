@@ -18,6 +18,7 @@
     </script>
   </head>
   <body class="dark-mode">
+    <%= render :partial => "/layouts/about" %>
     <div class="header-vpc dark-mode">
       <span onclick="showAbout()" 
         class="button dark-mode text-header-vpc" 
@@ -31,10 +32,7 @@
         <span class="text-header-vpc">Visit VPC</span>
       </a>
     </div>
-    <div class="left-header-vpc dark-mode"></div>
-    <div id="filters" class="filters-header-vpc dark-mode"></div>
-    
-   
+     
     <%= yield %>
 
     <div id="loadingMini"></div>

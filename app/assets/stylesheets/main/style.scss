@@ -12,16 +12,12 @@ html, body
     height: 100%;
     width: 100%;
     margin: 0px;
-    overflow: hidden;
 }
 
 #map { 
-    position: relative;
-    height: 85vh;
-    width: 80vw;
+    height: calc( 100% - 61px );
+    width: 100%;
     z-index:1;
-    top: -90%;
-    margin-left: 10vw;
 } 
 
 /* grey background */
@@ -140,7 +136,9 @@ a.Xbutton:hover{
     z-index: 5;
     display: grid;
     grid-template-areas: 'how title vpc';
-    margin-top: 15px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    line-height: 20px;
 }
 .button{    
     cursor: pointer;
@@ -195,4 +193,54 @@ a.header-visit-vpc:hover{
     .visually-hidden{
         display: none;
     }
+}
+
+.about_modal{
+  position: absolute;
+  z-index: 9999;
+  background-color: rgba(0,0,0,0.7);
+  width: 100%;
+  min-height: 100%;
+  display: none;
+  .container{
+    margin-top: 100px;
+    text-align: center;
+  }
+  .image_container{
+    margin: 0 auto;
+    img{
+      width: 80%;
+    }
+  }
+}
+
+.my_link{
+  text-decoration: none;
+  cursor: pointer;
+  color: white;
+}  
+
+.my_link:hover{
+  color: orange;
+} 
+
+.my_link:hover:after{
+  //content: '  →';
+} 
+
+.close_modal{
+  margin-top: 15px; 
+  font-size: 20px;
+  font-weight: 800;
+  float: right;
+  color: red;
+  margin-right: 15px;
+  border: 3px solid red;
+  border-radius: 10px;
+  min-width: 64px;
+  padding: 5px;
+}
+
+.close_modal:hover{
+  background-color: rgba(63,63,63,0.95);
 }
