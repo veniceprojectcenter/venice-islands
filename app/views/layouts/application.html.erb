@@ -21,7 +21,7 @@
     <%= render :partial => "/layouts/about" %>
     <div class="header-vpc dark-mode">
       <span onclick="showAbout()" 
-        class="button dark-mode text-header-vpc" 
+        class="button dark-mode text-header-vpc my_link" 
         style="grid-area: how; margin-left: 15px;">
         How it works
       </span>
@@ -43,22 +43,6 @@
         <div id="loadingBottom"></div>
     </div>
 
-    <!--script type ='text/javascript' src='js/core/randColor.js'></script>
-    <script type ='text/javascript' src='js/core/URLParam.js'></script>
-    <script type ='text/javascript' src='js/dictionary.js'></script>
-    <script type ='text/javascript' src='js/styles.js'></script>
-    <script type ='text/javascript' src='js/icons.js'></script>
-    <script type ='text/javascript' src='js/core/geom.js'></script>
-    <script type ='text/javascript' src='js/core/CKtoGeoJSON.js'></script>
-    <script type ='text/javascript' src='js/core/loading.js'></script>
-    
-    <script type ='text/javascript' src='js/core/map.js'></script>
-    <script type ='text/javascript' src='js/core/search.js'></script>
-    <script type ='text/javascript' src='js/core/filter.js'></script>
-    <script type ='text/javascript' src='js/core/color.js'></script>
-    <script type ='text/javascript' src='js/core/moreInfo.js'></script>
-
-    <script type ='text/javascript' src='js/getData.js'></script-->
     <%= javascript_include_tag 'application' %>
   </body>
 </html>
