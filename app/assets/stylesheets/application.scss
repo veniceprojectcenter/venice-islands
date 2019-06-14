@@ -14,7 +14,8 @@
  *= require leaflet/dist/leaflet.css
  *= require leaflet-search/dist/leaflet-search.min.css
  */
-
+ 
+@import 'main/font.scss';
 @import 'main/loading.scss';
 @import 'main/overlays.scss';
 @import 'main/mobile.scss';
@@ -23,3 +24,4 @@
 @import 'main/genInfo.scss';
 @import 'main/banner.scss';
 @import 'main/style.scss';
+

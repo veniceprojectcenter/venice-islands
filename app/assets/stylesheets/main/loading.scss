@@ -21,7 +21,7 @@
     position: absolute;
     background: rgba(255, 255, 255, 0);
     z-index:1;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+//    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: calc(10px + 1vw);
     bottom: 15px;
     width: 100%;
@@ -37,7 +37,7 @@
 
 #loadingTop{
     z-index:101;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    //font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: calc(20px + 6vw);
     position: absolute;
     top: 10%;
@@ -63,7 +63,7 @@ a.Close {
     color: white;
     background-color: black;
     padding: 4px;
-    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    //font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font: 14px/16px; /* Arial, Helvetica, sans-serif;*/
 }
 a.Close:hover { 

@@ -19,8 +19,8 @@
     <%= render :partial => "/layouts/about" %>
     <div class="header-vpc dark-mode">
       <span onclick="showAbout()" 
-        class="how-area dark-mode text-header-vpc my_link" 
-        style="">
+        class="button dark-mode text-header-vpc my_link" 
+        style="grid-area: how; margin-left: 15px;">
         How it works
       </span>
       <span class="dark-mode text-header-vpc" style="grid-area: title; text-align: center;font-weight: bold;">
@@ -30,9 +30,7 @@
         <span class="text-header-vpc">Visit VPC</span>
       </a>
     </div>
-    <!--div class="left-header-vpc dark-mode"></div-->
-    <div id="filters" class="filters-header-vpc dark-mode"></div>
-   
+
     <%= yield %>
 
     <div id="loadingMini"></div>

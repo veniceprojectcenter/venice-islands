@@ -12,40 +12,19 @@ html, body
     height: 100%;
     width: 100%;
     margin: 0px;
-    font-family: sans-serif;
 }
 
-#map{
-    height: 600px;
-    width: 80%;
-    margin: 0 auto;
-    margin-top: 25px;
-    z-index: 1;
-    margin-right: 155px;
-    .awesomplete{
-        display: inline;
-        ul{
-            display: none;
-        }
-    }
-
-    .visually-hidden{
-        display: none;
-    }
+div,span,p,a,h1,h2,h3,h4,h5,h6{
+    font-family: 'Gilroy';
 }
 
-#custom-map-controls-right{
-  .awesomplete{
-    display: inline;
-    ul{
-        display: none;
-    }
-  }
-  .visually-hidden{
-    display: none;
-  } 
-}
+#map { 
+    height: calc( 100% - 61px );
+    width: 100%;
+    z-index:1;
+} 
 
+/* grey background */
 #overlay {
     visibility: hidden; 
     position: absolute;
@@ -64,7 +43,7 @@ html, body
     max-width: 500px;
     margin: auto;
     float: center;
-    top: 15px;
+    top:120px;
     left:0; 
     right:0;
     text-align:left;
@@ -129,65 +108,23 @@ a.Xbutton:hover{
 }
 
 /*Search Bar Width*/
-/*Modifica css prova Giugie*/
-#inner{
-  z-index: 10!important;
-}
-#iconField {
-  color: white;
-  background-color: black;
-  border-radius: 5px;
-  }
-#controlIcon{
-  background-color: #2b2b2b;
-}
-.iconBox{
-  z-index: 7!important;
-  //top: -644px;
-  margin-left: 35px;
-  background-color: black;
-}
-.leaflet-control{
-  clear: inherit!important;
-}
-.leaflet-control-layers-list{
-  position: absolute;
-  right: 10px;
-  top: 120px;
-}
 .leaflet-control-search .search-input {
-    background-color: black!important;
-    color: white!important;
     height:25px;
     width: 150px;
     font-size: 12pt;
 }
 .search-tip{
     min-width: 150px;
-    color: white!important;
-    background-color: black!important;
-}
-.leaflet-control-search.search-exp{
-  background-color: #0000!important;
-  position: relative;
-  //top: -645px;
-  margin-left: 45px;
-}
-.leaflet-control-layers-toggle{
-  display: none!important;/*DELETED IMAGE*/
 }
 .search-cancel{
-  top: 1px;
+    top: 4px;
 }
 .search-button{
-  display: none!important;/*DELETED IMAGE*/
-  margin-top:3.0px;
+   margin-top:3.0px;
 }
-
-/*Rip Giugie*/
 /*NEW*/
 .text-header-vpc{
-    font-family: sans-serif;
+    //font-family: sans-serif;
     font-size: 18px;
     text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 }
@@ -203,19 +140,25 @@ a.Xbutton:hover{
     z-index: 5;
     display: grid;
     grid-template-areas: 'how title vpc';
-    padding-top: 15px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    line-height: 20px;
 }
-
-.how-area{
-  grid-area: how; 
-  margin-left: 15px;
+.button{    
+    cursor: pointer;
 }
 
 .header-visit-vpc{
     grid-area: vpc;
+    cursor: pointer;
+    text-decoration: none;
     text-align: right;
     margin-right: 15px;
     color: white;
+}
+
+a.header-visit-vpc:hover{
+   color: orange !important;
 }
 
 .left-header-vpc{
@@ -228,6 +171,7 @@ a.Xbutton:hover{
     width: 100vw;
     height: 5vh;
     position: relative;
+    top: -90%;
 }
 .leaflet-control-zoom .leaflet-bar .leaflet-contrl{
     position: absolute; 
@@ -236,32 +180,41 @@ a.Xbutton:hover{
 }
 
 
-
 #spinPanel{
     .spinner{
         margin-left: 50%;
         margin-top: 25%;
     }
 }
+#map{
+    .awesomplete{
+        display: inline;
+        ul{
+            display: none;
+        }
+    }
+
+    .visually-hidden{
+        display: none;
+    }
+}
 
 .about_modal{
   position: absolute;
   z-index: 9999;
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0,0,0,0.7);
   width: 100%;
   min-height: 100%;
   display: none;
   .container{
-    margin-top: 60px;
+    margin-top: 100px;
     text-align: center;
-    h1{
-      font-size: 22px;
-      text-transform: uppercase;
-    }
   }
   .image_container{
     margin: 0 auto;
-    
+    img{
+      width: 80%;
+    }
   }
 }
 
@@ -269,7 +222,7 @@ a.Xbutton:hover{
   text-decoration: none;
   cursor: pointer;
   color: white;
-} 
+}  
 
 .guida{
   padding: 4px;
@@ -288,7 +241,10 @@ a.Xbutton:hover{
 .my_link:hover{
   color: #e5b106;
 } 
- 
+
+/*.my_link:hover:after{
+  content: '  →';
+} */
 
 .close_modal{
   margin-top: 15px; 
@@ -306,21 +262,3 @@ a.Xbutton:hover{
 .close_modal:hover{
   background-color: rgba(63,63,63,0.95);
 }
-
-.prova{
-  display: grid;
-  grid-template-areas: 'menu mappa';
-  grid-template-columns: 20% 80%;
-}
-
-.mappa{
-  display: grid !important;
-  grid-area: 'mappa' !important;
-}
-
-.menu{
-  grid-area: menu !important;
-  display: grid !important;
-}
-
-
