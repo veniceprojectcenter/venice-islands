@@ -225,7 +225,7 @@ a.header-visit-vpc:hover{
 } 
 
 .my_link:hover:after{
-  //content: '  →';
+  content: '  →';
 } 
 
 .close_modal{
@@ -233,9 +233,9 @@ a.header-visit-vpc:hover{
   font-size: 20px;
   font-weight: 800;
   float: right;
-  color: red;
+  color: #cc2f0c;
   margin-right: 15px;
-  border: 3px solid red;
+  border: 3px solid #cc2f0c;
   border-radius: 10px;
   min-width: 64px;
   padding: 5px;
