@@ -176,8 +176,8 @@ function getIslandsGroup(path,islandOptions){
 //***********************************************************************************************
 
 //------- Island Layers --------//
-getIslands('http://data.cityknowledge.net/api/v1/geojson.json?group_name=IslesLagoon%20single');
-getIslands('http://data.cityknowledge.net/api/v1/geojson.json?group_name=IslesLagoon%20multi');
+getIslands('https://ckdata.herokuapp.com/api/v1/geojson.json?group_name=IslesLagoon%20single');
+getIslands('https://ckdata.herokuapp.com/api/v1/geojson.json?group_name=IslesLagoon%20multi');
 
 //getIslandsGroup("https://cityknowledge.firebaseio.com/groups/MAPS_Islands_2015.json");
 
