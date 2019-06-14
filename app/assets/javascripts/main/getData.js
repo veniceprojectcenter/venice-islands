@@ -176,8 +176,8 @@ function getIslandsGroup(path,islandOptions){
 //***********************************************************************************************
 
 //------- Island Layers --------//
-getIslands('/IslesLagoon_single.geojson');
-getIslands('/IslesLagoon_multi.geojson');
+getIslands('http://data.cityknowledge.net/api/v1/geojson.json?group_name=IslesLagoon%20single');
+getIslands('http://data.cityknowledge.net/api/v1/geojson.json?group_name=IslesLagoon%20multi');
 
 //getIslandsGroup("https://cityknowledge.firebaseio.com/groups/MAPS_Islands_2015.json");
 
@@ -235,7 +235,7 @@ function onAllIslandsLoaded(){
     
     layerController.addOverlay(locationLayer,"Current Location");
     locationLayer.addTo(map); 
-
+    /*
     //------- Bridge Layers --------//
     getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",generalInfo: function(target){
         return printObject(target.data,function(str){
@@ -261,8 +261,8 @@ function onAllIslandsLoaded(){
             }
         });
     }});
-
-
+    */
+    /*
     //------- Canal Layers --------//
     getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals",generalInfo: function(target){
         return printObject(target.data,function(str){
@@ -291,7 +291,7 @@ function onAllIslandsLoaded(){
             }
         });
     }});
-
+    */
     //------- Belltower Layers --------//
 //getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",generalInfo: function(target){
 //    return printObject(target.data,function(str){
@@ -316,7 +316,7 @@ function onAllIslandsLoaded(){
 //        "Date Recorded: " + feature.properties.birth_certificate.dor + "</br>"
 //        );
 //    }});
-    
+/*
 getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Final.json",{tag:"Bell Towers",useNearest:true,generalInfo: function(target){
         return printObject(target.data,function(str){
             switch(str){
@@ -346,8 +346,8 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
             }
         });
     }});
-
-    
+    */
+    /*
     //------- Hotel Layers --------//
     getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap",generalInfo: function(target){
         return printObject(target.data,function(str){
@@ -377,7 +377,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
             }
         });
     }});
-
+*/
     
 
 //------- Wiki Data Islands --------//
@@ -411,7 +411,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
     return new L.marker(latlng, {icon: noIcon});
 }});
 
-    
+    /*
     //------- Sewer Outlet Layers --------//
     getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets",generalInfo: function(target){
         return printObject(target.data,function(str){
@@ -439,7 +439,8 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
             }
         });
     }});
-
+    */
+    /*
     //------- Convent Layers --------//
     getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{generalInfo: function(target){
         return printObject(target.data,function(str){
@@ -469,10 +470,10 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
             }
         });
     }});
-    
+    */
 //------- Bathroom Layer --------//
 // data taken from http://www.comune.venezia.it/flex/cm/pages/ServeBLOB.php/L/EN/IDPagina/1339
-    getGroup("https://cityknowledge.firebaseio.com/groups/DATA_Bathrooms_2015.json",{tag:"Bathrooms",generalInfo: function(target){
+/*    getGroup("https://cityknowledge.firebaseio.com/groups/DATA_Bathrooms_2015.json",{tag:"Bathrooms",generalInfo: function(target){
         return printObject(target.data,function(str){
             switch(str){
                 case 'Hours':
@@ -546,6 +547,6 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
             }
         });
     }});
-
+*/
     
 }

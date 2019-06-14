@@ -161,18 +161,6 @@ a.header-visit-vpc:hover{
    color: orange !important;
 }
 
-.left-header-vpc{
-    z-index: 5;
-    width: 10vw;
-    height: 90vh;
-}
-.filters-header-vpc{
-    z-index: 6;
-    width: 100vw;
-    height: 5vh;
-    position: relative;
-    top: -90%;
-}
 .leaflet-control-zoom .leaflet-bar .leaflet-contrl{
     position: absolute; 
     top: 70vh; 
