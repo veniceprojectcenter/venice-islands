@@ -43,7 +43,7 @@ div,span,p,a,h1,h2,h3,h4,h5,h6{
     max-width: 500px;
     margin: auto;
     float: center;
-    top:120px;
+    top: 20px;
     left:0; 
     right:0;
     text-align:left;
@@ -194,16 +194,26 @@ a.header-visit-vpc:hover{
   width: 100%;
   min-height: 100%;
   display: none;
-  .container{
+  padding-bottom: 20px;
+  
+  
+}
+
+.about_modal .container{
     margin-top: 100px;
     text-align: center;
-  }
-  .image_container{
-    margin: 0 auto;
-    img{
-      width: 80%;
+    p{
+      margin-left: 10px;
+      margin-right: 10px;
     }
-  }
+}
+
+.about_modal .image_container {
+  margin: 0 auto;
+}
+
+.about_modal .image_container img{
+  width: 80%;
 }
 
 .my_link{
