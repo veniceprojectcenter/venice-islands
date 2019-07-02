@@ -7,7 +7,15 @@
 //customArgs = SEE http://leafletjs.com/reference.html#geojson-options
 function getGroup(URL,groupOptions,customArgs){
     $.getJSON(URL,function(msg){
+        console.log("mesagge",msg);
         if(!msg) return;
+        list_ckid = jQuery.map( msg, function( el ) {
+            return el.ck_id;
+        });
+        msg = {members: {} };
+        for(k in list_ckid){
+            msg["members"][list_ckid[k]] = [list_ckid[k]];
+        }
         getGroupCallback(groupOptions,customArgs,URL,msg);});
 }
 
@@ -381,27 +389,27 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
     
 
 //------- Wiki Data Islands --------//
-getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{tag:"Additional Information",preLoad: true,toggle:false,moreInfo: function(targets,tag){
+getGroup("https://ckdata.herokuapp.com/api/v1/dataset.json?group_name=MERGE_Islands_2015",{tag:"Additional Information",preLoad: true,toggle:false,moreInfo: function(targets,tag){
     var output = '';
     targets.forEach(function(target){
         if(target.media) var imageHash = Object.keys(target.media.images)[0];
         output+=
             (target.media ? '<img src="'+target.media.images[imageHash].small+'" id="embeddedImage">':'') +
-            (target.data.Blurb?'<b>About: </b>'+ target.data.Blurb+'</br>':'') +
+            (target.Blurb?'<b>About: </b>'+ target.Blurb+'</br>':'') +
         '</br><table border="1" style="width:100%">'+
         '<tr>'+
             '<td>'+ 'Handicap Accessible' + '</td>' +
-            '<td>'+ target.data.Handicap_Accessibility + '</td>' +
+            '<td>'+ target.Handicap_Accessibility + '</td>' +
         '</tr>' + '<tr>'+
             '<td>'+ 'Island Group' + '</td>' +
-            '<td>'+ target.data.Sestiere + '</td>' +
+            '<td>'+ target.Sestiere + '</td>' +
         '</tr>' + '<tr>'+
             '<td>'+ 'Usage' + '</td>' +
-            '<td>'+ target.data.Usage + '</td>' +
+            '<td>'+ target.Usage + '</td>' +
         '</tr>' + 
-            (target.data.Boat_Stop ? '</tr>' + '<tr>'+
+            (target.Boat_Stop ? '</tr>' + '<tr>'+
             '<td>'+ 'Boat Stop(s)' + '</td>' +
-            '<td>'+ target.data.Boat_Stop + ': Line(s) ' + target.data.Boat_Line + '</td>' +
+            '<td>'+ target.Boat_Stop + ': Line(s) ' + target.Boat_Line + '</td>' +
         '</tr>'  :'' ) +
         '</table>'
     });

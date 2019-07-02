@@ -284,7 +284,7 @@ function onLocationFound(e) {
     
     // add the marker and popup to the location layer
     locationLayer.addLayer(locationMarker);
-    locationLayer.addLayer(locationRadius);
+    //locationLayer.addLayer(locationRadius);
     markerFlag = true;
 
     locationGeoJSON = locationMarker.toGeoJSON();
@@ -429,6 +429,7 @@ var loadStatusIndex = {};
 
 function getGroupCallback(options,customArgs,groupURL,groupMSG) {
     //if no options are given, initialize options as an empty object with default values
+    console.log("getGroupCallback: ",options,customArgs,groupURL);
     options = options || {};
     if(!options.hasOwnProperty("preLoad")){
         options.preLoad=false;
@@ -504,7 +505,7 @@ function getNextEntry(statusIndex,options,customArgs,groupURL,groupMSG){
     for(var obj in jsonList.members){
         //if we found the next member to load, load it
         if(count>=loadStatus[statusIndex].sendCount){
-            var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
+            var URL = "https://ckdata.herokuapp.com/api/v1/data.json?ck_id=" + jsonList.members[obj];
             //$.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
             $.ajax({
                 dataType: "json",
@@ -554,13 +555,14 @@ function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
     for(var obj in jsonList.members){
         //if we see a member we have not yet requested, request it
         if(count>=loadStatus[statusIndex].sendCount){
-            var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
+            var URL = "https://ckdata.herokuapp.com/api/v1/data.json?ck_id=" + obj;
             //console.log(URL);
             //$.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
             $.ajax({
                 dataType: "json",
                 url: URL,
                 success: function(msg){
+                    console.log("finishGetEntries: ", msg);
                     getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);
                 },
                 complete: function(){
@@ -589,6 +591,7 @@ function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
 // callback function for pulling JSON file, run code related to it in HERE ONLY
 function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) {
     var jsonObj = msg;
+    console.log("getEntryCallback: ", jsonObj);
     
     //ensure options is an object and is initialized
     if(!options || typeof options != 'object'){
