@@ -140,6 +140,7 @@ a.Xbutton:hover{
     z-index: 5;
     display: grid;
     grid-template-areas: 'how title vpc';
+    grid-template-columns: 1fr 1fr 1fr;
     padding-bottom: 20px;
     padding-top: 20px;
     line-height: 20px;
@@ -187,7 +188,118 @@ a.header-visit-vpc:hover{
     }
 }
 
-.about_modal{
+
+
+.container_about{
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-areas: 'img text';
+  margin-left: 15px;
+  margin-right: 15px;
+  place-self: center;
+}
+
+.img_container{
+  grid-area: img;
+  place-self: center;
+  img{
+    width: 95%;
+  }
+}
+
+.text_container{
+  grid-area: text;
+  place-self: center;
+}
+
+.title{
+  h1{
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+}
+
+.guida{
+  border: solid 1px #ffffff;
+  background: transparent;
+  border-radius: 50px;
+  padding: .7em 2.4em;
+  cursor: pointer;
+  transition: .3s ease-in-out;
+  min-width: 120px;
+  display: inline-grid;
+  max-height: 30px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.guida span::after{
+  content: "⟶";
+  transition: .3s;
+  width: 0px;
+  overflow: hidden;
+  display: inline-block;
+  font-size: 18px;
+  line-height: 12px;
+  margin-left: 8px;
+}
+
+.guida span{
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 16px;
+  letter-spacing: .05em;
+  transition: .3s ease-in-out;
+  margin: 0 !important;
+  place-self: center;
+}
+
+.guida::hover{
+  animation: shinehover 2s infinite ease-in-out;
+  transition: .3s;
+}
+
+.guida::hover span{
+  transition: .3s ease-in-out;
+}
+/*
+.my_link{
+  text-decoration: none;
+  cursor: pointer;
+  color: white;
+}  
+
+.guida{
+  padding: 4px;
+  border: 3px solid #e5b106;
+  border-radius: 10px;
+  color: #e5b106;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+} 
+
+.guida:hover{
+  background-color: rgba(63,63,63,0.95);
+}
+
+.my_link:hover{
+  color: #e5b106;
+}
+
+
+*/
+
+
+
+
+
+
+
+
+
+/*.about_modal{
   position: absolute;
   z-index: 9999;
   background-color: rgba(0,0,0,0.7);
@@ -241,12 +353,12 @@ a.header-visit-vpc:hover{
 
 .my_link:hover{
   color: #e5b106;
-} 
+} */
 
 /*.my_link:hover:after{
   content: '  →';
 } */
-
+/*
 .close_modal{
   margin-top: 15px;
   font-size: 26px;
@@ -261,7 +373,7 @@ a.header-visit-vpc:hover{
   background: #cc2f0c;
   text-align: center;
   cursor: pointer;
-}
+}*/
 
 /*.close_modal:hover{
   background-color: rgba(63,63,63,0.95);
