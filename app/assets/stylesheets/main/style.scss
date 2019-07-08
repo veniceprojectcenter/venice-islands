@@ -210,6 +210,14 @@ a.header-visit-vpc:hover{
 .text_container{
   grid-area: text;
   place-self: center;
+
+  h2{
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  p{
+    margin: 0;
+  }
 }
 
 .title{
@@ -221,6 +229,7 @@ a.header-visit-vpc:hover{
 }
 
 .guida{
+  margin-top: 15px;
   border: solid 1px #ffffff;
   background: transparent;
   border-radius: 50px;
