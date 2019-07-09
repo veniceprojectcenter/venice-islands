@@ -254,13 +254,18 @@ a.header-visit-vpc:hover{
   place-self: center;
 }
 
-.guida::hover{
+.guida::hover {
   animation: shinehover 2s infinite ease-in-out;
   transition: .3s;
 }
 
 .guida::hover span{
   transition: .3s ease-in-out;
+}
+
+.back{
+  text-align: center;
+  margin-top: 30px;
 }
 /*
 .my_link{
