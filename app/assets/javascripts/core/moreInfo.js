@@ -140,7 +140,7 @@ function overlay(currentLayer) {
     $(document.getElementById("inner2")).append('<a href="" id="venipedia"  target="_blank">'+ '<div id="venipediaImage"></div></a>' + '<a href="" id="zotero"  target="_blank">'+ '<div id="zoteroImage"></div></a>' + '<a href="" id="cartography" target="_blank">'+ '<div id="cartographyImage"></div></a>');
     
     // generate correct venipedia link for associated island
-    var link = "http://www.venipedia.org/wiki/index.php?title=Island_of_" + encodeURIComponent(properties.Nome_Isola.replace(/ /g, "_")); 
+    var link = "http://www.wiki.veniceprojectcenter.org/wiki/index.php?title=Island_of_" + encodeURIComponent(properties.Nome_Isola.replace(/ /g, "_")); 
     document.getElementById("venipedia").href = link;
     
     // generate the zotero link
